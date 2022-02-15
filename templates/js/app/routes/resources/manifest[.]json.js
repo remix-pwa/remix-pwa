@@ -52,6 +52,6 @@ export let loader = () => {
       headers: {
         "Cache-Control": "public, max-age=600",
       },
-    }
+    },
   );
 };
