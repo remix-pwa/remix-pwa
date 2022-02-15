@@ -25,7 +25,9 @@
     "build": "rollup -c",
     "lint": "eslint --fix 'src/**/*.ts'",
     "test": "jest",
-    "start": "ts-node index.ts"
+    "format": "prettier --write \"**/*.ts\" \"**/*.js\" \"**/*.tsx\" \"**/*.jsx\"",
+    "start": "node --loader ts-node\/esm .\\cli.ts"
+
   },
   "jest": {
     "moduleFileExtensions": [

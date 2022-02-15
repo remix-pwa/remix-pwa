@@ -8,6 +8,7 @@
     "skipLibCheck": true,
     "declaration": true,
     "jsx": "react",
+    "module": "ESNext"
   },
   "exclude": ["node_modules", "**/__tests__/*"],
   "include": ["/**/*.ts", "/**/*.tsx", "index.ts"]
