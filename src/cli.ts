@@ -56,7 +56,7 @@ async function cli() {
   console.log(magenta("Welcome to Remix PWA!"));
   console.log();
 
-  await new Promise(res => setTimeout(res, 1500));
+  await new Promise((res) => setTimeout(res, 1500));
 
   const projectDir = path.resolve(process.cwd());
 
@@ -77,7 +77,9 @@ async function cli() {
 
 cli()
   .then(() => {
-    console.log(green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
+    console.log(
+      green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
+    );
     process.exit(0);
   })
   .catch((err: Error) => {
