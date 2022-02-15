@@ -2,7 +2,8 @@
   "name": "remix-pwa",
   "version": "0.1.5",
   "description": "A PWA handler for Remix",
-  "type": "module",
+  "type": "commonjs",
+  "main": "cli.ts",
   "keywords": [
     "pwa",
     "remix",

@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 
-import fse from "fs-extra";
-import * as path from "path";
-import inquirer from "inquirer";
-import { red, green, magenta } from "colorette";
-
-const __dirname = path.resolve(path.dirname(""));
+const fse = require("fs-extra");
+const path = require("path");
+const inquirer = require("inquirer");
+const { red, green, magenta } = require("colorette");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -62,9 +60,7 @@ async function cli() {
 
   const projectDir = path.resolve(process.cwd());
 
-  let answer = await inquirer.prompt<{
-    lang: "ts" | "js";
-  }>([
+  let answer = await inquirer.prompt([
     {
       name: "lang",
       type: "list",
