@@ -32,7 +32,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
     });
 
     fse.readdirSync(appDir).forEach((worker: string) => {
-      if (!worker.includes(".tsx") || worker.includes(".jsx")) {
+      if (!worker.includes(".tsx") && !worker.includes(".jsx")) {
         return false;
       } else if (worker.includes("entry.worker")) {
         const fileContent = fse.readFileSync(`${appDir}/${worker}`);
@@ -54,7 +54,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   }
 }
 
-export default async function cli() {
+async function cli() {
   console.log(magenta("Welcome to Remix PWA!"));
   console.log();
 
