@@ -5,8 +5,6 @@ import * as path from "path";
 import inquirer from "inquirer";
 import { red, green, magenta } from "colorette";
 
-const __dirname = path.resolve(path.dirname(""));
-
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
     fse.mkdirSync(projectDir + "/app/routes/resources", { recursive: true });
