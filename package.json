@@ -3,7 +3,9 @@
   "version": "0.1.5",
   "description": "A PWA handler for Remix",
   "type": "commonjs",
-  "main": "cli.ts",
+  "main": "dist/cli.js",
+  "types": "dist/cli.d.ts",
+  "files": ["lib/**/*", "dist/**/*"],
   "keywords": [
     "pwa",
     "remix",
@@ -23,11 +25,13 @@
     "remix-pwa": "cli.ts"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "tsc",
     "lint": "eslint --fix 'src/**/*.ts'",
     "test": "jest",
     "format": "prettier --write \"**/*.ts\" \"**/*.js\" \"**/*.tsx\" \"**/*.jsx\"",
-    "start": "node --loader ts-node/esm .\\cli.ts"
+    "start": "node --loader ts-node/esm .\\cli.ts",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run format"
   },
   "jest": {
     "moduleFileExtensions": [

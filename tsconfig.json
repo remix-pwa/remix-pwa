@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2015"],
+    "lib": ["DOM", "DOM.Iterable", "ES5"],
     "esModuleInterop": true,
     "moduleResolution": "Node",
-    "target": "ES2015",
+    "target": "ES5",
     "strict": true,
     "skipLibCheck": true,
     "declaration": true,
     "jsx": "react",
-    "module": "ES2015",
+    "module": "commonjs",
+    "outDir": "./dist"
   },
-  "files": ["./cli.ts"],
+  "include": ["src/cli.ts"],
+  "exclude": ["node_modules", "**/__tests__/*"]
 }
