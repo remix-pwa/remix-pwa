@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import fse from "fs-extra";
+import * as fse from "fs-extra";
 import * as path from "path";
 import * as inquirer from "inquirer";
 import { red, green, magenta } from "colorette";
