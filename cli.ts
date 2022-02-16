@@ -2,7 +2,7 @@
 
 import fse from "fs-extra";
 import * as path from "path";
-import inquirer from "inquirer";
+import * as inquirer from "inquirer";
 import { red, green, magenta } from "colorette";
 
 async function Run(projectDir: string, lang: "ts" | "js") {
