@@ -15,10 +15,10 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const appDir = path.resolve(__dirname, "templates", lang, "app");
 
   // Create `public/icons` and store PWA icons
-  fse.existsSync(projectDir + "/public/icons")
+  fse.existsSync(path.join(publicDir, "icons"))
     ? fse.readdirSync(`${publicDir}/icons`).forEach((file: string) => {
         const fileContent = fse.readFileSync(publicDir + "/icons/" + file);
-        fse.writeFile(projectDir + `/public/icons/${file}`, fileContent);
+        fse.writeFile(path.join(projectDir, `/public/icons/${file}`), fileContent);
       })
     : console.error("Error ocurred while creating necessary directories!");
 
@@ -26,17 +26,17 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   if (fse.existsSync(projectDir + "/app/routes/resources")) {
     fse.readdirSync(`${appDir}/routes/resources`).forEach((manifest: string) => {
       const fileContent = fse.readFileSync(appDir + "/routes/resources/" + manifest);
-      fse.writeFile(projectDir + `/app/routes/resources/${manifest}`, fileContent);
+      fse.writeFile(path.join(projectDir, `/app/routes/resources/${manifest}`), fileContent);
     });
 
-    fse.readdirSync(appDir).forEach((worker: string) => {
+    fse.readdirSync(appDir).forEach(async (worker: string) => {
       if (!worker.includes(".tsx") || worker.includes(".jsx")) {
         return false;
       } else if (worker.includes("entry.worker")) {
         const fileContent = fse.readFileSync(`${appDir}/${worker}`);
-        return fse.writeFile(projectDir + `/app/${worker}`, fileContent);
+        return fse.writeFile(path.join(projectDir, `/app/${worker}`), fileContent);
       } else {
-        const output = fse.createWriteStream(projectDir + `/app/${worker}`, { flags: "a" });
+        const output = fse.createWriteStream(path.join(projectDir, `/app/${worker}`), { flags: "a" });
         const input = fse.createReadStream(`${appDir}/${worker}`);
 
         output.on("close", () => {
@@ -58,7 +58,8 @@ export default async function cli() {
 
   await new Promise(res => setTimeout(res, 1500));
 
-  const projectDir = path.resolve("../../");
+  // const projectDir = path.resolve("../../");
+  const projectDir = process.cwd();
 
   let answer = await inquirer.prompt<{
     lang: "ts" | "js";
