@@ -31,15 +31,16 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent)
 
   // Acknowledge SW in the browser
-  const ServiceWorkerRegistrar = fse.readFileSync(appDir + "/root." + lang)
   const RootDir = projectDir + "/app/root." + lang + "x"
+
   const RootDirContent = fse.readFileSync(RootDir).toString()
-  const localeRootDir = fse.readFileSync(ServiceWorkerRegistrar).toString()
+  const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString()
+
   const RootDirNull = RootDirContent.replace(/\s\s+/g, ' ')
   const rootRegex = /return \( <html/g
   const index = RootDirNull.search(rootRegex)
   const NewContent = RootDirNull.slice(0, index - 1) + localeRootDir + RootDirNull.slice(index - 1)
-  fse.writeFileSync(RootDir, NewContent, { encoding: "utf8", flag: "w" })
+  fse.writeFileSync(RootDir, NewContent)
 
   /* TODO: Find a way to avoid messing up `root.[t/j]sx` */
 
@@ -65,10 +66,10 @@ export default async function cli() {
 
   await new Promise((res) => setTimeout(res, 1500));
 
-  const projectDir = path.resolve("../../");
+  // const projectDir = path.resolve("../../");
 
   /* Debugging purposes ONLY: Uncomment 👇 */
-  // const projectDir = process.cwd();
+  const projectDir = process.cwd();
 
   let answer = await inquirer.prompt<{
     lang: "ts" | "js";
