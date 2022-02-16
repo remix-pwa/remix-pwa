@@ -1,4 +1,5 @@
 node_modules
 ./dist
 index.js
-bundle.js
+./bundle.js
+./exports.ts
