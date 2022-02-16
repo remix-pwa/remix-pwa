@@ -3,7 +3,7 @@ import { json } from "remix";
 export let loader = () => {
   return json(
     {
-      short_name: "Remix PWA",
+      short_name: "PWA",
       name: "Remix PWA",
       start_url: "/",
       display: "standalone",

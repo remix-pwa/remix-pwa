@@ -5,6 +5,7 @@ import * as fse from "fs-extra";
 import * as path from "path";
 import * as inquirer from "inquirer";
 import { red, green, magenta } from "colorette";
+import RegisterServiceWorker from "./exports";
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -33,11 +34,9 @@ async function Run(projectDir: string, lang: "ts" | "js") {
       } else if (worker.includes("entry.worker")) {
         const fileContent = fse.readFileSync(`${appDir}/${worker}`);
         fse.writeFileSync(path.resolve(projectDir, `app/${worker}`), fileContent.toString());
-      } else {
-        const output = fse.createWriteStream(projectDir + `/app/${worker}`, { flags: "a" });
-        const input = fse.createReadStream(`${appDir}/${worker}`);
-
-        input.pipe(output);
+      } else if (worker.includes("client")) {
+        const fileContent = fse.readFileSync(appDir + "/entry.client." + lang)
+        fse.appendFileSync(projectDir + "/app/entry.client." + lang, fileContent.toString())
       }
     });
     //@ts-ignore
