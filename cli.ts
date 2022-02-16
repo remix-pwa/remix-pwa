@@ -26,17 +26,17 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   if (fse.existsSync(path.resolve(projectDir, "app"))) {
     fse.readdirSync(`${appDir}/routes/resources`).forEach((manifest: string) => {
       const fileContent = fse.readFileSync(appDir + "/routes/resources/" + manifest);
-      fse.writeFile(path.join(projectDir, `/app/routes/resources/${manifest}`), fileContent);
+      fse.writeFile(path.resolve(projectDir, `app/routes/resources/${manifest}`), fileContent);
     });
 
     fse.readdirSync(appDir).forEach(async (worker: string) => {
-      if (!worker.includes(".tsx") || worker.includes(".jsx")) {
+      if (!worker.includes(".tsx") && !worker.includes(".jsx")) {
         return false;
       } else if (worker.includes("entry.worker")) {
         const fileContent = fse.readFileSync(`${appDir}/${worker}`);
-        return fse.writeFile(path.join(projectDir, `/app/${worker}`), fileContent);
+        return fse.writeFile(path.resolve(projectDir, `app/${worker}`), fileContent);
       } else {
-        const output = fse.createWriteStream(path.join(projectDir, `/app/${worker}`), { flags: "a" });
+        const output = fse.createWriteStream(path.resolve(projectDir, `app/${worker}`), { flags: "a" });
         const input = fse.createReadStream(`${appDir}/${worker}`);
 
         output.on("close", () => {
@@ -83,6 +83,7 @@ export default async function cli() {
 cli()
   .then(() => {
     console.log(green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
+    console.log();
     process.exit(0);
   })
   .catch((err: Error) => {
