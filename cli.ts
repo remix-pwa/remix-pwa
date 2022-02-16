@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import * as fs from "fs";
 import * as fse from "fs-extra";
 import * as path from "path";
 import * as inquirer from "inquirer";
@@ -9,44 +10,38 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
     fse.mkdirSync(projectDir + "/app/routes/resources", { recursive: true });
 
-  !fse.existsSync(projectDir + "/public/icons") && fse.mkdirSync(projectDir + "/public/icons", { recursive: true });
+  !fse.existsSync(projectDir + "/public/icons") && 
+    fse.mkdirSync(projectDir + "/public/icons", { recursive: true });
 
-  const publicDir = path.resolve(__dirname, "templates", lang, "public");
-  const appDir = path.resolve(__dirname, "templates", lang, "app");
+  const publicDir = path.resolve(process.cwd(), "templates", lang, "public");
+  const appDir = path.resolve(process.cwd(), "templates", lang, "app");
 
   // Create `public/icons` and store PWA icons
-  fse.existsSync(path.join(publicDir, "icons"))
-    ? fse.readdirSync(`${publicDir}/icons`).forEach((file: string) => {
-        const fileContent = fse.readFileSync(publicDir + "/icons/" + file);
-        fse.writeFile(path.join(projectDir, `/public/icons/${file}`), fileContent);
-      })
-    : console.error("Error ocurred while creating necessary directories!");
+  fse.readdirSync(`${publicDir}/icons`).map((file: string) => {
+    const fileContent = fs.readFileSync(publicDir + "/icons/" + file);
+    fse.writeFileSync(projectDir + `/public/icons/${file}`, fileContent);
+  });
 
   // Create `manifest.json` file && service worker entry point
-  if (fse.existsSync(path.resolve(projectDir, "app"))) {
-    fse.readdirSync(`${appDir}/routes/resources`).forEach((manifest: string) => {
-      const fileContent = fse.readFileSync(appDir + "/routes/resources/" + manifest);
-      fse.writeFile(path.resolve(projectDir, `app/routes/resources/${manifest}`), fileContent);
-    });
+  const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`);
+  fse.writeFileSync(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent.toString());
 
-    fse.readdirSync(appDir).forEach(async (worker: string) => {
-      if (!worker.includes(".tsx") && !worker.includes(".jsx")) {
+  try {
+    fse.readdirSync(appDir).map((worker: string) => {
+      if (!worker.includes(lang)) {
         return false;
       } else if (worker.includes("entry.worker")) {
         const fileContent = fse.readFileSync(`${appDir}/${worker}`);
-        return fse.writeFile(path.resolve(projectDir, `app/${worker}`), fileContent);
+        fse.writeFileSync(path.resolve(projectDir, `app/${worker}`), fileContent.toString());
       } else {
-        const output = fse.createWriteStream(path.resolve(projectDir, `app/${worker}`), { flags: "a" });
+        const output = fse.createWriteStream(projectDir + `/app/${worker}`, { flags: "a" });
         const input = fse.createReadStream(`${appDir}/${worker}`);
-
-        output.on("close", () => {
-          console.log("PWA Service Worker successfully created!");
-        });
 
         input.pipe(output);
       }
     });
-  } else {
+    //@ts-ignore
+  } catch (error) {
     console.error(red("Error ocurred creating files. Could not create Service Worker files."));
     process.exit(1);
   }
@@ -56,7 +51,7 @@ export default async function cli() {
   console.log(magenta("Welcome to Remix PWA!"));
   console.log();
 
-  await new Promise(res => setTimeout(res, 1500));
+  await new Promise((res) => setTimeout(res, 1500));
 
   const projectDir = path.resolve("../../");
 
@@ -82,8 +77,9 @@ export default async function cli() {
 
 cli()
   .then(() => {
-    console.log(green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
-    console.log();
+    console.log(
+      green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
+    );
     process.exit(0);
   })
   .catch((err: Error) => {
