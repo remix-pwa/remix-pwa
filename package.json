@@ -43,7 +43,7 @@
       }
     },
     "testMatch": [
-      "**/test/**/*.test.ts"
+      "**/__tests__/**/*.test.ts"
     ]
   },
   "devDependencies": {
