@@ -27,7 +27,7 @@
     "test": "jest",
     "format": "prettier --write \"**/*.ts\" \"**/*.js\" \"**/*.tsx\" \"**/*.jsx\"",
     "start": "node --loader ts-node/esm .\\cli.ts",
-    "install": "npm run postinstall",
+    "install": "npm install -D @types/fs-extra @types/inquirer && npm run postinstall",
     "postinstall": "npm run start"
   },
   "jest": {
