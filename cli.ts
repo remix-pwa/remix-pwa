@@ -23,7 +23,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
     : console.error("Error ocurred while creating necessary directories!");
 
   // Create `manifest.json` file && service worker entry point
-  if (fse.existsSync(projectDir + "/app/routes/resources")) {
+  if (fse.existsSync(path.resolve(projectDir, "app"))) {
     fse.readdirSync(`${appDir}/routes/resources`).forEach((manifest: string) => {
       const fileContent = fse.readFileSync(appDir + "/routes/resources/" + manifest);
       fse.writeFile(path.join(projectDir, `/app/routes/resources/${manifest}`), fileContent);
@@ -47,7 +47,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
       }
     });
   } else {
-    console.error(red("Error ocurred creating files. Could not create `entry.worker` file."));
+    console.error(red("Error ocurred creating files. Could not create Service Worker files."));
     process.exit(1);
   }
 }
