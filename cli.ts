@@ -5,7 +5,6 @@ import * as fse from "fs-extra";
 import * as path from "path";
 import * as inquirer from "inquirer";
 import { red, green, magenta } from "colorette";
-import RegisterServiceWorker from "./exports";
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -26,6 +25,15 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   // Create `manifest.json` file && service worker entry point
   const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`);
   fse.writeFileSync(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent.toString());
+  
+  // Register worker in `entry.client.tsx`
+  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang)
+  fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent.toString())
+
+  // Acknowledge SW in the browser
+  const ServiceWorkerContent = fse.readFileSync(appDir + "/root." + lang)
+
+  /* TODO: Input function to handle root input */
 
   try {
     fse.readdirSync(appDir).map((worker: string) => {
@@ -34,9 +42,6 @@ async function Run(projectDir: string, lang: "ts" | "js") {
       } else if (worker.includes("entry.worker")) {
         const fileContent = fse.readFileSync(`${appDir}/${worker}`);
         fse.writeFileSync(path.resolve(projectDir, `app/${worker}`), fileContent.toString());
-      } else if (worker.includes("client")) {
-        const fileContent = fse.readFileSync(appDir + "/entry.client." + lang)
-        fse.appendFileSync(projectDir + "/app/entry.client." + lang, fileContent.toString())
       }
     });
     //@ts-ignore

@@ -1,2 +1,4 @@
 node_modules
 ./index.js
+exports.ts
+/examples
