@@ -16,7 +16,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
 
   // Create `public/icons` and store PWA icons
   fse.existsSync(projectDir + "/public/icons")
-    ? fse.readdirSync(`${publicDir}/icons`).forEach((file) => {
+    ? fse.readdirSync(`${publicDir}/icons`).forEach((file: string) => {
         const fileContent = fse.readFileSync(publicDir + "/icons/" + file);
         fse.writeFile(projectDir + `/public/icons/${file}`, fileContent);
       })
@@ -24,7 +24,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
 
   // Create `manifest.json` file && service worker entry point
   if (fse.existsSync(projectDir + "/app/routes/resources")) {
-    fse.readdirSync(`${appDir}/routes/resources`).forEach((manifest) => {
+    fse.readdirSync(`${appDir}/routes/resources`).forEach((manifest: string) => {
       const fileContent = fse.readFileSync(appDir + "/routes/resources/" + manifest);
       fse.writeFile(projectDir + `/app/routes/resources/${manifest}`, fileContent);
     });
