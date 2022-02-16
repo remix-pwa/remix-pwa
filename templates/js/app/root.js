@@ -1,6 +1,7 @@
 let location = useLocation();
 let matches = useMatches();
 
+let isMount = true
 useEffect(() => {
   let mounted = isMount;
   isMount = false;
