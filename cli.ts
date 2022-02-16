@@ -23,23 +23,23 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   });
 
   // Create `manifest.json` file && service worker entry point
-  const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`);
-  fse.writeFileSync(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent.toString());
+  const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
+  fse.writeFileSync(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent);
   
   // Register worker in `entry.client.tsx`
-  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang)
-  fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent.toString())
+  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString()
+  fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent)
 
   // Acknowledge SW in the browser
   const ServiceWorkerRegistrar = fse.readFileSync(appDir + "/root." + lang)
   const RootDir = projectDir + "/app/root." + lang + "x"
   const RootDirContent = fse.readFileSync(RootDir).toString()
-  const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString()
+  const localeRootDir = fse.readFileSync(ServiceWorkerRegistrar).toString()
   const RootDirNull = RootDirContent.replace(/\s\s+/g, ' ')
   const rootRegex = /return \( <html/g
   const index = RootDirNull.search(rootRegex)
   const NewContent = RootDirNull.slice(0, index - 1) + localeRootDir + RootDirNull.slice(index - 1)
-  fse.writeFileSync(RootDir, NewContent)
+  fse.writeFileSync(RootDir, NewContent, { encoding: "utf8", flag: "w" })
 
   /* TODO: Find a way to avoid messing up `root.[t/j]sx` */
 
