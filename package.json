@@ -27,7 +27,6 @@
     "test": "jest",
     "format": "prettier --write \"**/*.ts\" \"**/*.js\" \"**/*.tsx\" \"**/*.jsx\"",
     "start": "node --loader ts-node/esm .\\cli.ts",
-    "prepare": "browserify exports.js > bundle.js",
     "install": "npm install -D @types/fs-extra @types/inquirer && npm run start"
   },
   "jest": {
