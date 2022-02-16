@@ -1,6 +1,6 @@
 <div align="center">
 
-![alt](./asset/favicon.png)
+<img src="./asset/favicon.png" width="250" alt="remix-pwa"/>
 
 # Remix PWA
 
