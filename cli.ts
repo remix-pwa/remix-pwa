@@ -44,7 +44,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const formatted = prettier.format(NewContent, { parser: "babel" });
   fse.writeFileSync(RootDir, formatted)
 
-  /* TODO: Find a way to avoid messing up `root.[t/j]sx` */
+  /* TODO: Turn this root operation into a function */
 
   try {
     fse.readdirSync(appDir).map((worker: string) => {
