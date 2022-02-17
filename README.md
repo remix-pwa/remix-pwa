@@ -54,13 +54,13 @@ To run your app, simply run the command:
 npm run dev
 ```
 
-To get installability feature of PWA as well as app characteristics and other features, simply add the following block of code to the head in your `root` file above the `<Links />` tag:
+Add the `manifest` file in order to get installability feature of PWA as well as app characteristics and other features, simply add the following block of code to the head in your `root` file above the `<Links />` tag:
 ```jsx
 <link rel="manifest" href="/resources/manifest.json" />
 ```
 
-And voila! You are now ready to use your PWA! If you want to lay you hands on a demo icons and favicons for your PWA, `remix-pwa` got you covered. Simply delete the `favicon.ico`
-in your `public` folder and add the [following](https://github.com/ShafSpecs/remix-pwa/blob/main/examples/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
+And voila! You are now ready to use your PWA! If you want to lay you hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
+in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/examples/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
 
 ## Contributing
 
