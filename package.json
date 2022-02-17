@@ -22,7 +22,6 @@
     "remix-pwa": "cli.ts"
   },
   "scripts": {
-    "build": "rollup -c",
     "lint": "eslint --fix 'src/**/*.ts'",
     "test": "jest",
     "format": "prettier --write \"**/*.ts\" \"**/*.js\"",

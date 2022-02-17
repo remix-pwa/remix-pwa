@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as fse from "fs-extra";
 import * as path from "path";
 import * as inquirer from "inquirer";
-import { red, green, magenta } from "colorette";
+import { red, green, magenta, blue } from "colorette";
 import * as prettier from "prettier";
 
 async function Run(projectDir: string, lang: "ts" | "js") {
@@ -61,7 +61,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   }
 }
 
-export default async function cli() {
+async function cli() {
   console.log();
   console.log(magenta("Welcome to Remix PWA!"));
   console.log();
@@ -88,41 +88,34 @@ export default async function cli() {
   ]);
 
   await Run(projectDir, answer.lang);
-}
+  console.log(green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
 
-async function PostInstall () {
-  const saveFile = fse.writeFileSync
+  console.log();
+  console.log(blue("Running postinstall scripts..."));
+
+  const saveFile = fse.writeFileSync;
 
   //@ts-ignore
-  const pkgJsonPath = require.main.paths[0].split('node_modules')[0] + 'package.json';
+  const pkgJsonPath = require.main.paths[0].split("node_modules")[0] + "package.json";
   const json = require(pkgJsonPath);
 
-  if (!json.hasOwnProperty('scripts')) {
+  if (!json.hasOwnProperty("scripts")) {
     json.scripts = {};
   }
-  
-  json.scripts['watch'] = '<some_commands_here>';
-  
+
+  json.scripts["build"] = "run-p build:*";
+  json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
+  json.scripts["build:worker"] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
+  json.scripts["dev"] = "run-p dev:*";
+  json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
+  json.scripts["dev:worker"] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
+
   saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
 }
 
 cli()
   .then(() => {
-    console.log(
-      green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
-    );
-    process.exit(0);
-  })
-  .catch((err: Error) => {
-    console.error(red(err.message));
-    process.exit(1);
-  });
-
-PostInstall()
-  .then(() => {
-    console.log(
-      green("Successfully ran postintall script!"),
-    );
+    console.log(green("Successfully ran postinstall scripts!"))
     process.exit(0);
   })
   .catch((err: Error) => {
