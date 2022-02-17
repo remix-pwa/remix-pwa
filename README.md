@@ -31,31 +31,16 @@ During installation, you would be required to choose the current language you ar
 > This package requires `esbuild` to be installed.
 ## Setting up your PWA
 
-After installing `remix-pwa`, replace your `build` and `dev` scripts with the following:
+> v0.3.0 update: *`remix-pwa` automatically updates scripts now, so you don't need to do any editing to the `package.json` file.*
 
-```js
-"build": "run-p build:*",
-"build:remix": "cross-env NODE_ENV=production remix build",
-"build:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
-"dev": "run-p dev:*",
-"dev:remix": "cross-env NODE_ENV=development remix dev",
-"dev:worker": "esbuild ./app/entry.worker.ts --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch",
-```
-
-If you are using JavaScript instead of TypeScript, replace the `build:worker` and `dev:worker` scripts with the following:
-```js
-"build:worker": "esbuild ./app/entry.worker.js --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
-"dev:worker": "esbuild ./app/entry.worker.js --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch",
+After installing `remix-pwa`, add the `manifest` file in order to get installability feature of PWA as well as app characteristics and other features, simply add the following block of code to the head in your `root` file above the `<Links />` tag:
+```jsx
+<link rel="manifest" href="/resources/manifest.json" />
 ```
 
 To run your app, simply run the command:
 ```sh
 npm run dev
-```
-
-Add the `manifest` file in order to get installability feature of PWA as well as app characteristics and other features, simply add the following block of code to the head in your `root` file above the `<Links />` tag:
-```jsx
-<link rel="manifest" href="/resources/manifest.json" />
 ```
 
 And voila! You are now ready to use your PWA! If you want to lay you hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
