@@ -27,7 +27,6 @@
     "test": "jest",
     "format": "prettier --write \"**/*.ts\" \"**/*.js\"",
     "start": "node --loader ts-node/esm .\\cli.ts",
-    "prepare": "npm run format",
     "install": "npm run start"
   },
   "jest": {
