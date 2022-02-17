@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./asset/favicon.png" width="250" alt="remix-pwa"/>
+<img src="https://ucarecdn.com/ab502fed-46f6-4db0-866a-42d82b5d296d/UntitledDesign3.png" width="250" alt="remix-pwa"/>
 
 # Remix PWA
 
