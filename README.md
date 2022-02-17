@@ -48,4 +48,4 @@ in your `public` folder and add the [following links](https://github.com/ShafSpe
 
 ## Contributing
 
-todo: CONTRIBUTING.md
+Thank you for your interest in contributing 🙂. The contribution guidelines are available in the [CONTRIBUTING.md](./CONTRIBUTING.md). Awaiting your PR 😉!
