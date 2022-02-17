@@ -29,7 +29,6 @@ npm install remix-pwa
 During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript.
 
 > This package requires `esbuild` to be installed.
-
 ## Setting up your PWA
 
 After installing `remix-pwa`, replace your `build` and `dev` scripts with the following:
