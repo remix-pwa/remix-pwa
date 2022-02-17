@@ -1,5 +1,3 @@
 node_modules
 ./dist
 index.js
-./bundle.js
-./exports.ts

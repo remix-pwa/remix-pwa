@@ -5,6 +5,7 @@ import * as fse from "fs-extra";
 import * as path from "path";
 import * as inquirer from "inquirer";
 import { red, green, magenta } from "colorette";
+import * as prettier from "prettier";
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -40,7 +41,8 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const rootRegex = /return \( <html/g
   const index = RootDirNull.search(rootRegex)
   const NewContent = RootDirNull.slice(0, index - 1) + localeRootDir + RootDirNull.slice(index - 1)
-  fse.writeFileSync(RootDir, NewContent)
+  const formatted = prettier.format(NewContent, { parser: "babel" });
+  fse.writeFileSync(RootDir, formatted)
 
   /* TODO: Find a way to avoid messing up `root.[t/j]sx` */
 
@@ -61,6 +63,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
 }
 
 export default async function cli() {
+  console.log();
   console.log(magenta("Welcome to Remix PWA!"));
   console.log();
 
