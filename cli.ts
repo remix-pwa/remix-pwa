@@ -11,8 +11,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
     fse.mkdirSync(projectDir + "/app/routes/resources", { recursive: true });
 
-  !fse.existsSync(projectDir + "/public/icons") && 
-    fse.mkdirSync(projectDir + "/public/icons", { recursive: true });
+  !fse.existsSync(projectDir + "/public/icons") && fse.mkdirSync(projectDir + "/public/icons", { recursive: true });
 
   const publicDir = path.resolve(process.cwd(), "templates", lang, "public");
   const appDir = path.resolve(process.cwd(), "templates", lang, "app");
@@ -26,23 +25,23 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   // Create `manifest.json` file && service worker entry point
   const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
   fse.writeFileSync(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent);
-  
+
   // Register worker in `entry.client.tsx`
-  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString()
-  fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent)
+  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
+  fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent);
 
   // Acknowledge SW in the browser
-  const RootDir = projectDir + "/app/root." + lang + "x"
+  const RootDir = projectDir + "/app/root." + lang + "x";
 
-  const RootDirContent = fse.readFileSync(RootDir).toString()
-  const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString()
+  const RootDirContent = fse.readFileSync(RootDir).toString();
+  const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString();
 
-  const RootDirNull = RootDirContent.replace(/\s\s+/g, ' ')
-  const rootRegex = /return \( <html/g
-  const index = RootDirNull.search(rootRegex)
-  const NewContent = RootDirNull.slice(0, index - 1) + localeRootDir + RootDirNull.slice(index - 1)
+  const RootDirNull = RootDirContent.replace(/\s\s+/g, " ");
+  const rootRegex = /return \( <html/g;
+  const index = RootDirNull.search(rootRegex);
+  const NewContent = RootDirNull.slice(0, index - 1) + localeRootDir + RootDirNull.slice(index - 1);
   const formatted = prettier.format(NewContent, { parser: "babel" });
-  fse.writeFileSync(RootDir, formatted)
+  fse.writeFileSync(RootDir, formatted);
 
   /* TODO: Turn this root operation into a function */
 

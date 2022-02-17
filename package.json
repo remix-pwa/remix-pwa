@@ -25,9 +25,10 @@
     "build": "rollup -c",
     "lint": "eslint --fix 'src/**/*.ts'",
     "test": "jest",
-    "format": "prettier --write \"**/*.ts\" \"**/*.js\" \"**/*.tsx\" \"**/*.jsx\"",
+    "format": "prettier --write \"**/*.ts\" \"**/*.js\"",
     "start": "node --loader ts-node/esm .\\cli.ts",
-    "install": "npm install -D @types/fs-extra @types/inquirer && npm run start"
+    "prepare": "npm run format",
+    "install": "npm run start"
   },
   "jest": {
     "moduleFileExtensions": [
