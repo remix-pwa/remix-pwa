@@ -90,10 +90,38 @@ export default async function cli() {
   await Run(projectDir, answer.lang);
 }
 
+async function PostInstall () {
+  const saveFile = fse.writeFileSync
+
+  //@ts-ignore
+  const pkgJsonPath = require.main.paths[0].split('node_modules')[0] + 'package.json';
+  const json = require(pkgJsonPath);
+
+  if (!json.hasOwnProperty('scripts')) {
+    json.scripts = {};
+  }
+  
+  json.scripts['watch'] = '<some_commands_here>';
+  
+  saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
+}
+
 cli()
   .then(() => {
     console.log(
       green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
+    );
+    process.exit(0);
+  })
+  .catch((err: Error) => {
+    console.error(red(err.message));
+    process.exit(1);
+  });
+
+PostInstall()
+  .then(() => {
+    console.log(
+      green("Successfully ran postintall script!"),
     );
     process.exit(0);
   })
