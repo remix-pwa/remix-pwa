@@ -1,3 +1,9 @@
+// This function is not intended to be called. It is only for demo purposes.
+// The return method contains links to use as a quick test for your PWA app in development,
+// just copy & paste the `links` into the <head> of your Remix App in the root file and test it. 
+// The required icons are already added and stored in the `public/icons` folder, you can change the icons
+// by replacing the icons with your own. You can remove the default Remix's `favicon.ico` and use these instead.
+
 function LinkExample () {
     return (
         <link

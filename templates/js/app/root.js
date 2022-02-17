@@ -2,7 +2,7 @@ let location = useLocation();
 let matches = useMatches();
 
 let isMount = true
-useEffect(() => {
+React.useEffect(() => {
   let mounted = isMount;
   isMount = false;
   if ("serviceWorker" in navigator) {
