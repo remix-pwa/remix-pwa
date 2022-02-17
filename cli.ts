@@ -66,10 +66,10 @@ export default async function cli() {
 
   await new Promise((res) => setTimeout(res, 1500));
 
-  // const projectDir = path.resolve("../../");
+  const projectDir = path.resolve("../../");
 
   /* Debugging purposes ONLY: Uncomment 👇 */
-  const projectDir = process.cwd();
+  // const projectDir = process.cwd();
 
   let answer = await inquirer.prompt<{
     lang: "ts" | "js";
