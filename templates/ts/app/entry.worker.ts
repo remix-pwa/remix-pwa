@@ -5,7 +5,7 @@ import { json } from "@remix-run/server-runtime";
 export type {};
 declare let self: ServiceWorkerGlobalScope;
 
-const STATIC_ASSETS = ["/build/", "/icons/"];
+const STATIC_ASSETS = ["/build/", "/icons/", "/"];
 
 const ASSET_CACHE = "asset-cache";
 const DATA_CACHE = "data-cache";
