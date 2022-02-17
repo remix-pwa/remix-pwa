@@ -46,6 +46,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
     "@remix-run/react": "^1.1.3",
     "@remix-run/serve": "^1.1.3",
     "@types/fs-extra": "^9.0.13",
@@ -55,6 +57,7 @@
     "@types/react-dom": "^17.0.9",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
+    "babel-jest": "^27.5.1",
     "eslint": "^8.9.0",
     "eslint-plugin-react": "^7.28.0",
     "install": "^0.13.0",
@@ -64,9 +67,10 @@
     "ts-jest": "^27.1.3",
     "ts-node": "^10.5.0",
     "tsup": "^5.11.13",
-    "typescript": "^3.9.10"
+    "typescript": "^4.5.5"
   },
   "dependencies": {
+    "@babel/preset-typescript": "^7.16.7",
     "@remix-run/dev": "^1.1.3",
     "browserify": "^17.0.0",
     "colorette": "^2.0.16",
