@@ -65,9 +65,23 @@ And voila! You are now ready to use your PWA!
 If you want to lay you hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
 in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/examples/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
 
+## Roadmap
+
+Want to see proposed features and bug fixes? Or do you want to propose an idea/bug fix for `remix-pwa` and want to view the current roadmap? Check out `remix-pwa` [Roadmap](./ROADMAP.md) and see what lies in wait for us!
+
 ## Contributing
 
 Thank you for your interest in contributing 🙂. The contribution guidelines and process of submitting Pull Requests are available in the [CONTRIBUTING.md](./CONTRIBUTING.md). Awaiting your PR 😉!
+
+## Support 
+
+If you want to get help on an issue or have a question, you could either [open an issue](https://github.com/ShafSpecs/remix-pwa/issues/new/choose) or you could ask your questions in the [Official Remix's Discord Server](https://discord.gg/TTVwU2wZca) where there are a lot of helpful people to help you out.
+
+## Author
+
+- Abdur-Rahman Fashola (aka [@ShafSpecs](https://github.com/ShafSpecs))
+
+See (todo: CONTRIBUTORS.md) for the list of awesome `remix-pwa` contributors!
 
 ## License
 
