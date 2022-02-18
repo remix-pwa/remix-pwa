@@ -81,6 +81,8 @@ If you want to get help on an issue or have a question, you could either [open a
 
 - Abdur-Rahman Fashola (aka [@ShafSpecs](https://github.com/ShafSpecs))
 
+- Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for making this whole endeavour possible!
+
 See (todo: CONTRIBUTORS.md) for the list of awesome `remix-pwa` contributors!
 
 ## License
