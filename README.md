@@ -77,9 +77,11 @@ Thank you for your interest in contributing 🙂. The contribution guidelines an
 
 If you want to get help on an issue or have a question, you could either [open an issue](https://github.com/ShafSpecs/remix-pwa/issues/new/choose) or you could ask your questions in the [Official Remix's Discord Server](https://discord.gg/TTVwU2wZca) where there are a lot of helpful people to help you out.
 
-## Author
+## Authors
 
 - Abdur-Rahman Fashola (aka [@ShafSpecs](https://github.com/ShafSpecs))
+
+- Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for his contribution and help with the creation of `remix-pwa`!
 
 See (todo: CONTRIBUTORS.md) for the list of awesome `remix-pwa` contributors!
 
