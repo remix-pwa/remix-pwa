@@ -27,7 +27,8 @@
     "postinstall": "node dist/cli.js"
   },
   "files": [
-    "/dist/**/*"
+    "/dist/**/*",
+    "templates/**/*"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.5",
