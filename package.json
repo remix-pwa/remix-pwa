@@ -53,9 +53,6 @@
   },
   "dependencies": {
     "@babel/preset-typescript": "^7.16.7",
-    "@types/fs-extra": "^9.0.13",
-    "@types/inquirer": "^8.2.0",
-    "@types/prettier": "^2.4.4",
     "colorette": "^2.0.16",
     "cross-env": "^7.0.3",
     "dotenv-cli": "^4.1.1",

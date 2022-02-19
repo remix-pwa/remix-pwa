@@ -1,9 +1,9 @@
-import * as fs from "fs";
-import * as fse from "fs-extra";
-import * as path from "path";
-import * as inquirer from "inquirer";
-import { red, green, magenta, blue } from "colorette";
-import * as prettier from "prettier";
+const fs = require("fs")
+const fse = require("fs-extra");
+const path = require("path");
+const inquirer = require("inquirer");
+const colorette = require("colorette");
+const prettier = require("prettier");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -54,14 +54,14 @@ async function Run(projectDir: string, lang: "ts" | "js") {
     });
     //@ts-ignore
   } catch (error) {
-    console.error(red("Error ocurred creating files. Could not create Service Worker files."));
+    console.error(colorette.red("Error ocurred creating files. Could not create Service Worker files."));
     process.exit(1);  
   }
 }
 
 async function cli() {
   console.log();
-  console.log(magenta("Welcome to Remix PWA!"));
+  console.log(colorette.magenta("Welcome to Remix PWA!"));
   console.log();
 
   await new Promise((res) => setTimeout(res, 1500));
@@ -71,9 +71,7 @@ async function cli() {
   /* Debugging purposes ONLY: Uncomment 👇 */
   // const projectDir = process.cwd();
 
-  let answer = await inquirer.prompt<{
-    lang: "ts" | "js";
-  }>([
+  let answer = await inquirer.prompt([
     {
       name: "lang",
       type: "list",
@@ -86,10 +84,10 @@ async function cli() {
   ]);
 
   await Run(projectDir, answer.lang);
-  console.log(green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
+  console.log(colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
 
   console.log();
-  console.log(blue("Running postinstall scripts...."));
+  console.log(colorette.blue("Running postinstall scripts...."));
 
   const saveFile = fse.writeFileSync;
 
@@ -113,10 +111,10 @@ async function cli() {
 
 cli()
   .then(() => {
-    console.log(green("Successfully ran postinstall scripts!"));
+    console.log(colorette.green("Successfully ran postinstall scripts!"));
     process.exit(0);
   })
   .catch((err: Error) => {
-    console.error(red(err.message));
+    console.error(colorette.red(err.message));
     process.exit(1);
   });
