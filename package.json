@@ -23,12 +23,14 @@
   "scripts": {
     "test": "jest",
     "ts": "tsc",
-    "prepublishOnly": "ts-node cli.ts && tsc",
-    "install": "node dist/cli.js"
+    "prepublishOnly": "tsc",
+    "install": "node dist/cli.js && ts-node cli.ts"
   },
   "files": [
     "/dist/**/*",
-    "templates/**/*"
+    "templates/**/*",
+    "cli.ts",
+    "tsconfig.json"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.5",
