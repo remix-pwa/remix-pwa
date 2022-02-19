@@ -21,14 +21,6 @@
   "bin": {
     "remix-pwa": "cli.ts"
   },
-  "tsup": {
-    "entry": [
-      "cli.ts"
-    ],
-    "splitting": false,
-    "sourcemap": true,
-    "clean": true
-  },
   "scripts": {
     "test": "jest",
     "ts": "tsc cli.ts",
