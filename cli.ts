@@ -123,7 +123,6 @@ async function cli() {
 cli()
   .then(async () => {
     await console.log(colorette.green("Successfully ran postinstall scripts!"));
-    process.exit(0);
   })
   .catch((err: Error) => {
     console.error(colorette.red(err.message));
