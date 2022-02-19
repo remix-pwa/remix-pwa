@@ -39,7 +39,7 @@ npm install esbuild
 To install `remix-pwa` into your Remix project, run the following command:
 
 ```sh
-npm install remix-pwa
+npm install remix-pwa@latest
 ```
 
 During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript.
