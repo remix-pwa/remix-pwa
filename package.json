@@ -2,7 +2,7 @@
   "name": "remix-pwa",
   "version": "0.3.12",
   "description": "A PWA handler for Remix",
-  "type": "module",
+  "type": "commonjs",
   "keywords": [
     "pwa",
     "remix",
