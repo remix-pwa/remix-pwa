@@ -38,8 +38,8 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 ### Draft
 
-- **Create a set of PWA utils in Remix projects**: Create a set of `.server.[j/t]s` and `.client.[j/t]s` files that can be used to add different PWA features based on developer's needs.
-- **Possible enhancement** *(imo)* **to the above point**: Improve the above point (Draft no. 1) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features 
+- **Create customizable PWA functions/utils in Remix projects**: Create a set of `.server.[j/t]s` and `.client.[j/t]s` files that would contain (*all*) PWA features that developers can simply integrate into their project based on their needs.
+- **Possible enhancement** *(imo)* **to the above point**: Improve the above point (Draft no. 1) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features.
 
 ### Proposals
 
