@@ -6,7 +6,8 @@
     "module": "commonjs",
     "declaration": true,
     "moduleResolution": "Node",
-    "strict": true
+    "strict": true,
+    "outDir": "dist/"
   },
   "ts-node": {
     "transpileOnly": false,
