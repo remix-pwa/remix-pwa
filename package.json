@@ -32,9 +32,9 @@
   "scripts": {
     "test": "jest",
     "ts": "tsc cli.ts",
-    "prepare": "npm run ts",
+    "prepublishOnly": "tsc cli.ts",
     "start": "node --loader ts-node/esm cli.ts",
-    "install": "node cli.ts"
+    "install": "node cli.js"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
