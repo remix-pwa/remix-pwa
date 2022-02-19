@@ -25,7 +25,7 @@
     "lint": "eslint --fix 'src/**/*.ts'",
     "test": "jest",
     "format": "prettier --write \"**/*.ts\" \"**/*.js\"",
-    "start": "node --loader ts-node/esm .\\cli.ts",
+    "start": "node --loader ts-node/esm cli.ts",
     "install": "npm run start"
   },
   "devDependencies": {
