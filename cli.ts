@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require("fs");
 const fse = require("fs-extra");
 const path = require("path");
@@ -5,7 +7,7 @@ const inquirer = require("inquirer");
 const colorette = require("colorette");
 const prettier = require("prettier");
 
-function Run(projectDir: string, lang: "ts" | "js") {
+async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
     fse.mkdirSync(projectDir + "/app/routes/resources", { recursive: true });
 
@@ -59,19 +61,19 @@ function Run(projectDir: string, lang: "ts" | "js") {
   }
 }
 
-function cli() {
+async function cli() {
   console.log();
   console.log(colorette.magenta("Welcome to Remix PWA!"));
   console.log();
 
-  new Promise((res) => setTimeout(res, 1500));
+  await new Promise((res) => setTimeout(res, 1500));
 
   const projectDir = path.resolve("../../");
 
   /* Debugging purposes ONLY: Uncomment 👇 */
   // const projectDir = process.cwd();
 
-  let answer = inquirer.prompt([
+  let answer = await inquirer.prompt([
     {
       name: "lang",
       type: "list",
@@ -83,12 +85,13 @@ function cli() {
     },
   ]);
 
-  Run(projectDir, answer.lang)
+  await Run(projectDir, answer.lang).then(() => {
     console.log(
       colorette.green(
         "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
       ),
     );
+  });
 
   console.log();
   console.log(colorette.blue("Running postinstall scripts...."));
@@ -118,14 +121,11 @@ function cli() {
 }
 
 cli()
-console.log(colorette.green("Successfully ran postinstall scripts!"));
-  
-
-process.on("exit", () => {
-  console.log();
-  console.log(colorette.magenta("Thank you for using Remix PWA!"));
-})
-
-process.on("SIGINT", () => {
-  console.log("Exiting process")
-})
+  .then(async () => {
+    await console.log(colorette.green("Successfully ran postinstall scripts!"));
+    process.exit(0);
+  })
+  .catch((err: Error) => {
+    console.error(colorette.red(err.message));
+    process.exit(1);
+  });

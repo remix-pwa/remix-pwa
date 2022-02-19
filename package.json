@@ -10,7 +10,7 @@
     "PWA",
     "PWA-Remix"
   ],
-  "main": "dist/cli.js",
+  "main": "cli.ts",
   "types": "dist/cli.d.ts",
   "license": "MIT",
   "author": {
@@ -20,15 +20,16 @@
     "type": "git",
     "url": "https://github.com/ShafSpecs/remix-pwa"
   },
+  "bin": "cli.ts",
   "scripts": {
     "test": "jest",
     "ts": "tsc",
-    "prepublishOnly": "tsc",
-    "install": "node dist/cli.js"
+    "install": "ts-node cli.ts"
   },
   "files": [
-    "/dist/**/*",
-    "templates/**/*"
+    "cli.ts",
+    "templates/**/*",
+    "dist/cli.d.ts"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.5",

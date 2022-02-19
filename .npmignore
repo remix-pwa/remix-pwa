@@ -3,3 +3,4 @@ node_modules
 .prettierrc
 tsconfig.json
 jest.config.js
+cli.ts
