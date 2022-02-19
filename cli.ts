@@ -85,7 +85,7 @@ async function cli() {
     },
   ]);
 
-  await Run(projectDir, answer.lang);
+  await Promise.all([Run(projectDir, answer.lang)])
 
   console.log(
     colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
