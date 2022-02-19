@@ -5,7 +5,7 @@ const inquirer = require("inquirer");
 const colorette = require("colorette");
 const prettier = require("prettier");
 
-async function Run(projectDir: string, lang: "ts" | "js") {
+function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
     fse.mkdirSync(projectDir + "/app/routes/resources", { recursive: true });
 
@@ -59,19 +59,19 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   }
 }
 
-async function cli() {
+function cli() {
   console.log();
   console.log(colorette.magenta("Welcome to Remix PWA!"));
   console.log();
 
-  await new Promise((res) => setTimeout(res, 1500));
+  new Promise((res) => setTimeout(res, 1500));
 
   const projectDir = path.resolve("../../");
 
   /* Debugging purposes ONLY: Uncomment 👇 */
   // const projectDir = process.cwd();
 
-  let answer = await inquirer.prompt([
+  let answer = inquirer.prompt([
     {
       name: "lang",
       type: "list",
@@ -83,13 +83,12 @@ async function cli() {
     },
   ]);
 
-  await Run(projectDir, answer.lang).then(() => {
+  Run(projectDir, answer.lang)
     console.log(
       colorette.green(
         "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
       ),
     );
-  });
 
   console.log();
   console.log(colorette.blue("Running postinstall scripts...."));
@@ -119,11 +118,14 @@ async function cli() {
 }
 
 cli()
-  .then(async () => {
-    await console.log(colorette.green("Successfully ran postinstall scripts!"));
-    process.exit(0);
-  })
-  .catch((err: Error) => {
-    console.error(colorette.red(err.message));
-    process.exit(1);
-  });
+console.log(colorette.green("Successfully ran postinstall scripts!"));
+  
+
+process.on("exit", () => {
+  console.log();
+  console.log(colorette.magenta("Thank you for using Remix PWA!"));
+})
+
+process.on("SIGINT", () => {
+  console.log("Exiting process")
+})
