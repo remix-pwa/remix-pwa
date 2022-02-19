@@ -29,7 +29,8 @@
   "files": [
     "cli.ts",
     "templates/**/*",
-    "dist/cli.d.ts"
+    "dist/cli.d.ts",
+    "tsconfig.json"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.5",
