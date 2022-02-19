@@ -24,7 +24,7 @@
     "test": "jest",
     "ts": "tsc",
     "prepublishOnly": "tsc",
-    "postinstall": "node dist/cli.js"
+    "install": "node dist/cli.js"
   },
   "files": [
     "/dist/**/*",
