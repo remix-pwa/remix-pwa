@@ -9,9 +9,9 @@ const prettier = require("prettier");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
-    await fse.mkdir(projectDir + "/app/routes/resources", { recursive: true });
+    (await fse.mkdir(projectDir + "/app/routes/resources", { recursive: true }));
 
-  !fse.existsSync(projectDir + "/public/icons") && await fse.mkdir(projectDir + "/public/icons", { recursive: true });
+  !fse.existsSync(projectDir + "/public/icons") && (await fse.mkdir(projectDir + "/public/icons", { recursive: true }));
 
   const publicDir = path.resolve(process.cwd(), "templates", lang, "public");
   const appDir = path.resolve(process.cwd(), "templates", lang, "app");
@@ -85,13 +85,11 @@ async function cli() {
     },
   ]);
 
-  await Run(projectDir, answer.lang).then(() => {
-    console.log(
-      colorette.green(
-        "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
-      ),
-    );
-  });
+  await Promise.all([Run(projectDir, answer.lang)]);
+
+  console.log(
+    colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
+  );
 
   console.log();
   console.log(colorette.blue("Running postinstall scripts...."));
@@ -120,13 +118,13 @@ async function cli() {
   saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
 }
 
-(async function init() {
-  await cli()
-    // .then(async () => {
-    //   await console.log(colorette.green("Successfully ran postinstall scripts!"));
-    // })
-    // .catch((err: Error) => {
-    //   console.error(colorette.red(err.message));
-    //   process.exit(1);
-    // });
-});
+// (async function init() {
+cli()
+  .then(() => {
+    console.log(colorette.green("Successfully ran postinstall scripts!"));
+  })
+  .catch((err: Error) => {
+    console.error(colorette.red(err.message));
+    process.exit(1);
+  });
+// });
