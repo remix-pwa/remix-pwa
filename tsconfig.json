@@ -13,7 +13,7 @@
     "emitDeclarationOnly": true,
     "resolveJsonModule": true,
 
-    "outDir": "build/node_modules/remix-pwa",
+    "outDir": "/dist",
     "rootDir": "."
   }
 }

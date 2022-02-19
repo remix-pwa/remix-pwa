@@ -55,7 +55,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
     //@ts-ignore
   } catch (error) {
     console.error(red("Error ocurred creating files. Could not create Service Worker files."));
-    process.exit(1);
+    process.exit(1);  
   }
 }
 
@@ -89,7 +89,7 @@ async function cli() {
   console.log(green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
 
   console.log();
-  console.log(blue("Running postinstall scripts..."));
+  console.log(blue("Running postinstall scripts...."));
 
   const saveFile = fse.writeFileSync;
 
