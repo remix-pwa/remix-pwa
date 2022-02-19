@@ -115,10 +115,11 @@ function cli() {
                         ])];
                 case 2:
                     answer = _a.sent();
-                    return [4 /*yield*/, Run(projectDir, answer.lang)];
+                    return [4 /*yield*/, Run(projectDir, answer.lang).then(function () {
+                            console.log(colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
+                        })];
                 case 3:
                     _a.sent();
-                    console.log(colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
                     console.log();
                     console.log(colorette.blue("Running postinstall scripts...."));
                     saveFile = fse.writeFileSync;
