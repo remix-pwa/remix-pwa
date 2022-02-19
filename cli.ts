@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import * as fs from "fs";
 import * as fse from "fs-extra";
 import * as path from "path";
@@ -115,7 +113,7 @@ async function cli() {
 
 cli()
   .then(() => {
-    console.log(green("Successfully ran postinstall scripts!"))
+    console.log(green("Successfully ran postinstall scripts!"));
     process.exit(0);
   })
   .catch((err: Error) => {
