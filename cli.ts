@@ -1,4 +1,4 @@
-const fs = require("fs")
+const fs = require("fs");
 const fse = require("fs-extra");
 const path = require("path");
 const inquirer = require("inquirer");
@@ -55,7 +55,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
     //@ts-ignore
   } catch (error) {
     console.error(colorette.red("Error ocurred creating files. Could not create Service Worker files."));
-    process.exit(1);  
+    process.exit(1);
   }
 }
 
@@ -83,8 +83,13 @@ async function cli() {
     },
   ]);
 
-  await Run(projectDir, answer.lang);
-  console.log(colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."));
+  await Run(projectDir, answer.lang).then(() => {
+    console.log(
+      colorette.green(
+        "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
+      ),
+    );
+  });
 
   console.log();
   console.log(colorette.blue("Running postinstall scripts...."));
@@ -101,17 +106,21 @@ async function cli() {
 
   json.scripts["build"] = "run-p build:*";
   json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
-  json.scripts["build:worker"] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
+  json.scripts[
+    "build:worker"
+  ] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
   json.scripts["dev"] = "run-p dev:*";
   json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
-  json.scripts["dev:worker"] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
+  json.scripts[
+    "dev:worker"
+  ] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
 
   saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
 }
 
 cli()
-  .then(() => {
-    console.log(colorette.green("Successfully ran postinstall scripts!"));
+  .then(async () => {
+    await console.log(colorette.green("Successfully ran postinstall scripts!"));
     process.exit(0);
   })
   .catch((err: Error) => {

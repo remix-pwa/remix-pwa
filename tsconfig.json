@@ -1,17 +1,12 @@
 {
   "exclude": ["__tests__", "templates"],
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "templates"],
+  "include": ["cli.ts"],
   "compilerOptions": {
-    "lib": ["ES2019"],
-    "target": "ES2019",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-
+    "target": "es5",
+    "module": "commonjs",
     "declaration": true,
-    "emitDeclarationOnly": true,
-    "resolveJsonModule": true,
-    "rootDir": "."
+    "outDir": "./dist",
+    "moduleResolution": "Node",
+    "strict": true
   }
 }

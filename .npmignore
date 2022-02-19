@@ -1,2 +1,5 @@
 node_modules
 /examples
+.prettierrc
+tsconfig.json
+jest.config.js

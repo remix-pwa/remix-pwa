@@ -2,7 +2,6 @@
   "name": "remix-pwa",
   "version": "0.3.14",
   "description": "A PWA handler for Remix",
-  "type": "commonjs",
   "keywords": [
     "pwa",
     "remix",
@@ -11,6 +10,8 @@
     "PWA",
     "PWA-Remix"
   ],
+  "main": "dist/cli.js",
+  "types": "dist/cli.d.ts",
   "license": "MIT",
   "author": {
     "name": "Abdur-Rahman Fashola"
@@ -19,16 +20,14 @@
     "type": "git",
     "url": "https://github.com/ShafSpecs/remix-pwa"
   },
-  "bin": {
-    "remix-pwa": "cli.ts"
-  },
   "scripts": {
     "test": "jest",
-    "ts": "tsc cli.ts",
-    "prepublishOnly": "tsc cli.ts",
+    "ts": "tsc",
+    "prepublishOnly": "tsc",
     "start": "node --loader ts-node/esm cli.ts",
     "install": "node cli.js"
   },
+  "files": ["/dist/**/*"],
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/preset-env": "^7.16.11",
