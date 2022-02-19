@@ -9,39 +9,39 @@ const prettier = require("prettier");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
-    fse.mkdirSync(projectDir + "/app/routes/resources", { recursive: true });
+    await fse.mkdir(projectDir + "/app/routes/resources", { recursive: true });
 
-  !fse.existsSync(projectDir + "/public/icons") && fse.mkdirSync(projectDir + "/public/icons", { recursive: true });
+  !fse.existsSync(projectDir + "/public/icons") && await fse.mkdir(projectDir + "/public/icons", { recursive: true });
 
   const publicDir = path.resolve(process.cwd(), "templates", lang, "public");
   const appDir = path.resolve(process.cwd(), "templates", lang, "app");
 
   // Create `public/icons` and store PWA icons
-  fse.readdirSync(`${publicDir}/icons`).map((file: string) => {
-    const fileContent = fs.readFileSync(publicDir + "/icons/" + file);
-    fse.writeFileSync(projectDir + `/public/icons/${file}`, fileContent);
+  fse.readdir(`${publicDir}/icons`).map(async (file: string) => {
+    const fileContent = await fs.readFile(publicDir + "/icons/" + file);
+    await fse.writeFile(projectDir + `/public/icons/${file}`, fileContent);
   });
 
   // Create `manifest.json` file && service worker entry point
-  const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
-  fse.writeFileSync(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent);
+  const fileContent = fse.readFile(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
+  await fse.writeFile(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent);
 
   // Register worker in `entry.client.tsx`
   const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
-  fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent);
+  fse.appendFile(projectDir + "/app/entry.client." + lang + "x", ClientContent);
 
   // Acknowledge SW in the browser
   const RootDir = projectDir + "/app/root." + lang + "x";
 
-  const RootDirContent = fse.readFileSync(RootDir).toString();
-  const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString();
+  const RootDirContent = await fse.readFile(RootDir).toString();
+  const localeRootDir = fse.readFile(appDir + "/root." + lang).toString();
 
   const RootDirNull = RootDirContent.replace(/\s\s+/g, " ");
   const rootRegex = /return \( <html/g;
   const index = RootDirNull.search(rootRegex);
   const NewContent = RootDirNull.slice(0, index - 1) + localeRootDir + RootDirNull.slice(index - 1);
   const formatted = prettier.format(NewContent, { parser: "babel" });
-  fse.writeFileSync(RootDir, formatted);
+  await fse.writeFile(RootDir, formatted);
 
   /* TODO: Turn this root operation into a function */
 
@@ -122,11 +122,11 @@ async function cli() {
 
 (async function init() {
   await cli()
-    .then(async () => {
-      await console.log(colorette.green("Successfully ran postinstall scripts!"));
-    })
-    .catch((err: Error) => {
-      console.error(colorette.red(err.message));
-      process.exit(1);
-    });
+    // .then(async () => {
+    //   await console.log(colorette.green("Successfully ran postinstall scripts!"));
+    // })
+    // .catch((err: Error) => {
+    //   console.error(colorette.red(err.message));
+    //   process.exit(1);
+    // });
 });
