@@ -120,11 +120,13 @@ async function cli() {
   saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
 }
 
-cli()
-  .then(async () => {
-    await console.log(colorette.green("Successfully ran postinstall scripts!"));
-  })
-  .catch((err: Error) => {
-    console.error(colorette.red(err.message));
-    process.exit(1);
-  });
+(async function init() {
+  await cli()
+    .then(async () => {
+      await console.log(colorette.green("Successfully ran postinstall scripts!"));
+    })
+    .catch((err: Error) => {
+      console.error(colorette.red(err.message));
+      process.exit(1);
+    });
+});
