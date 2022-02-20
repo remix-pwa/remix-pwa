@@ -114,7 +114,8 @@ const offline = () => {
 }
 
 useEffect(() => {
-  checkConnectivity(online, offline).then(data => console.log(data))
+  // The `console.log` method returns an object with a status of "success" if online and a pass message or a status of "bad" and a fail message if offline
+  checkConnectivity(online, offline).then(data => console.log(data)) 
 }, [])
 ```
 
@@ -153,6 +154,8 @@ The badge API is used by installed web apps to set an application-wide badge, sh
 
 The badge API makes it easy to silently notify the user that there is new activity that might require their attention, or to indicate a small amount of information, such as an unread count (e.g unread messages).
 
+The `addBadge` function takes a number as an argument (displays the number of notification) while the `removeBadge` function doesn't take any argument.
+
 ```tsx
 import { addBadge, removeBadge } from "~utils/client/pwa-utils.client";
 
@@ -163,7 +166,70 @@ removeBadge()
 addBadge(3); // sets a new notification badge with 3 indicated notifications 
 ```
 
-> **⚠ Hang On tight! We are working on bringing more to you amazing folks. ⚠**
+### FullScreen Toggle
+#### `EnableFullScreenMode() => Promise<ReturnObject>`
+
+#### `ExitFullScreenMode() => Promise<ReturnObject>`
+
+The Full Screen feature is an additional utility you can integrate into your app while building your PWA, `EnableFullScreenMode()` enables an App to cover the entire breadth and width of the scree at the tap of a button and the `ExitFullScreenMode()` exits full-screen mode. They both don't take any arguments and can be invoked like any other normal function.
+
+```tsx
+import { EnableFullScreenMode, ExitFullScreenMode } from "~/utils/client/pwa-utils.client";
+
+// Enable full-screen at the click of a button
+<button onClick={EnableFullScreenMode}>Enable Full-Screen mode</button>
+
+//Exit full-screen mode
+<button onClick={ExitFullScreenMode}>Exit Full-Screen Mode</button>
+```
+
+### (Client) Notification API
+#### `SendNotification(title: string, option: NotificationOptions) => Promise<ReturnObject>`
+
+```ts
+// Interface `NotificationOptions`
+interface NotificationOptions {
+  body: string | "Notification body";
+  badge?: string;
+  icon?: string;
+  silent?: boolean | false;
+}
+```
+
+The `SendNotification` API is a client-only function driven only by the [Notifications API](https://developer.mozilla.org/en-US/docs/Web/API/Notification), it is different from the Push API which is another API handled and executed by the server (arriving to `remix-pwa` soon). The `SendNotification` function is executed by the client and takes in two arguments, one is the title of the notification and that's the top header (Title) of the notification your user would see. The second option is an object that would contain additional options for the API.
+
+The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notifivcation content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**), it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
+
+The Notification API can take values from the server (e.g `loader`) or from the client but it must be called and executed on the client side. We are working on adding the Push API that allows you to execute a Notification API together with the Push API on the server side in response to anything (for example, when a message is sent to a user in a messaging App).
+
+> This API is fully stable and is setup comepletely for your use cases including Notification permissions, however, we are working on adding more API options so that you can have the maximum custom experience!
+
+```tsx
+import { SendNotification } from "~/utils/client/pwa-utils.client";
+
+const options = {
+  body: "Hello, take a break and drink some water! 💧",
+  badge: "/icons/notification-badge.png", // not required
+  icon: "/icons/app-icon.png", // not required
+  silent: false // not required
+}
+
+let minutes = 30
+
+// executed in several ways
+setTimeout(() => {
+  SendNotification("Workout App", options)
+}, minutes * 60 * 1000)
+
+// another method of execution
+<button onClick={() => SendNotification("Exercise Tracker App", options)}>Take a break!</button>
+```
+
+## Server API
+
+#### 🚧 Still Working on this set of APIs 🚧
+
+> **⚠ Hang On tight! We are working on bringing more awesome features to you amazing folks. ⚠**
 
 ## Roadmap
 
