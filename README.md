@@ -46,6 +46,16 @@ npm run build
 
 at build time and then, you can host it on any hosting providers you prefer.
 
+### Upgrade Guide
+
+To upgrade to a newer version of `remix-pwa`, simply re-run 
+```sh
+npm i --save-dev remix-pwa@latest
+```
+and you can continue with your PWA
+
+> For users coming from pre-0.5.0, delete the following file `entry.worker.[t/j]s`from your project, make sure there are no duplicate code blocks in your `entry.client` and `root` file and run `npm i --save-dev remix-pwa@latest` again.
+
 ## Setting up your PWA
 
 > v0.3.0 update: _`remix-pwa` automatically updates scripts now, so you don't need to do any editing to the `package.json` file._
