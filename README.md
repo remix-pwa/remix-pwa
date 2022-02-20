@@ -44,6 +44,16 @@ npm install remix-pwa@latest
 
 During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript.
 
+### Deployment
+
+To deploy your Remix PWA App, simply run the command:
+
+```sh
+npm run build
+```
+
+at build time and then, you can host it on any hosting providers you prefer.
+
 ## Setting up your PWA
 
 > v0.3.0 update: _`remix-pwa` automatically updates scripts now, so you don't need to do any editing to the `package.json` file._

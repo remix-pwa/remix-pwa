@@ -50,6 +50,7 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 ### In the Works
 
 1. **`root` file formatting**: `root` file re-formatted after the installation of `remix-pwa`
+2. **Service Worker crashes in Chrome**: Fix service worker bug that let's it crash in Chrome ~2 seconds after installation 
 
 ### Draft
 
