@@ -40,6 +40,7 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 - **Create customizable PWA functions/utils in Remix projects**: Create a set of `.server.[j/t]s` and `.client.[j/t]s` files that would contain (*all*) PWA features that developers can simply integrate into their project based on their needs.
 - **Possible enhancement** *(imo)* **to the above point**: Improve the above point (Draft no. 1) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features.
+- **Make manifest file fully-customizable by Remix**
 
 ### Proposals
 
@@ -50,7 +51,6 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 ### In the Works
 
 1. **`root` file formatting**: `root` file re-formatted after the installation of `remix-pwa`
-2. **Service Worker crashes in Chrome**: Fix service worker bug that let's it crash in Chrome ~2 seconds after installation 
 
 ### Draft
 
