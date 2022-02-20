@@ -54,7 +54,7 @@ npm i --save-dev remix-pwa@latest
 ```
 and you can continue with your PWA
 
-> For users coming from pre-0.5.0, delete the following file `entry.worker.[t/j]s`from your project, make sure there are no duplicate code blocks in your `entry.client` and `root` file and run `npm i --save-dev remix-pwa@latest` again.
+> For users coming from pre-0.5.0, delete the following file `entry.worker.[t/j]s`from your project, make sure there are no duplicate code blocks in your `entry.client` and `root` file, then delete `remix-pwa` with the command `npm uninstall remix-pwa` and finally, run `npm i --save-dev remix-pwa@latest` again.
 
 ## Setting up your PWA
 
