@@ -132,7 +132,7 @@ import { copyText } from "~utils/client/pwa-utils.client";
 ### WakeLock API
 #### `WakeLock() => Promise<ReturnObject>`
 
-**🚨 This is still an experimental feature! Some browsers like FireFox would not work with this feature! 🚨**
+> **🚨 This is still an experimental feature! Some browsers like FireFox would not work with this feature! 🚨**
 
 The WakeLock API is a function that when fired, is used to keep the screen of a device on at all times even when idle. It is usually fired when an app is started or when a particular route that needs screen-time is loaded (e.g A video app that has a `watch-video` route)
 
