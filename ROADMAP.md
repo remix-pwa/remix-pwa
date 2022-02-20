@@ -43,7 +43,7 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 ### Proposals
 
-#### 😐
+- Create sample PWA apps under `example/` directory
 
 ## Bug Fixes & Improvements
 
