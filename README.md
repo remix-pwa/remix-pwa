@@ -58,8 +58,6 @@ and you can continue with your PWA
 
 ## Setting up your PWA
 
-> v0.3.0 update: _`remix-pwa` automatically updates scripts now, so you don't need to do any editing to the `package.json` file._
-
 After installing `remix-pwa`, link the `manifest` file in order to get installability feature of PWA as well as app characteristics and other features. To do that, simply add the following block of code to the head in your `root` file above the `<Links />` tag:
 
 ```jsx
