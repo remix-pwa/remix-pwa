@@ -14,6 +14,8 @@
 
 Remix PWA is a lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿.
 
+> New "Major" upgrade v0.5.0 released! Checkout the [release changelog]() for full details !
+
 ## Features
 
 - Integrates Progressive Web App (PWA) features into Remix including offline support, caching, installability on Native devices and more.
@@ -24,29 +26,19 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 
 ## Getting Started
 
-### Prerequisites
-
-> This package requires `esbuild` to be installed.
-
-Install esbuild by running the following command:
-
-```sh
-npm install esbuild
-```
-
 ### Installation
 
 To install `remix-pwa` into your Remix project, run the following command:
 
 ```sh
-npm install remix-pwa@latest
+npm install --save-dev remix-pwa@latest
 ```
 
 During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript.
 
 ### Deployment
 
-To deploy your Remix PWA App, simply run the command:
+To build and deploy your Remix PWA App, simply run the command:
 
 ```sh
 npm run build
@@ -74,6 +66,92 @@ And voila! You are now ready to use your PWA!
 
 If you want to lay you hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
 in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/examples/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
+
+# API Documentation
+
+## Client APIs
+
+> Client APIs are a set of asynchronous functions that are to be run on the client **only** and never on the server. 
+
+They can be triggered by DOM events (click, hover, keypress, etc.) like other functions, but in order to trigger window events that happen at the start of a page lifecycle, e.g page "load" event, it is **highly recommended** to use these functions in a React's `useEffect` hook.
+
+#### <u>Type annonations</u>:
+
+All Client APIs all return an object (type `ReturnObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particluar UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
+
+```ts
+interface ReturnObject {
+  status: "success" | "bad",
+  message: string;
+}
+```
+
+### Check Connectivity
+#### `checkConnectivity(online: () => any, offline: () => any): Promise<ReturnObject>`
+
+This function is used to check wether a user is online or offline and execute a function accordingly. It could be used to update a state,
+display a particular UI or send a particular response to the server.
+
+```ts
+import { checkConnectivity } from "~utils/client/pwa-utils.client";
+
+const online = () => {
+  //..Do something for online state
+}
+
+const offline = () => {
+  //..Do something for offline state
+}
+
+useEffect(() => {
+  checkConnectivity(online, offline).then(data => console.log(data))
+}, [])
+```
+
+### Copy text to Clipboard
+#### `copyText(text: string) => Promise<ReturnObject>`
+
+The Clipboard API is a method used to access the clipboard of a device, native or web, and write to it. This function can be triggered by DOM events, i.e "click", "hover", etc. or window events i.e "load", "scroll", etc. 
+
+```tsx
+import { copyText } from "~utils/client/pwa-utils.client";
+
+<button onClick={() => copyText("Test String")}>Copy to Clipboard</button>
+```
+
+### WakeLock API
+#### `WakeLock() => Promise<ReturnObject>`
+
+The WakeLock API is a function that when fired, is used to keep the screen of a device on at all times even when idle. It is usually fired when an app is started or when a particular route that needs screen-time is loaded (e.g A video app that has a `watch-video` route)
+
+```tsx
+import { WakeLock } from "~utils/client/pwa-utils.client";
+
+useEffect(() => {
+  WakeLock() // triggers the Wakelock api
+}, [])
+```
+
+### App Badges
+#### `addBadge(numberCount: number) => Promise<ReturnObject>`
+
+#### `removeBadge() => Promise<ReturnObject>`
+
+The badge API is used by installed web apps to set an application-wide badge, shown in an "operating-system-specific" place associated with the application (such as the shelf or home screen or taskbar).
+
+The badge API makes it easy to silently notify the user that there is new activity that might require their attention, or to indicate a small amount of information, such as an unread count (e.g unread messages).
+
+```tsx
+import { addBadge, removeBadge } from "~utils/client/pwa-utils.client";
+
+// used to clear away all notification badges
+removeBadge()
+
+//used to add a badge to the installed App
+addBadge(3); // sets a new notification badge with 3 indicated notifications 
+```
+
+> **⚠ Hang On tight! We are working on bringing more to you amazing folks. ⚠**
 
 ## Roadmap
 
