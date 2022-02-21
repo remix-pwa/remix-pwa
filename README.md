@@ -274,7 +274,7 @@ useEffect(() => {
 
 ## Server API
 
-#### 🚧 Still Working on this set of APIs 🚧
+#### 🚧 Still Working on these set of APIs 🚧
 
 > **⚠ Hang On tight! We are working on bringing more awesome features to you amazing folks. ⚠**
 
