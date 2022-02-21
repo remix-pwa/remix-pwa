@@ -1,16 +1,21 @@
 /* 
   Project Fugu APIs 
   & 
-  other client-side Service Worker methods & APIs  
+  other client-side Service Worker methods & APIs for PWAs  
 */
 
 /* 
-  ⚠ Except you understand what you're what you are doing, don't modify this file! ⚠
+  ⚠ Except you understand & know the implication of what you're what you are doing, don't modify this file! ⚠
 */
+
+interface ResponseObject {
+  status: "success" | "bad",
+  message: string,
+}
 
 // Clipboard Copy API
 
-export async function copyText(text: string) {
+export async function copyText(text: string): Promise<ResponseObject> {
   try {
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(text);
@@ -25,13 +30,14 @@ export async function copyText(text: string) {
       };
     }
   } catch (err) {
+    console.debug(err)
     throw new Error("Unable to copy text to clipboard!");
   }
 }
 
 // Handle connectivity check and return one of the specifics
 
-export async function checkConnectivity(online: () => any, offline: () => any) {
+export async function checkConnectivity(online: () => void, offline: () => void): Promise<ResponseObject> {
   try {
     if (navigator.onLine) {
       online();
@@ -47,13 +53,14 @@ export async function checkConnectivity(online: () => any, offline: () => any) {
       };
     }
   } catch (err) {
+    console.debug(err)
     throw new Error("Unable to check network connectivity!");
   }
 }
 
 // Keep device awake for a determined period of time
 
-export async function WakeLock() {
+export async function WakeLock(): Promise<ResponseObject> {
   try {
     if ("wakeLock" in navigator) {
       // This is an experimental feature!
@@ -78,13 +85,14 @@ export async function WakeLock() {
       };
     }
   } catch (err) {
+    console.debug(err)
     throw new Error("Error activating WakeLock!");
   }
 }
 
 // Badge creator
 
-export async function addBadge(numberCount: number) {
+export async function addBadge(numberCount: number): Promise<ResponseObject> {
   try {
     //@ts-ignore
     if (navigator.setAppBadge) {
@@ -101,14 +109,14 @@ export async function addBadge(numberCount: number) {
       };
     }
   } catch (err) {
-    console.debug(err);
+    console.debug(err)
     throw new Error("Error adding badge!");
   }
 }
 
 // remove Badges
 
-export async function removeBadge() {
+export async function removeBadge(): Promise<ResponseObject> {
   try {
     //@ts-ignore
     if (navigator.clearAppBadge) {
@@ -125,14 +133,14 @@ export async function removeBadge() {
       };
     }
   } catch (error) {
-    console.debug(error);
+    console.debug(error)
     throw new Error("Error removing badge!");
   }
 }
 
 // Enable Full-Screen mode for an app
 
-export async function EnableFullScreenMode() {
+export async function EnableFullScreenMode(): Promise<ResponseObject> {
   try {
     if (document.fullscreenEnabled) {
       document.documentElement.requestFullscreen();
@@ -147,14 +155,14 @@ export async function EnableFullScreenMode() {
       };
     }
   } catch (err) {
-    console.debug(err);
+    console.debug(err)
     throw new Error("Error activating fullscreen mode!");
   }
 }
 
 // Exit fullscreen mode
 
-export async function ExitFullScreenMode() {
+export async function ExitFullScreenMode(): Promise<ResponseObject> {
   try {
     if (document.exitFullscreen) {
       document.exitFullscreen();
@@ -169,7 +177,7 @@ export async function ExitFullScreenMode() {
       };
     }
   } catch (err) {
-    console.debug(err);
+    console.debug(err)
     throw new Error("Error deactivating fullscreen mode!");
   }
 }
@@ -180,7 +188,7 @@ interface NotificationOptions {
   body: string | "Notification body";
   badge?: string;
   icon?: string;
-  silent?: boolean | false;
+  silent: boolean | false;
 }
 
 export async function SendNotification(
@@ -223,7 +231,39 @@ export async function SendNotification(
       };
     }
   } catch (error) {
-    console.debug(error);
+    console.debug(error)
     throw new Error("Error sending notification!");
+  }
+}
+
+// Page focus
+
+export async function Visibility (isVisible: () => void, notVisible: () => void): Promise<ResponseObject> {
+  try {
+    if (document.visibilityState) {
+      const visibleState = document.visibilityState;
+
+      if (visibleState === "visible") {
+        isVisible();
+        return {
+          status: "success",
+          message: "Page is focused and being viewed!",
+        };
+      } else {
+        notVisible();
+        return {
+          status: "bad",
+          message: "Page is not currently being viewed!",
+        };
+      }
+    }
+
+    return {
+      status: "bad",
+      message: "Page focus API not supported",
+    }
+  } catch (err) {
+    console.debug(err)
+    throw new Error("Error checking page visibility!");
   }
 }

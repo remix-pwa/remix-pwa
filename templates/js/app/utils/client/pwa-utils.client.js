@@ -1,14 +1,14 @@
 /* 
   Project Fugu APIs 
   & 
-  other client-side Service Worker methods & APIs  
+  other client-side Service Worker methods & APIs for PWAs  
 */
 
 /* 
-  ⚠ Except you understand what you're what you are doing, don't modify this file! ⚠
+  ⚠ Except you understand & know the implication of what you're what you are doing, don't modify this file! ⚠
 */
 
-// Clipborad Copy API
+// Clipboard Copy API
 
 export async function copyText(text) {
   try {
@@ -25,6 +25,7 @@ export async function copyText(text) {
       };
     }
   } catch (err) {
+    console.debug(err)
     throw new Error("Unable to copy text to clipboard!");
   }
 }
@@ -47,6 +48,7 @@ export async function checkConnectivity(online, offline) {
       };
     }
   } catch (err) {
+    console.debug(err)
     throw new Error("Unable to check network connectivity!");
   }
 }
@@ -78,6 +80,7 @@ export async function WakeLock() {
       };
     }
   } catch (err) {
+    console.debug(err)
     throw new Error("Error activating WakeLock!");
   }
 }
@@ -218,5 +221,37 @@ export async function SendNotification(
   } catch (error) {
     console.debug(error)
     throw new Error("Error sending notification!");
+  }
+}
+
+// Page focus
+
+export async function Visibility (isVisible, notVisible) {
+  try {
+    if (document.visibilityState) {
+      const visibleState = document.visibilityState;
+
+      if (visibleState === "visible") {
+        isVisible();
+        return {
+          status: "success",
+          message: "Page is focused and being viewed!",
+        };
+      } else {
+        notVisible();
+        return {
+          status: "bad",
+          message: "Page is not currently being viewed!",
+        };
+      }
+    }
+
+    return {
+      status: "bad",
+      message: "Page focus API not supported",
+    }
+  } catch (err) {
+    console.debug(err)
+    throw new Error("Error checking page visibility!");
   }
 }
