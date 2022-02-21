@@ -23,6 +23,31 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 - Implements a network-first strategy for loader calls (i.e Gets a fresh request each time when online, and proceeds to an older fallback when offline)
 - Auto-caching loader calls to allow offline client-side transitioning between pages
 - Safely handles uncached loader calls without affecting other sections of the site (i.e Throws user to nearest Error boundary without disrupting Service Workers)
+- PWA client-side utilities that comes bundled with your App to give you more options and freedom while building the PWA of tomorrow.
+
+## Table Of Content
+
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Deployment](#deployment)
+  - [Upgrading Guide](#upgrade-guide)
+  - [Setting Up your PWA](#setting-up-your-pwa)
+- [API Documentation](#api-documentation)
+  - [Client APIs](#client-apis)
+    - [Type Annonations and Return Object](#type-annonations)
+    - [Check Connection Status of User](#check-connectivity)
+    - [Clipboard API](#copy-text-to-clipboard)
+    - [WakeLock API](#wakelock-api)
+    - [App Notification Badges](#app-badges)
+    - [FullScreen Toggle Utility](#fullscreen-toggle)
+    - [Notification API](#client-notification-api)
+    - [Document Visibility](#visibility-state)
+  - [Server APIs](#server-api)
+- [Remix PWA Roadmap](#roadmap)
+- [Contributing Doc](#contributing)
+- [Help Support](#support)
+- [Authors](#authors)
+- [License](#license)  
 
 ## Getting Started
 
@@ -85,7 +110,7 @@ They can be triggered by DOM events (click, hover, keypress, etc.) like other fu
 
 #### <u>Type annonations</u>:
 
-All Client APIs all return a promise object (type `ReturnObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particluar UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
+Almost all Client APIs return a promise object (type `ReturnObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particluar UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
 
 ```ts
 interface ReturnObject {
@@ -95,7 +120,7 @@ interface ReturnObject {
 ```
 
 ### Check Connectivity
-#### `checkConnectivity(online: () => any, offline: () => any): Promise<ReturnObject>`
+#### `checkConnectivity(online: () => void, offline: () => void): Promise<ReturnObject>`
 
 This function is used to check wether a user is online or offline and execute a function accordingly. It could be used to update a state,
 display a particular UI or send a particular response to the server.
@@ -223,6 +248,30 @@ setTimeout(() => {
 <button onClick={() => SendNotification("Exercise Tracker App", options)}>Take a break!</button>
 ```
 
+### Visibility State
+#### `Visibility (isVisible: () => void, notVisible: () => void): Promise<ResponseObject>`
+
+This utility is used to get wether a document is visible or is minimized (or in the background, etc). It takes two functions as its parameter, one for a visible state, and the other for an invisible state. A common use case for this is to stop a process (e.g video playing, downloading process, etc) when the app is minimized or to run a process *only* when the App is minimized.
+
+```tsx
+import { Visibility } from "~/utils/client/pwa-utils.client"
+
+const documentVisible = () => {
+  //..do something
+}
+
+const documentInvisible = () => {
+  //..do something else
+}
+
+const state = document.visibilityState
+
+// Monitor visibility and keep firing the function on visibility change
+useEffect(() => {
+  Visibiliy(documentVisible, documentInvisible)
+}, [state])
+```
+
 ## Server API
 
 #### 🚧 Still Working on this set of APIs 🚧
@@ -251,4 +300,4 @@ See (todo: CONTRIBUTORS.md) for the list of awesome `remix-pwa` contributors!
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](./LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](./LICENSE.md) file for details.
