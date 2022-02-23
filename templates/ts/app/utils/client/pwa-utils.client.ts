@@ -9,8 +9,8 @@
 */
 
 interface ResponseObject {
-  status: "success" | "bad",
-  message: string,
+  status: "success" | "bad";
+  message: string;
 }
 
 // Clipboard Copy API
@@ -30,7 +30,7 @@ export async function copyText(text: string): Promise<ResponseObject> {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Unable to copy text to clipboard!");
   }
 }
@@ -53,7 +53,7 @@ export async function checkConnectivity(online: () => void, offline: () => void)
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Unable to check network connectivity!");
   }
 }
@@ -85,7 +85,7 @@ export async function WakeLock(): Promise<ResponseObject> {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error activating WakeLock!");
   }
 }
@@ -109,7 +109,7 @@ export async function addBadge(numberCount: number): Promise<ResponseObject> {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error adding badge!");
   }
 }
@@ -133,7 +133,7 @@ export async function removeBadge(): Promise<ResponseObject> {
       };
     }
   } catch (error) {
-    console.debug(error)
+    console.debug(error);
     throw new Error("Error removing badge!");
   }
 }
@@ -155,7 +155,7 @@ export async function EnableFullScreenMode(): Promise<ResponseObject> {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error activating fullscreen mode!");
   }
 }
@@ -177,7 +177,7 @@ export async function ExitFullScreenMode(): Promise<ResponseObject> {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error deactivating fullscreen mode!");
   }
 }
@@ -191,24 +191,17 @@ interface NotificationOptions {
   silent: boolean | false;
 }
 
-export async function SendNotification(
-  title: string,
-  options: NotificationOptions
-) {
+export async function SendNotification(title: string, options: NotificationOptions) {
   try {
     if ("Notification" in window) {
-      const permissions = await (
-        await navigator.permissions.query({ name: "notifications" })
-      ).state;
-      navigator.permissions
-        .query({ name: "notifications" })
-        .then((permissionStatus) => {
-          if (permissionStatus.state === "granted") {
-            return;
-          } else {
-            return Notification.requestPermission();
-          }
-        });
+      const permissions = await (await navigator.permissions.query({ name: "notifications" })).state;
+      navigator.permissions.query({ name: "notifications" }).then((permissionStatus) => {
+        if (permissionStatus.state === "granted") {
+          return;
+        } else {
+          return Notification.requestPermission();
+        }
+      });
 
       if (permissions === "granted") {
         await navigator.serviceWorker.ready.then((registration) => {
@@ -231,14 +224,14 @@ export async function SendNotification(
       };
     }
   } catch (error) {
-    console.debug(error)
+    console.debug(error);
     throw new Error("Error sending notification!");
   }
 }
 
 // Page focus
 
-export async function Visibility (isVisible: () => void, notVisible: () => void): Promise<ResponseObject> {
+export async function Visibility(isVisible: () => void, notVisible: () => void): Promise<ResponseObject> {
   try {
     if (document.visibilityState) {
       const visibleState = document.visibilityState;
@@ -261,9 +254,73 @@ export async function Visibility (isVisible: () => void, notVisible: () => void)
     return {
       status: "bad",
       message: "Page focus API not supported",
+    };
+  } catch (err) {
+    console.debug(err);
+    throw new Error("Error checking page visibility!");
+  }
+}
+
+// Copying Image to the clipboard
+
+export async function copyImage(url: string): Promise<ResponseObject> {
+  try {
+    if (navigator.clipboard) {
+      const data = await fetch(url);
+      const fileBlob = await data.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [fileBlob.type]: fileBlob,
+        }),
+      ]);
+      return {
+        status: "success",
+        message: "Image copied successfully successfully!",
+      };
+    } else {
+      return {
+        status: "bad",
+        message: "Copy Image API not supported on your device!",
+      };
     }
   } catch (err) {
-    console.debug(err)
-    throw new Error("Error checking page visibility!");
+    throw new Error("Error occured while copying image to clipboard!");
+  }
+}
+
+// Sharing information straight to other apps from PWA.
+
+export async function WebShare(data: any): Promise<ResponseObject> {
+  try {
+    // Determine if it's a file or not and behave accordingly.
+    if (data.files) {
+      if (navigator.canShare && navigator.canShare(data)) {
+        await navigator.share(data);
+        return {
+          status: "success",
+          message: "Successfully shared file!",
+        };
+      } else {
+        return {
+          status: "bad",
+          message: "Share Files API not supported",
+        };
+      }
+    } else {
+      if (navigator.share) {
+        await navigator.share(data);
+        return {
+          status: "success",
+          message: "Shared links accordingly!",
+        };
+      } else {
+        return {
+          status: "bad",
+          message: "Web Share API not supported",
+        };
+      }
+    }
+  } catch (err) {
+    throw new Error("Failed to share for some weird reason 🤷‍♂️!");
   }
 }

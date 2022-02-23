@@ -255,3 +255,67 @@ export async function Visibility (isVisible, notVisible) {
     throw new Error("Error checking page visibility!");
   }
 }
+
+// Copying Image to the clipboard
+
+export async function copyImage(url) {
+  try {
+    if (navigator.clipboard) {
+      const data = await fetch(url);
+      const fileBlob = await data.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [fileBlob.type]: fileBlob,
+        }),
+      ]);
+      return {
+        status: "success",
+        message: "Image copied successfully successfully!",
+      };
+    } else {
+      return {
+        status: "bad",
+        message: "Copy Image API not supported on your device!",
+      };
+    }
+  } catch (err) {
+    throw new Error("Error occured while copying image to clipboard!");
+  }
+}
+
+// Sharing information straight to other apps from PWA.
+
+export async function WebShare(data) {
+  try {
+    // Determine if it's a file or not and behave accordingly.
+    if (data.files) {
+      if (navigator.canShare && navigator.canShare(data)) {
+        await navigator.share(data);
+        return {
+          status: "success",
+          message: "Successfully shared file!",
+        };
+      } else {
+        return {
+          status: "bad",
+          message: "Share Files API not supported",
+        };
+      }
+    } else {
+      if (navigator.share) {
+        await navigator.share(data);
+        return {
+          status: "success",
+          message: "Shared links accordingly!",
+        };
+      } else {
+        return {
+          status: "bad",
+          message: "Web Share API not supported",
+        };
+      }
+    }
+  } catch (err) {
+    throw new Error("Failed to share for some weird reason 🤷‍♂️!");
+  }
+}
