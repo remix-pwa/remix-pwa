@@ -42,6 +42,8 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
     - [FullScreen Toggle Utility](#fullscreen-toggle)
     - [Notification API](#client-notification-api)
     - [Document Visibility](#visibility-state)
+    - [Copy Images to Clipboard](#copy-images-to-clipboard)
+    - [Web Share API](#web-share-api)
   - [Server APIs](#server-api)
 - [Remix PWA Roadmap](#roadmap)
 - [Contributing Doc](#contributing)
@@ -254,7 +256,7 @@ setTimeout(() => {
 This utility is used to get wether a document is visible or is minimized (or in the background, etc). It takes two functions as its parameter, one for a visible state, and the other for an invisible state. A common use case for this is to stop a process (e.g video playing, downloading process, etc) when the app is minimized or to run a process *only* when the App is minimized.
 
 ```tsx
-import { Visibility } from "~/utils/client/pwa-utils.client"
+import { Visibility } from "~/utils/client/pwa-utils.client";
 
 const documentVisible = () => {
   //..do something
@@ -270,6 +272,32 @@ const state = document.visibilityState
 useEffect(() => {
   Visibiliy(documentVisible, documentInvisible)
 }, [state])
+```
+
+### Copy Images to Clipboard
+#### `copyImage(url: string) => Promise<ResponseObject>`
+
+This is a modified version of the Copy Text to Clipboard API. It is used to easily copy images to your device's clipboard, it starts by taking the url of the image (e.g Passed through the `src` of an image tag) then fetching the image behind-scenes and finally copying the `blob` to your device's clipboard.
+
+```tsx
+import { copyImage } from "~/utils/client/pwa-utils.client";
+
+// Getting an image frame via React's ref hook.
+const frameRef = useRef<HTMLImageElement>(null!)
+
+// Accessing the `src` attribute and copying it to the clipboard.
+<button onClick={() => copyImage(frameRef.current.src)}>📋 Copy Image to Clipboard</button>
+```
+
+### Web Share API
+#### `WebShare(data: any) => Promise<ResponseObject>`
+
+The Web Share API is an API used to share links, texts, and even files to supported apps that can recieve them on your device. It takes in just one parameter which is the data to share.
+
+```tsx
+import { WebShare } from "~/utils/client/pwa-utils.client";
+
+<button onClick={() => WebShare(this.godKnowsWhat)}>📤 Share</button>
 ```
 
 ## Server API
