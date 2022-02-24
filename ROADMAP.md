@@ -39,6 +39,8 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 - **Possible enhancement to customization proposal**: Improve the above point (In the works no. 4) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features.
 - **Make manifest file fully-customizable by Remix**
+- **Background Sync**: Create a background sync API utility
+- **Create a custom download utility**: Allow users to download files generated client-side on the App.
 
 ### Proposals
 
