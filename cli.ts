@@ -30,10 +30,18 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
   fse.existsSync(projectDir + "/app/routes/resources/manifest[.]json." + lang) ? null : fse.writeFileSync(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent);
 
+  // Create resource route for push notifications 
+  const subscribeContent = fse.readFileSync(appDir + `/routes/resources/subscribe.${lang}`).toString();
+  fse.existsSync(projectDir + "/app/routes/resources/subscribe." + lang) ? null : fse.writeFileSync(projectDir + `/app/routes/resources/subscribe.${lang}`, subscribeContent);
+
   // Register worker in `entry.client.tsx`
   const remoteClientContent: string = fse.readFileSync(projectDir + "/app/entry.client." + lang + "x").toString();
   const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
-  remoteClientContent.includes(ClientContent) ? null : fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent);
+  const lastClient = "hydrate(<RemixBrowser />, document);"
+  let lastWordFinder: RegExp = /[a-z0-9](?=\W*$)/gi;
+  lastWordFinder.exec(lastClient)
+  const indexOfLast = lastWordFinder.lastIndex - 1;
+  remoteClientContent.includes(ClientContent) ? null : remoteClientContent.slice(0, indexOfLast + 1) + "\n" + ClientContent + "\n" + remoteClientContent.slice(indexOfLast + 1);
 
   // Acknowledge SW in the browser
   const RootDir = projectDir + "/app/root." + lang + "x";
@@ -41,27 +49,33 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const RootDirContent = fse.readFileSync(RootDir).toString();
   const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString();
 
-  const RootDirNull = RootDirContent.replace(/\s\s+/g, " ");
-  const rootRegex = /return \( <html/g;
+  const RootDirNull: string = RootDirContent.replace(/\s\s+/g, " ");
+  const rootRegex: RegExp = /return \( <html/g;
   const index = RootDirNull.search(rootRegex);
   const NewContent = RootDirContent.includes(localeRootDir) ? RootDirContent : RootDirNull.slice(0, index - 1) + localeRootDir + RootDirNull.slice(index - 1);
-  const formatted = prettier.format(NewContent, { parser: "babel" });
-  fse.writeFileSync(RootDir, formatted);
+  const formatted: string = prettier.format(NewContent, { parser: "babel" });
+  const cleanRegex: RegExp = /{" "}/g;
+  const newFormatted: string = formatted.replace(cleanRegex, " ");
+  fse.writeFileSync(RootDir, newFormatted);
 
-  /* TODO: Turn this root operation into a function */
   /* End of `root` meddling */
 
   // Create and write pwa-utils client file
-  const ClientUtils = fse.readFileSync(appDir + "/utils/client/pwa-utils.client.ts").toString()
+  const ClientUtils = fse.readFileSync(appDir + "/utils/client/pwa-utils.client." + lang).toString()
   fse.writeFileSync(projectDir + "/app/utils/client/pwa-utils.client." + lang, ClientUtils);
+  
+  // Create and write pwa-utils server file
+  const ServerUtils = fse.readFileSync(appDir + "/utils/server/pwa-utils.server." + lang).toString()
+  fse.writeFileSync(projectDir + "/app/utils/server/pwa-utils.server." + lang, ServerUtils);
 
   try {
     fse.readdirSync(appDir).map((worker: string) => {
       if (!worker.includes(lang)) {
         return false;
       } else if (worker.includes("entry.worker")) {
+        const workerDir = path.resolve(projectDir, `app/${worker}`);
         const fileContent = fse.readFileSync(`${appDir}/${worker}`);
-        fse.writeFileSync(path.resolve(projectDir, `app/${worker}`), fileContent.toString());
+        (fse.existsSync(workerDir) && workerDir.includes(fileContent)) ? null : fse.writeFileSync(path.resolve(projectDir, `app/${worker}`), fileContent.toString());
       }
     });
     //@ts-ignore

@@ -188,6 +188,7 @@ interface NotificationOptions {
   body: string | "Notification body";
   badge?: string;
   icon?: string;
+  image?: string;
   silent: boolean | false;
 }
 
@@ -292,35 +293,70 @@ export async function copyImage(url: string): Promise<ResponseObject> {
 
 export async function WebShare(data: any): Promise<ResponseObject> {
   try {
-    // Determine if it's a file or not and behave accordingly.
-    if (data.files) {
-      if (navigator.canShare && navigator.canShare(data)) {
-        await navigator.share(data);
-        return {
-          status: "success",
-          message: "Successfully shared file!",
-        };
-      } else {
-        return {
-          status: "bad",
-          message: "Share Files API not supported",
-        };
-      }
+    if (navigator.share && navigator.canShare(data)) {
+      await navigator.share(data);
+      return {
+        status: "success",
+        message: "Shared links accordingly!",
+      };
     } else {
-      if (navigator.share) {
-        await navigator.share(data);
-        return {
-          status: "success",
-          message: "Shared links accordingly!",
-        };
-      } else {
-        return {
-          status: "bad",
-          message: "Web Share API not supported",
-        };
-      }
+      return {
+        status: "bad",
+        message: "Web Share API not supported",
+      };
     }
   } catch (err) {
     throw new Error("Failed to share for some weird reason 🤷‍♂️!");
+  }
+}
+
+// Custom handler to share link to other apps from your app
+
+export async function WebShareLink(url: string, title: string, text: string): Promise<ResponseObject> {
+  try {
+    if (navigator.canShare({ url })) {
+      await navigator.share({
+        title: title,
+        text: text,
+        url: url,
+      });
+      return {
+        status: "success",
+        message: "Shared link accordingly!",
+      };
+    } else {
+      return {
+        status: "bad",
+        message: "Web Share API not supported",
+      };
+    }
+  } catch (err) {
+    throw new Error("Failed to share for some weird reason 🤷‍♂️!");
+  }
+}
+
+// Special Web Share API for sharing files to your App.
+
+export async function WebShareFile(title: string, data: any[], text: string): Promise<ResponseObject> {
+  let filesArray = [...data];
+  try {
+    if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+      await navigator.share({
+        files: filesArray,
+        title: title,
+        text: text,
+      });
+      return {
+        status: "success",
+        message: "Shared file accordingly!",
+      };
+    } else {
+      return {
+        status: "bad",
+        message: "Web Share API not supported",
+      };
+    }
+  } catch (error) {
+    throw new Error("Error occured sharing file!");
   }
 }
