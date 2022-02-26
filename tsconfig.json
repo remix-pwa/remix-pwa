@@ -1,19 +1,16 @@
 {
   "exclude": ["__tests__", "templates"],
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "templates"],
+  "include": ["cli.ts"],
   "compilerOptions": {
-    "lib": ["ES2019"],
-    "target": "ES2019",
-
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-
+    "target": "es5",
+    "module": "commonjs",
     "declaration": true,
-    "emitDeclarationOnly": true,
-    "resolveJsonModule": true,
-
-    "outDir": "build/node_modules/remix-pwa",
-    "rootDir": "."
+    "moduleResolution": "Node",
+    "strict": true,
+    "outDir": "dist/"
+  },
+  "ts-node": {
+    "transpileOnly": false,
+    "files": false
   }
 }

@@ -1,7 +1,5 @@
 # 🗺 Remix PWA Roadmap
 
-> *The Roadmap is still Work-In-Progress (WIP)*
-
 This file documents the roadmap and changes for Remix PWA. It includes proposed features, changes, ideas and features that are already in the  works.
 
 ### Notes about the Roadmap
@@ -34,21 +32,25 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 ### In the Works
 
-#### 😐
+- **Allow Push Notifications**: Create flexible, and customizable functions/utilities that allow users to recieve dynamic, server-side push notifications.
+- **Create customizable PWA functions/utils in Remix projects**: Create a set of `.server.[j/t]s` and `.client.[j/t]s` files that would contain (*all*) PWA features that developers can simply integrate into their project based on their needs.
 
 ### Draft
 
-#### 😐
+- **Possible enhancement to customization proposal**: Improve the above point (In the works no. 4) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features.
+- **Make manifest file fully-customizable by Remix**
+- **Background Sync**: Create a background sync API utility
+- **Create a custom download utility**: Allow users to download files generated client-side on the App.
 
 ### Proposals
 
-#### 😐
+- Create sample PWA apps under `example/` directory
 
 ## Bug Fixes & Improvements
 
 ### In the Works
 
-1. **`root` file formatting**: `root` file gets formatted wrongly after installing `remix-pwa`
+1. **`root` file formatting**: `root` file re-formatted after the installation of `remix-pwa`
 
 ### Draft
 
