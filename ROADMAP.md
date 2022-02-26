@@ -33,14 +33,14 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 ### In the Works
 
 - **Allow Push Notifications**: Create flexible, and customizable functions/utilities that allow users to recieve dynamic, server-side push notifications.
-- **Copy Image API**: Allow users to copy images to the Clipboard.
-- **Share texts (links, texts) & files**: Allow users to share texts and files to other supported apps on the device (e.g Sending a text as a message to Whatsapp straight from your PWA)
 - **Create customizable PWA functions/utils in Remix projects**: Create a set of `.server.[j/t]s` and `.client.[j/t]s` files that would contain (*all*) PWA features that developers can simply integrate into their project based on their needs.
 
 ### Draft
 
 - **Possible enhancement to customization proposal**: Improve the above point (In the works no. 4) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features.
 - **Make manifest file fully-customizable by Remix**
+- **Background Sync**: Create a background sync API utility
+- **Create a custom download utility**: Allow users to download files generated client-side on the App.
 
 ### Proposals
 
