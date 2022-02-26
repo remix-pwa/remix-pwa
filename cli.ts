@@ -95,7 +95,6 @@ async function Run(projectDir: string, lang: "ts" | "js") {
           : fse.writeFileSync(path.resolve(projectDir, `app/${worker}`), fileContent.toString());
       }
     });
-    //@ts-ignore
   } catch (error) {
     console.error(colorette.red("Error ocurred creating files. Could not create Service Worker files."));
   }
@@ -154,24 +153,28 @@ async function cli() {
   json.scripts[
     "dev:worker"
   ] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
-  
+
   saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
-  console.log(colorette.green("Successfully ran postinstall scripts!"));
 }
 
-// cli()
-//   .then(() => {
-//     console.log(colorette.green("Successfully ran postinstall scripts!"));
-//   })
-//   .catch((err: Error) => {
-//     console.error(colorette.red(err.message));
-//   });
+cli()
+  .then(() => {
+    console.log(colorette.green("Successfully ran postinstall scripts!"));
+  })
+  .catch((err: Error) => {
+    console.error(colorette.red(err.message));
+  });
 
-catchExit.addExitCallback((signal: any) => {
-  if (signal !== "exit") {
-    new Promise((resolve) => {
-      // do async stuff
-      resolve(cli);
-    });
-  }
-});
+// catchExit.addExitCallback((signal: any) => {
+//   if (signal !== "exit") {
+//     return new Promise(async (resolve) => {
+//       await cli()
+//         .then(() => {
+//           console.log(colorette.green("Successfully ran postinstall scripts!"));
+//         })
+//         .catch((err: Error) => {
+//           console.error(colorette.red(err.message));
+//         });
+//     });
+//   }
+// });
