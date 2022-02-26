@@ -105,7 +105,7 @@ async function cli() {
   console.log(colorette.magenta("Welcome to Remix PWA!"));
   console.log();
 
-  await new Promise((res) => setTimeout(res, 1500));
+  await new Promise((res) => setTimeout(res, 1000));
 
   const projectDir = path.resolve("../../");
 
