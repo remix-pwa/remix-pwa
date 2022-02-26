@@ -14,6 +14,8 @@
 
 Remix PWA is a lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿.
 
+> New, major update with some ground-breaking changes! Read the full changelog [here](https://github.com/ShafSpecs/remix-pwa/releases/tag/v0.6.0) 
+
 ## Features
 
 - Integrates Progressive Web App (PWA) features into Remix including offline support, caching, installability on Native devices and more.
