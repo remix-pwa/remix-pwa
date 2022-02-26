@@ -6,7 +6,7 @@ const path = require("path");
 const inquirer = require("inquirer");
 const colorette = require("colorette");
 const prettier = require("prettier");
-const catchExit = require("catch-exit");
+const { Select } = require("enquirer");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -112,50 +112,71 @@ async function cli() {
   /* Debugging purposes ONLY: Uncomment 👇 */
   // const projectDir = process.cwd();
 
-  let answer = await inquirer.prompt([
-    {
-      name: "lang",
-      type: "list",
-      message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
-      choices: [
-        { name: "TypeScript", value: "ts" },
-        { name: "JavaScript", value: "js" },
-      ],
-    },
-  ]);
+  // let answer = await inquirer.prompt([
+  //   {
+  //     name: "lang",
+  //     type: "list",
+  //     message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
+  //     choices: [
+  //       { name: "TypeScript", value: "ts" },
+  //       { name: "JavaScript", value: "js" },
+  //     ],
+  //   },
+  // ]);
 
-  await Promise.all([Run(projectDir, answer.lang)]).catch((err: Error) => console.log(err));
+  const prompt = new Select({
+    name: "lang",
+    message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
+    choices: [
+      {
+        name: "TypeScript",
+        value: "ts",
+      },
+      {
+        name: "JavaScript",
+        value: "js",
+      },
+    ],
+  });
 
-  console.log(
-    colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
-  );
+  prompt
+    .run()
+    .then(async (answer: any) => {
+      let lang: "ts" | "js";
+      answer === "TypeScript" ? (lang = "ts") : (lang = "js");
 
-  console.log();
-  console.log(colorette.blue("Running postinstall scripts...."));
+      await Promise.all([Run(projectDir, lang)])
+      console.log(
+        colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
+      );
+      console.log();
+      console.log(colorette.blue("Running postinstall scripts...."));
+    
+      const saveFile = fse.writeFileSync;
 
-  const saveFile = fse.writeFileSync;
-
-  //@ts-ignore
-  const pkgJsonPath = require.main.paths[0].split("node_modules")[0] + "package.json";
-  const json = require(pkgJsonPath);
-
-  if (!json.hasOwnProperty("scripts")) {
-    json.scripts = {};
-  }
-
-  json.scripts["build"] = "run-p build:*";
-  json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
-  json.scripts[
-    "build:worker"
-  ] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
-  json.scripts["dev"] = "run-p dev:*";
-  json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
-  json.scripts[
-    "dev:worker"
-  ] = `esbuild ./app/entry.worker.${answer.lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
-
-  saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
-  console.log(colorette.green("Successfully ran postinstall scripts!"));
+      //@ts-ignore
+      const pkgJsonPath = require.main.paths[0].split("node_modules")[0] + "package.json";
+      const json = require(pkgJsonPath);
+    
+      if (!json.hasOwnProperty("scripts")) {
+        json.scripts = {};
+      }
+    
+      json.scripts["build"] = "run-p build:*";
+      json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
+      json.scripts[
+        "build:worker"
+      ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
+      json.scripts["dev"] = "run-p dev:*";
+      json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
+      json.scripts[
+        "dev:worker"
+      ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
+    
+      saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
+      console.log(colorette.green("Successfully ran postinstall scripts!"));
+    })
+    .catch(console.error);
 }
 
 cli();
