@@ -32,8 +32,7 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 ### In the Works
 
-- **Allow Push Notifications**: Create flexible, and customizable functions/utilities that allow users to recieve dynamic, server-side push notifications.
-- **Create customizable PWA functions/utils in Remix projects**: Create a set of `.server.[j/t]s` and `.client.[j/t]s` files that would contain (*all*) PWA features that developers can simply integrate into their project based on their needs.
+- **Auto-detect language**: Allow `remix-pwa` to automatically detect user's language and act on that without the question prompt
 
 ### Draft
 
