@@ -333,7 +333,7 @@ const data = useLoaderData()
 ### Misc. Web Share API
 #### ` WebShare(data: any): Promise<ResponseObject>`
 
-The Miscellaneous Webs Share Api is intended to be simple Web Share Api that should be used if you intend to send something a bit more loose and simple compared to files & URLs. 
+The Miscellaneous Webs Share Api is intended to be a simple Web Share Api that should be used if you intend to send something a bit more loose and simple compared to files & URLs. 
 
 > *I would advise against using this API except when the other two don't meet your data criteria. As this is loosely typed and ~~could~~ cause errors when used with heavy, technical data.*
 
@@ -400,9 +400,9 @@ One thing you might have noticed is that your manifest.json file is stored as a 
 
 Allow me to break that down. If you open your `manifest` file located in `app/routes/resources`, you would notice that the manifest is stored inside a loader function that returns the manifest as a json object. Now if you wanted to customise the manifest based on user preference instead of a static file, how would we do it? Let's look at a simple  scenario to answer that question:
 
-We have a database hosted on an external platform and we are using [Prisma](https://prisma.io) as our database ORM, we save our user's color preferences in a table called `User` and we want to give the PWA the same feel as the website. The last thing we want to do is give our user's the same color scheme for the app and custom schemes for the site. That's poor UX. 
+We have a database hosted on an external platform and we are using [Prisma](https://prisma.io) as our database ORM, we save our user's color preferences in a table called `User` and we want to give the PWA the same feel as the website. The last thing we want to do is give our user's default color scheme for the app and custom schemes for the site. That's poor UX. 
 
-To solve this issue, we can simply import our `PrismaClient` into our manifest route's loader and interact with our db from there. Allowing us to get the preferences and set them as our PWA's theme and background color (for more info on these, refer to [MDN](https://developer.mozilla.org/en-US/docs/Web/Manifest))
+To solve this issue, we can simply import our `PrismaClient` into our manifest route's loader and interact with our db from there. Allowing us to get the preferences and set them as our PWA's theme and background color (for more info on themes and background-color, refer to [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/Manifest))
 
 ```ts
 export let loader: LoaderFunction = async () => {
