@@ -33,13 +33,12 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 ### In the Works
 
 - **Auto-detect language**: Allow `remix-pwa` to automatically detect user's language and act on that without the question prompt
+- **Create a custom download utility**: Create a custom handler for downloading the PWA onto the user's device
 
 ### Draft
 
 - **Possible enhancement to customization proposal**: Improve the above point (In the works no. 4) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features.
-- **Make manifest file fully-customizable by Remix**
 - **Background Sync**: Create a background sync API utility
-- **Create a custom download utility**: Allow users to download files generated client-side on the App.
 
 ### Proposals
 
@@ -49,7 +48,7 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 ### In the Works
 
-1. **`root` file formatting**: `root` file re-formatted after the installation of `remix-pwa`
+#### 😐
 
 ### Draft
 
