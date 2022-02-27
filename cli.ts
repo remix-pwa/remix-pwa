@@ -50,11 +50,11 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const indexOfLast = lastWordFinder.lastIndex - 1;
   remoteClientContent.includes(ClientContent)
     ? null
-    : remoteClientContent.slice(0, indexOfLast + 1) +
+    : remoteClientContent.slice(0, indexOfLast - 1) +
       "\n" +
       ClientContent +
       "\n" +
-      remoteClientContent.slice(indexOfLast + 1);
+      remoteClientContent.slice(indexOfLast);
 
   // Acknowledge SW in the browser
   const RootDir = projectDir + "/app/root." + lang + "x";
@@ -67,7 +67,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const index = RootDirNull.search(rootRegex);
   const NewContent = RootDirContent.includes(localeRootDir)
     ? RootDirContent
-    : RootDirNull.slice(0, index - 1) + localeRootDir + RootDirNull.slice(index - 1);
+    : RootDirNull.slice(0, index) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index); 
   const formatted: string = prettier.format(NewContent, { parser: "babel" });
   const cleanRegex: RegExp = /{" "}/g;
   const newFormatted: string = formatted.replace(cleanRegex, " ");
@@ -111,18 +111,6 @@ async function cli() {
 
   /* Debugging purposes ONLY: Uncomment 👇 */
   // const projectDir = process.cwd();
-
-  // let answer = await inquirer.prompt([
-  //   {
-  //     name: "lang",
-  //     type: "list",
-  //     message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
-  //     choices: [
-  //       { name: "TypeScript", value: "ts" },
-  //       { name: "JavaScript", value: "js" },
-  //     ],
-  //   },
-  // ]);
 
   const prompt = new Select({
     name: "lang",
