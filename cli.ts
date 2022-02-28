@@ -44,17 +44,20 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   // Register worker in `entry.client.tsx`
   const remoteClientContent: string = fse.readFileSync(projectDir + "/app/entry.client." + lang + "x").toString();
   const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
-  const lastClient = "hydrate(<RemixBrowser />, document);";
-  let lastWordFinder: RegExp = /[a-z0-9](?=\W*$)/gi;
-  lastWordFinder.exec(lastClient);
-  const indexOfLast = lastWordFinder.lastIndex - 1;
-  remoteClientContent.includes(ClientContent)
-    ? null
-    : remoteClientContent.slice(0, indexOfLast - 1) +
-      "\n" +
-      ClientContent +
-      "\n" +
-      remoteClientContent.slice(indexOfLast);
+
+  // const lastClient = "hydrate(<RemixBrowser />, document);";
+  // let lastWordFinder: RegExp = /[a-z0-9](?=\W*$)/gi;
+  // lastWordFinder.exec(lastClient);
+  // const indexOfLast = lastWordFinder.lastIndex - 1;
+  // remoteClientContent.includes(ClientContent)
+  //   ? null
+  //   : remoteClientContent.slice(0, indexOfLast - 1) +
+  //     "\n" +
+  //     ClientContent +
+  //     "\n" +
+  //     remoteClientContent.slice(indexOfLast);
+
+  remoteClientContent.includes(ClientContent) ? null : fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent);
 
   // Acknowledge SW in the browser
   const RootDir = projectDir + "/app/root." + lang + "x";
