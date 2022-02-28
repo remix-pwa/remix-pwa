@@ -57,7 +57,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   //     "\n" +
   //     remoteClientContent.slice(indexOfLast);
 
-  remoteClientContent.includes(ClientContent) ? null : fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", ClientContent);
+  remoteClientContent.includes(ClientContent) ? null : fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", `\n${ClientContent}`);
 
   // Acknowledge SW in the browser
   const RootDir = projectDir + "/app/root." + lang + "x";
@@ -153,12 +153,12 @@ async function cli() {
         json.scripts = {};
       }
     
-      json.scripts["build"] = "run-p build:*";
+      json.scripts["build"] = "npm-run-all -p build:*";
       json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
       json.scripts[
         "build:worker"
       ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
-      json.scripts["dev"] = "run-p dev:*";
+      json.scripts["dev"] = "npm-run-all -p dev:*";
       json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
       json.scripts[
         "dev:worker"

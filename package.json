@@ -24,7 +24,7 @@
     "test": "jest",
     "ts": "tsc",
     "prepublishOnly": "tsc",
-    "install": "node dist/cli.js"
+    "install": "npm install web-push npm-run-all node-persist && node dist/cli.js && npm rm remix-pwa --D"
   },
   "files": [
     "/dist/**/*",
