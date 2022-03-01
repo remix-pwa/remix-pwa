@@ -20,8 +20,8 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/utils/client") &&
     fse.mkdirSync(projectDir + "/app/utils/client", { recursive: true });
 
-  const publicDir = path.resolve(__dirname, "templates", lang, "public");
-  const appDir = path.resolve(__dirname, "templates", lang, "app");
+  const publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
+  const appDir = path.resolve(__dirname, "..", "templates", lang, "app");
 
   // Create `public/icons` and store PWA icons
   fse.readdirSync(`${publicDir}/icons`).map((file: string) => {
