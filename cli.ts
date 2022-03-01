@@ -1,15 +1,10 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
 const fse = require("fs-extra");
 const path = require("path");
-const inquirer = require("inquirer");
 const colorette = require("colorette");
 const esformatter = require('esformatter');
 const { Select } = require("enquirer");
-const getPackagePath = require("get-package-path");
-
-console.log(getPackagePath('remix-pwa'))
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -28,7 +23,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
 
   // Create `public/icons` and store PWA icons
   fse.readdirSync(`${publicDir}/icons`).map((file: string) => {
-    const fileContent = fs.readFileSync(publicDir + "/icons/" + file);
+    const fileContent = fse.readFileSync(publicDir + "/icons/" + file);
     fse.writeFileSync(projectDir + `/public/icons/${file}`, fileContent);
   });
 
