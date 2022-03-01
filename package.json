@@ -23,8 +23,7 @@
   "scripts": {
     "test": "jest",
     "ts": "tsc",
-    "prepublishOnly": "tsc",
-    "install": "node dist/cli.js"
+    "prepublishOnly": "tsc"
   },
   "files": [
     "/dist/**/*",
