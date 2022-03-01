@@ -55,10 +55,11 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const RootDirNull: string = RootDirContent.replace(/\s\s+/g, " ");
   const rootRegex: RegExp = /return \( <html/g;
   const index = RootDirNull.search(rootRegex);
+  const parser = lang === "ts" ? "-ts" : ""
   const NewContent = RootDirContent.includes(localeRootDir)
     ? RootDirContent
     : RootDirNull.slice(0, index + 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index + 1); 
-    const formatted: string = prettier.format(NewContent, { parser: "babel" });
+    const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
     // const formatted: string = esformatter.format(NewContent)
   const cleanRegex: RegExp = /{" "}/g;
   const newFormatted: string = formatted.replace(cleanRegex, " ");

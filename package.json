@@ -27,7 +27,9 @@
   },
   "files": [
     "/dist/**/*",
-    "templates/**/*"
+    "templates/**/*",
+    ".prettierrc",
+    "babel.config.json"
   ],
   "bin": {
     "remix-pwa": "dist/cli.js"
