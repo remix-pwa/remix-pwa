@@ -6,7 +6,6 @@ const path = require("path");
 const inquirer = require("inquirer");
 const colorette = require("colorette");
 const esformatter = require('esformatter');
-const prettier = require("prettier");
 const { Select } = require("enquirer");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
@@ -72,7 +71,6 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const NewContent = RootDirContent.includes(localeRootDir)
     ? RootDirContent
     : RootDirNull.slice(0, index) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index); 
-  // const formatted: string = prettier.format(NewContent, { parser: "babel" });
   const formatted: string = esformatter.format(NewContent)
   const cleanRegex: RegExp = /{" "}/g;
   const newFormatted: string = formatted.replace(cleanRegex, " ");
@@ -155,6 +153,7 @@ async function cli() {
         json.scripts = {};
       }
     
+      json.scripts["pwa"] = "npm install node-persist npm run-all web-push";
       json.scripts["build"] = "npm-run-all -p build:*";
       json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
       json.scripts[
