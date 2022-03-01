@@ -35,7 +35,7 @@
   },
   "esformatter": {
     "plugins": [
-      "esformatter-jsx", 
+      "esformatter-jsx",
       "esformatter-quotes",
       "esformatter-curly"
     ],
@@ -58,7 +58,7 @@
         "max_preserve_newlines": 2,
         "preserve_newlines": true
       }
-    }  
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
