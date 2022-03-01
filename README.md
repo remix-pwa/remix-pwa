@@ -244,7 +244,7 @@ const options = {
   body: "Hello, take a break and drink some water! 💧",
   badge: "/icons/notification-badge.png", // not required
   icon: "/icons/app-icon.png", // not required
-  silent: false // not required
+  silent: false, // not required
   image: string // NEW! Not required
 }
 
