@@ -3,6 +3,7 @@
 const fse = require("fs-extra");
 const path = require("path");
 const colorette = require("colorette");
+const prettier = require("prettier");
 const esformatter = require('esformatter');
 const { Select } = require("enquirer");
 
@@ -56,8 +57,9 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const index = RootDirNull.search(rootRegex);
   const NewContent = RootDirContent.includes(localeRootDir)
     ? RootDirContent
-    : RootDirNull.slice(0, index) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index); 
-  const formatted: string = esformatter.format(NewContent)
+    : RootDirNull.slice(0, index + 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index + 1); 
+    const formatted: string = prettier.format(NewContent, { parser: "babel" });
+    // const formatted: string = esformatter.format(NewContent)
   const cleanRegex: RegExp = /{" "}/g;
   const newFormatted: string = formatted.replace(cleanRegex, " ");
   fse.writeFileSync(RootDir, newFormatted);
