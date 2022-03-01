@@ -135,7 +135,8 @@ async function cli() {
       const saveFile = fse.writeFileSync;
 
       //@ts-ignore
-      const pkgJsonPath = require.main.paths[0].split("node_modules")[0] + "package.json";
+      // const pkgJsonPath = require.main.paths[0].split("node_modules")[0] + "package.json";
+      const pkgJsonPath = path.resolve(process.cwd() + "package.json");
       const json = require(pkgJsonPath);
     
       if (!json.hasOwnProperty("scripts")) {
