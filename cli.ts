@@ -7,6 +7,9 @@ const inquirer = require("inquirer");
 const colorette = require("colorette");
 const esformatter = require('esformatter');
 const { Select } = require("enquirer");
+const getPackagePath = require("get-package-path");
+
+console.log(getPackagePath('remix-pwa'))
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -20,8 +23,8 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/utils/client") &&
     fse.mkdirSync(projectDir + "/app/utils/client", { recursive: true });
 
-  const publicDir = path.resolve(__dirname, "templates", lang, "public");
-  const appDir = path.resolve(__dirname, "templates", lang, "app");
+  const publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
+  const appDir = path.resolve(__dirname, "..", "templates", lang, "app");
 
   // Create `public/icons` and store PWA icons
   fse.readdirSync(`${publicDir}/icons`).map((file: string) => {
@@ -98,10 +101,10 @@ async function cli() {
 
   await new Promise((res) => setTimeout(res, 1000));
 
-  // const projectDir = path.resolve("../../");
+  const projectDir = path.resolve("./");
 
   /* Debugging purposes ONLY: Uncomment 👇 */
-  const projectDir = process.cwd();
+  // const projectDir = process.cwd();
 
   const prompt = new Select({
     name: "lang",
