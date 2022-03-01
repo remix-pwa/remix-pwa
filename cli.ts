@@ -20,8 +20,8 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/utils/client") &&
     fse.mkdirSync(projectDir + "/app/utils/client", { recursive: true });
 
-  const publicDir = path.resolve(process.cwd(), "templates", lang, "public");
-  const appDir = path.resolve(process.cwd(), "templates", lang, "app");
+  const publicDir = path.resolve(__dirname, "templates", lang, "public");
+  const appDir = path.resolve(__dirname, "templates", lang, "app");
 
   // Create `public/icons` and store PWA icons
   fse.readdirSync(`${publicDir}/icons`).map((file: string) => {
@@ -44,18 +44,6 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   // Register worker in `entry.client.tsx`
   const remoteClientContent: string = fse.readFileSync(projectDir + "/app/entry.client." + lang + "x").toString();
   const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
-
-  // const lastClient = "hydrate(<RemixBrowser />, document);";
-  // let lastWordFinder: RegExp = /[a-z0-9](?=\W*$)/gi;
-  // lastWordFinder.exec(lastClient);
-  // const indexOfLast = lastWordFinder.lastIndex - 1;
-  // remoteClientContent.includes(ClientContent)
-  //   ? null
-  //   : remoteClientContent.slice(0, indexOfLast - 1) +
-  //     "\n" +
-  //     ClientContent +
-  //     "\n" +
-  //     remoteClientContent.slice(indexOfLast);
 
   remoteClientContent.includes(ClientContent) ? null : fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", `\n${ClientContent}`);
 
