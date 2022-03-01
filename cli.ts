@@ -58,11 +58,11 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const parser = lang === "ts" ? "-ts" : ""
   const NewContent = RootDirContent.includes(localeRootDir)
     ? RootDirContent
-    : RootDirNull.slice(0, index + 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index + 1); 
-    const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
+    : RootDirNull.slice(0, index + 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index + 1) + RootDirNull.slice(RootDirNull.length - 1) + ";"; 
+    // const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
     // const formatted: string = esformatter.format(NewContent)
   const cleanRegex: RegExp = /{" "}/g;
-  const newFormatted: string = formatted.replace(cleanRegex, " ");
+  const newFormatted: string = NewContent.replace(cleanRegex, " ");
   fse.writeFileSync(RootDir, newFormatted);
 
   /* End of `root` meddling */
