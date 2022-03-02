@@ -259,7 +259,7 @@ const options = {
   badge: "/icons/notification-badge.png", // not required
   icon: "/icons/app-icon.png", // not required
   silent: false, // not required
-  image: string // NEW! Not required
+  image: "/images/Nature.png" // NEW! Not required
 }
 
 let minutes = 30
