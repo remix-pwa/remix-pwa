@@ -238,7 +238,7 @@ interface NotificationOptions {
   body: string | "Notification body";
   badge?: string;
   icon?: string;
-  silent?: boolean | false;
+  silent: boolean | false;
   image?: string
 }
 ```
@@ -255,10 +255,10 @@ The Notification API can take values from the server (e.g `loader`) or from the 
 import { SendNotification } from "~/utils/client/pwa-utils.client";
 
 const options = {
-  body: "Hello, take a break and drink some water! 💧",
+  body: "Hello, take a break and drink some water! 💧", // required
   badge: "/icons/notification-badge.png", // not required
   icon: "/icons/app-icon.png", // not required
-  silent: false, // not required
+  silent: false, // required
   image: "/images/Nature.png" // NEW! Not required
 }
 
@@ -449,6 +449,10 @@ Our manifest is quite simple and default, the `name` of the app is something tha
 In v0.6.0, we created a new field in our manifest known as `shortcuts` and they do exactly what they say. They allow us to navigate to certain, specified pages (*routes*) directly from outside our App. I won't cover the fields used in the `shortcuts` and what they are meant to do, I would however, drop [this](https://dev.to/azure/09-creating-application-shortcuts-m0i) wonderful article by Microsoft Azure that explains the `shortcut` aspect of the manifest well.
 
 Another thing you would love to edit is the `icons` field in the manifest, we used default Remix icons for those but you would not want to. Instead replace the icons in `/icons` folder and specify their sizes. You could use [Sketch](https://sketch.com) or [Figma](https://figma.com) to design and resize icons. You could also delete the default `favicon.ico` that comes with Remix.
+
+### Customizing & Extending the Push API
+
+The Push API is something you definitely want to edit if you want to push your App to production or even just want a feel of ownership over your notifications. The default title of the notification and options are parameters that are set while in development. Unlike the Notification API that allows you to set the title, icon and other parameters each time, the Push API parameters are set by default in the `entry.worker.{lang}` file. In order to change the title of your Push Notifications, simply edit [this](https://github.com/ShafSpecs/remix-pwa/blob/main/templates/ts/app/entry.worker.ts#L151) line in **your** own worker file and rename `title` to whatever you want. To change your optiions, edit the [options object](https://github.com/ShafSpecs/remix-pwa/blob/main/templates/ts/app/entry.worker.ts#L152) (**do not edit the `body` parameter**), for the full list of options available, refer to this [MDN](https://developer.mozilla.org/en-US/docs/Web/API/notification#instance_properties) resource on PWA Notification options. 
 
 > This section is till WIP 🚧
 
