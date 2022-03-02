@@ -52,6 +52,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 - [Going Deeper](#going-deeper)
   - [Customizing your PWA `manifest` file](#customizing-your-pwa-manifest)
   - [Upgrading your PWA manifest](#upgrading-your-pwa-manifest)
+  - [Customizing and extending the Push API](#customizing--extending-the-push-api)
 - [Remix PWA Roadmap](#roadmap)
 - [Contributing Doc](#contributing)
 - [Help Support](#support)
