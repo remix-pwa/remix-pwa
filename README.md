@@ -89,7 +89,7 @@ at build time and then, you can host it on any hosting providers you prefer.
 
 ### Upgrade Guide
 
-To upgrade to a newer version of `remix-pwa`, simply run these two commands one after the other 
+To upgrade to a newer version of `remix-pwa`, simply run these three commands one after the other 
 ```sh
 # Uninstall remix-pwa to remove it from your package.json
 npm rm -D remix-pwa
