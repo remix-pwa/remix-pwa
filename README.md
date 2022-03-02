@@ -14,7 +14,7 @@
 
 Remix PWA is a lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿.
 
-> New, major update with some ground-breaking changes! Read the full changelog [here](https://github.com/ShafSpecs/remix-pwa/releases/tag/v0.6.0) 
+> New breaking changes and fixes! Read the full changelog [here](https://github.com/ShafSpecs/remix-pwa/releases/tag/v0.7.0) 
 
 ## Features
 
@@ -62,10 +62,10 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 
 ### Installation
 
-To install `remix-pwa` into your Remix project, run the following command:
+To integrate PWA features into your Remix App with `remix-pwa`, run the following command:
 
 ```sh
-npm install --save-dev remix-pwa@latest
+npx remix-pwa@latest
 ```
 
 During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript.
@@ -82,13 +82,17 @@ at build time and then, you can host it on any hosting providers you prefer.
 
 ### Upgrade Guide
 
-To upgrade to a newer version of `remix-pwa`, simply re-run 
+To upgrade to a newer version of `remix-pwa`, simply run these two commands one after the other 
 ```sh
-npm i --save-dev remix-pwa@latest
+# Uninstall remix-pwa to remove it from your package.json
+npm rm -D remix-pwa
+
+# Use npx to integrate PWA features without modifying your dependencies
+npx remix-pwa@latest
 ```
 and you can continue with your PWA
 
-> For users coming from pre-0.5.0, delete the following file `entry.worker.[t/j]s`from your project, make sure there are no duplicate code blocks in your `entry.client` and `root` file, then delete `remix-pwa` with the command `npm uninstall remix-pwa` and finally, run `npm i --save-dev remix-pwa@latest` again.
+> *Due to a massive setback with `remix-pwa` that made it impossible to successfully build and deploy your PWA. I changed things around and shifted a lot of it's APIs to rely heavily on using `npx` instead of `npm install`. You **must** uninstall `remix-pwa` from your dependencies and then use `npx` to accomodate the new changes. Thanks for your support and patience.* 🥰
 
 ## Setting up your PWA
 
