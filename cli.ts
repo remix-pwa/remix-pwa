@@ -4,7 +4,7 @@ const fse = require("fs-extra");
 const path = require("path");
 const colorette = require("colorette");
 const prettier = require("prettier");
-const esformatter = require('esformatter');
+const esformatter = require("esformatter");
 const { Select } = require("enquirer");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
@@ -44,7 +44,9 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const remoteClientContent: string = fse.readFileSync(projectDir + "/app/entry.client." + lang + "x").toString();
   const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
 
-  remoteClientContent.includes(ClientContent) ? null : fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", `\n${ClientContent}`);
+  remoteClientContent.includes(ClientContent)
+    ? null
+    : fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", `\n${ClientContent}`);
 
   // Acknowledge SW in the browser
   const RootDir = projectDir + "/app/root." + lang + "x";
@@ -55,12 +57,11 @@ async function Run(projectDir: string, lang: "ts" | "js") {
   const RootDirNull: string = RootDirContent.replace(/\s\s+/g, " ");
   const rootRegex: RegExp = /return \( <html/g;
   const index = RootDirNull.search(rootRegex);
-  const parser = lang === "ts" ? "-ts" : ""
+  const parser = lang === "ts" ? "-ts" : "";
   const NewContent = RootDirContent.includes(localeRootDir)
     ? RootDirContent
-    : RootDirNull.slice(0, index) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index); 
-    const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
-    // const formatted: string = esformatter.format(NewContent)
+    : RootDirNull.slice(0, index - 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index);
+  const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
   const cleanRegex: RegExp = /{" "}/g;
   const newFormatted: string = formatted.replace(cleanRegex, " ");
   fse.writeFileSync(RootDir, newFormatted);
@@ -124,25 +125,27 @@ async function cli() {
       let lang: "ts" | "js";
       answer === "TypeScript" ? (lang = "ts") : (lang = "js");
 
-      await Promise.all([Run(projectDir, lang)])
+      await Promise.all([Run(projectDir, lang)]);
       console.log(
-        colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
+        colorette.green(
+          "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
+        ),
       );
       console.log();
       console.log(colorette.blue("Running postinstall scripts...."));
-    
+
       const saveFile = fse.writeFileSync;
 
       //@ts-ignore
       // const pkgJsonPath = require.main.paths[0].split("node_modules")[0] + "package.json";
       const pkgJsonPath = path.resolve(process.cwd(), "package.json");
       const json = require(pkgJsonPath);
-    
+
       if (!json.hasOwnProperty("scripts")) {
         json.scripts = {};
       }
-    
-      json.scripts["pwa"] = "npm install node-persist npm-run-all web-push && npm rm remix-pwa -D";
+
+      json.scripts["pwa"] = "npm install node-persist npm-run-all web-push";
       json.scripts["build"] = "npm-run-all -p build:*";
       json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
       json.scripts[
@@ -153,7 +156,7 @@ async function cli() {
       json.scripts[
         "dev:worker"
       ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
-    
+
       saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
       console.log(colorette.green("Successfully ran postinstall scripts!"));
     })
