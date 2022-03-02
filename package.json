@@ -1,6 +1,6 @@
 {
   "name": "remix-pwa",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A PWA handler for Remix",
   "keywords": [
     "pwa",
@@ -23,13 +23,44 @@
   "scripts": {
     "test": "jest",
     "ts": "tsc",
-    "prepublishOnly": "tsc",
-    "install": "node dist/cli.js"
+    "prepublishOnly": "tsc"
   },
   "files": [
     "/dist/**/*",
-    "templates/**/*"
+    "templates/**/*",
+    ".prettierrc",
+    "babel.config.json"
   ],
+  "bin": {
+    "remix-pwa": "dist/cli.js"
+  },
+  "esformatter": {
+    "plugins": [
+      "esformatter-jsx",
+      "esformatter-quotes",
+      "esformatter-curly"
+    ],
+    "quotes": {
+      "type": "double"
+    },
+    "jsx": {
+      "formatJSXExpressions": true,
+      "JSXExpressionsSingleLine": true,
+      "formatJSX": true,
+      "attrsOnSameLineAsTag": false,
+      "maxAttrsOnTag": 1,
+      "firstAttributeOnSameLine": false,
+      "spaceInJSXExpressionContainers": " ",
+      "alignWithFirstAttribute": true,
+      "htmlOptions": {
+        "brace_style": "collapse",
+        "indent_char": " ",
+        "indent_size": 2,
+        "max_preserve_newlines": 2,
+        "preserve_newlines": true
+      }
+    }
+  },
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/preset-env": "^7.16.11",
@@ -42,6 +73,10 @@
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
     "babel-jest": "^27.5.1",
+    "esformatter": "^0.11.3",
+    "esformatter-curly": "0.0.2",
+    "esformatter-jsx": "^8.0.1",
+    "esformatter-semicolons": "^1.1.2",
     "eslint": "^8.9.0",
     "eslint-plugin-react": "^7.28.0",
     "install": "^0.13.0",
@@ -49,7 +84,6 @@
     "prettier": "^2.5.1",
     "save-dev": "0.0.1-security",
     "ts-jest": "^27.1.3",
-    "ts-node": "^10.5.0",
     "typescript": "^4.5.5"
   },
   "dependencies": {
@@ -59,13 +93,17 @@
     "dotenv-cli": "^4.1.1",
     "enquirer": "^2.3.6",
     "esbuild": "^0.14.23",
+    "esformatter": "^0.11.3",
+    "esformatter-curly": "0.0.2",
+    "esformatter-jsx": "^8.0.1",
+    "esformatter-semicolons": "^1.1.2",
     "fs-extra": "^10.0.0",
-    "inquirer": "^8.2.0",
+    "inquirer-path": "^1.0.0-beta5",
+    "js-beautify": "^1.14.0",
     "node-persist": "^3.1.0",
     "npm-run-all": "^4.1.5",
     "postinstall-js": "^0.7.2",
     "prettier": "^2.5.1",
-    "ts-node": "^10.5.0",
     "web-push": "^3.4.5"
   }
 }

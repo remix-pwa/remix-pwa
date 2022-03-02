@@ -14,6 +14,8 @@
 
 Remix PWA is a lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿.
 
+> 💥 New breaking changes and fixes! Read the full changelog [here](https://github.com/ShafSpecs/remix-pwa/releases/tag/v0.7.0) 
+
 ## Features
 
 - Integrates Progressive Web App (PWA) features into Remix including offline support, caching, installability on Native devices and more.
@@ -60,13 +62,20 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 
 ### Installation
 
-To install `remix-pwa` into your Remix project, run the following command:
+To integrate PWA features into your Remix App with `remix-pwa`, run the following command:
 
 ```sh
-npm install --save-dev remix-pwa@latest
+npx remix-pwa@latest
 ```
 
 During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript.
+
+After integrating `remix-pwa`, run the command:
+
+```sh
+npm run pwa
+```
+to successfully complete the PWA installation
 
 ### Deployment
 
@@ -80,13 +89,20 @@ at build time and then, you can host it on any hosting providers you prefer.
 
 ### Upgrade Guide
 
-To upgrade to a newer version of `remix-pwa`, simply re-run 
+To upgrade to a newer version of `remix-pwa`, simply run these three commands one after the other 
 ```sh
-npm i --save-dev remix-pwa@latest
+# Uninstall remix-pwa to remove it from your package.json
+npm rm -D remix-pwa
+
+# Use npx to integrate PWA features without modifying your dependencies
+npx remix-pwa@latest
+
+# Complete the integration in your App by installing required dependencies
+npm run pwa
 ```
 and you can continue with your PWA
 
-> For users coming from pre-0.5.0, delete the following file `entry.worker.[t/j]s`from your project, make sure there are no duplicate code blocks in your `entry.client` and `root` file, then delete `remix-pwa` with the command `npm uninstall remix-pwa` and finally, run `npm i --save-dev remix-pwa@latest` again.
+> *Due to a massive setback with `remix-pwa` that made it impossible to successfully build and deploy your PWA. I changed things around and shifted a lot of it's APIs to rely heavily on using `npx` instead of `npm install`. You **must** uninstall `remix-pwa` from your dependencies and then use `npx` to accomodate the new changes. Thanks for your support and patience.* 🥰
 
 ## Setting up your PWA
 
@@ -242,7 +258,7 @@ const options = {
   body: "Hello, take a break and drink some water! 💧",
   badge: "/icons/notification-badge.png", // not required
   icon: "/icons/app-icon.png", // not required
-  silent: false // not required
+  silent: false, // not required
   image: string // NEW! Not required
 }
 
@@ -331,7 +347,7 @@ const data = useLoaderData()
 ### Misc. Web Share API
 #### ` WebShare(data: any): Promise<ResponseObject>`
 
-The Miscellaneous Webs Share Api is intended to be simple Web Share Api that should be used if you intend to send something a bit more loose and simple compared to files & URLs. 
+The Miscellaneous Webs Share Api is intended to be a simple Web Share Api that should be used if you intend to send something a bit more loose and simple compared to files & URLs. 
 
 > *I would advise against using this API except when the other two don't meet your data criteria. As this is loosely typed and ~~could~~ cause errors when used with heavy, technical data.*
 
@@ -398,9 +414,9 @@ One thing you might have noticed is that your manifest.json file is stored as a 
 
 Allow me to break that down. If you open your `manifest` file located in `app/routes/resources`, you would notice that the manifest is stored inside a loader function that returns the manifest as a json object. Now if you wanted to customise the manifest based on user preference instead of a static file, how would we do it? Let's look at a simple  scenario to answer that question:
 
-We have a database hosted on an external platform and we are using [Prisma](https://prisma.io) as our database ORM, we save our user's color preferences in a table called `User` and we want to give the PWA the same feel as the website. The last thing we want to do is give our user's the same color scheme for the app and custom schemes for the site. That's poor UX. 
+We have a database hosted on an external platform and we are using [Prisma](https://prisma.io) as our database ORM, we save our user's color preferences in a table called `User` and we want to give the PWA the same feel as the website. The last thing we want to do is give our user's default color scheme for the app and custom schemes for the site. That's poor UX. 
 
-To solve this issue, we can simply import our `PrismaClient` into our manifest route's loader and interact with our db from there. Allowing us to get the preferences and set them as our PWA's theme and background color (for more info on these, refer to [MDN](https://developer.mozilla.org/en-US/docs/Web/Manifest))
+To solve this issue, we can simply import our `PrismaClient` into our manifest route's loader and interact with our db from there. Allowing us to get the preferences and set them as our PWA's theme and background color (for more info on themes and background-color, refer to [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/Manifest))
 
 ```ts
 export let loader: LoaderFunction = async () => {
@@ -428,9 +444,9 @@ We got our user, we got their preference, we make them happy!
 
 ### Upgrading your PWA `manifest`
 
-Our manifest is quite simple and default, the name is what you would change, same as the theme color and other fields depending on your taste. How about we add more to our manifest instead?
+Our manifest is quite simple and default, the `name` of the app is something that you would change, same as the theme color and other json fields depending on your taste and App's needs. But how about we add more to our manifest instead?
 
-In v0.6.0, we created a new field in our manifest known as `shortcuts` and they are what they say. They allow us to navigate to certain, specified pages from app shortcuts already set up. I won't cover the fields in shortcuts and what they mean but I would refer you to [this](https://dev.to/azure/09-creating-application-shortcuts-m0i) wonderful article by Microsoft Azure.
+In v0.6.0, we created a new field in our manifest known as `shortcuts` and they do exactly what they say. They allow us to navigate to certain, specified pages (*routes*) directly from outside our App. I won't cover the fields used in the `shortcuts` and what they are meant to do, I would however, drop [this](https://dev.to/azure/09-creating-application-shortcuts-m0i) wonderful article by Microsoft Azure that explains the `shortcut` aspect of the manifest well.
 
 Another thing you would love to edit is the `icons` field in the manifest, we used default Remix icons for those but you would not want to. Instead replace the icons in `/icons` folder and specify their sizes. You could use [Sketch](https://sketch.com) or [Figma](https://figma.com) to design and resize icons. You could also delete the default `favicon.ico` that comes with Remix.
 
