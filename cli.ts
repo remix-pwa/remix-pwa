@@ -99,9 +99,6 @@ async function cli() {
 
   await new Promise((res) => setTimeout(res, 1000));
 
-  // const projectDir = path.resolve("../../");
-
-  /* Debugging purposes ONLY: Uncomment 👇 */
   const projectDir = process.cwd();
 
   const prompt = new Select({
@@ -137,7 +134,6 @@ async function cli() {
       const saveFile = fse.writeFileSync;
 
       //@ts-ignore
-      // const pkgJsonPath = require.main.paths[0].split("node_modules")[0] + "package.json";
       const pkgJsonPath = path.resolve(process.cwd(), "package.json");
       const json = require(pkgJsonPath);
 
@@ -145,7 +141,7 @@ async function cli() {
         json.scripts = {};
       }
 
-      json.scripts["pwa"] = "npm install node-persist npm-run-all web-push";
+      json.scripts["pwa"] = "npm install node-persist npm-run-all web-push cross-env";
       json.scripts["build"] = "npm-run-all -p build:*";
       json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
       json.scripts[
