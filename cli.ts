@@ -99,9 +99,6 @@ async function cli() {
 
   await new Promise((res) => setTimeout(res, 1000));
 
-  // const projectDir = path.resolve("../../");
-
-  /* Debugging purposes ONLY: Uncomment 👇 */
   const projectDir = process.cwd();
 
   const prompt = new Select({
