@@ -14,7 +14,8 @@
   "types": "dist/cli.d.ts",
   "license": "MIT",
   "author": {
-    "name": "Abdur-Rahman Fashola"
+    "name": "Abdur-Rahman Fashola",
+    "url": "https://shafspecs.vercel.app/"
   },
   "repository": {
     "type": "git",

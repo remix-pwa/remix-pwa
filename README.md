@@ -77,7 +77,7 @@ npm run pwa
 ```
 to successfully complete the PWA installation
 
-> *Due to a major setback with `remix-pwa` that made it impossible to build and deploy your PWA successfully, I made some chnages to `remix-pwa` APIs that made them heavily reliant on `npx` instead of `npm install`. You **must** remove remix-pwa from your package.json in order to deploy your PWA. Thanks for your support and patience.* 🥰
+> *Due to a major setback with `remix-pwa` pre-v0.7.0 that made it impossible to build and deploy your PWA successfully, I made some chnages to `remix-pwa` APIs that made them heavily reliant on `npx` instead of `npm install`. You **must** remove remix-pwa from your package.json in order to deploy your PWA. Thanks for your support and patience.* 🥰
 
 ### Deployment
 
