@@ -176,7 +176,7 @@ async function cli() {
 
   const option = new Confirm({
     name: "question",
-    message: 'Do you want to automatically to run "npm install"?',
+    message: 'Do you want to immediately run "npm install"?',
   });
 
   console.log();
