@@ -155,9 +155,6 @@ async function cli() {
       json.dependencies["npm-run-all"] = "^4.1.5";
       json.dependencies["cross-env"] = "^7.0.3";
 
-      json.devDependencies["@types/web"] = "^0.0.54";
-      json.devDependencies["@types/serviceworker"] = "^0.0.37";
-
       json.scripts["build"] = "npm-run-all -p build:*";
       json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
       json.scripts[
