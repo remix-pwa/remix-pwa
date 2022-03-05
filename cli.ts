@@ -2,10 +2,11 @@
 
 const fse = require("fs-extra");
 const path = require("path");
+const { execSync } = require("child_process");
 const colorette = require("colorette");
 const prettier = require("prettier");
 const esformatter = require("esformatter");
-const { Select } = require("enquirer");
+const { Select, Confirm } = require("enquirer");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -94,7 +95,7 @@ async function Run(projectDir: string, lang: "ts" | "js") {
 }
 
 async function cli() {
-  console.log(colorette.magenta("Welcome to Remix PWA!"));
+  console.log(colorette.bold(colorette.magenta("Welcome to Remix PWA!")));
   console.log();
 
   await new Promise((res) => setTimeout(res, 1000));
@@ -137,11 +138,26 @@ async function cli() {
       const pkgJsonPath = path.resolve(process.cwd(), "package.json");
       const json = require(pkgJsonPath);
 
+      if (!json.hasOwnProperty("dependencies")) {
+        json.dependencies = {};
+      }
+
+      if (!json.hasOwnProperty("devDependencies")) {
+        json.devDependencies = {};
+      }
+
       if (!json.hasOwnProperty("scripts")) {
         json.scripts = {};
       }
 
-      json.scripts["pwa"] = "npm install node-persist npm-run-all web-push cross-env";
+      json.dependencies["node-persist"] = "^3.1.0";
+      json.dependencies["web-push"] = "^3.4.5";
+      json.dependencies["npm-run-all"] = "^4.1.5";
+      json.dependencies["cross-env"] = "^7.0.3";
+
+      json.devDependencies["@types/web"] = "^0.0.54";
+      json.devDependencies["@types/serviceworker"] = "^0.0.37";
+
       json.scripts["build"] = "npm-run-all -p build:*";
       json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
       json.scripts[
@@ -155,6 +171,28 @@ async function cli() {
 
       saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
       console.log(colorette.green("Successfully ran postinstall scripts!"));
+    })
+    .catch(console.error);
+
+  const option = new Confirm({
+    name: "question",
+    message: 'Do you want to automatically to run "npm install"?',
+  });
+
+  console.log();
+  option
+    .run()
+    .then((answer: any) => {
+      if (answer) {
+        console.log(colorette.blueBright("Running npm install...."));
+        execSync("npm install", {
+          cwd: process.cwd(),
+        });
+        console.log(colorette.green("Successfully ran npm install!"));
+      } else {
+        console.log(colorette.red("Skipping npm install...."));
+        console.log(colorette.red("Don't forget to run npm install!"));
+      }
     })
     .catch(console.error);
 }

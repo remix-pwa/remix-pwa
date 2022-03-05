@@ -1,6 +1,6 @@
-const webPush = require("web-push");
-
 import { PushNotification, SaveSubscription } from "../../utils/server/pwa-utils.server";
+
+const webPush = require("web-push");
 
 export const action = async ({ request }) => {
   const data = await request.json();
