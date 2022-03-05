@@ -69,14 +69,7 @@ To integrate PWA features into your Remix App with `remix-pwa`, run the followin
 npx remix-pwa@latest
 ```
 
-During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript.
-
-After integrating `remix-pwa`, run the command:
-
-```sh
-npm run pwa
-```
-to successfully complete the PWA installation
+During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript. Make sure to pick "yes" to run `npm install` after the installation
 
 ### Deployment
 
@@ -90,20 +83,17 @@ at build time and then, you can host it on any hosting providers you prefer.
 
 ### Upgrade Guide
 
-To upgrade to a newer version of `remix-pwa`, simply run these three commands one after the other 
+To upgrade to a newer version of `remix-pwa`, simply run these two commands one after the other 
 ```sh
-# Uninstall remix-pwa to remove it from your package.json
+# Uninstall remix-pwa to remove it from your package.json (if present. If not, skip this command)
 npm rm -D remix-pwa
 
 # Use npx to integrate PWA features without modifying your dependencies
 npx remix-pwa@latest
-
-# Complete the integration in your App by installing required dependencies
-npm run pwa
 ```
 and you can continue with your PWA
 
-> *Due to a massive setback with `remix-pwa` that made it impossible to successfully build and deploy your PWA. I changed things around and shifted a lot of it's APIs to rely heavily on using `npx` instead of `npm install`. You **must** uninstall `remix-pwa` from your dependencies and then use `npx` to accomodate the new changes. Thanks for your support and patience.* 🥰
+> *Due to a massive setback with `remix-pwa` that made it impossible to successfully build and deploy your PWA (pre-0.7.0). I changed things around and shifted a lot of it's APIs to rely heavily on using `npx` instead of `npm install`. You **must** uninstall `remix-pwa` from your dependencies and then use `npx` to accomodate the new changes. Thanks for your support and patience.* 🥰
 
 ## Setting up your PWA
 
@@ -246,7 +236,7 @@ interface NotificationOptions {
 
 The `SendNotification` API is a client-only function driven only by the [Notifications API](https://developer.mozilla.org/en-US/docs/Web/API/Notification), it is different from the Push API which is another API handled and executed by the server (arriving to `remix-pwa` soon). The `SendNotification` function is executed by the client and takes in two arguments, one is the title of the notification and that's the top header (Title) of the notification your user would see. The second option is an object that would contain additional options for the API.
 
-The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notifivcation content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**), it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
+The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notifivcation content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**) that is <u>required</u>, it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
 
 The Notification API can take values from the server (e.g `loader`) or from the client but it must be called and executed on the client side. We are working on adding the Push API that allows you to execute a Notification API together with the Push API on the server side in response to anything (for example, when a message is sent to a user in a messaging App).
 
@@ -389,7 +379,9 @@ import "dotenv/config"
 
 > *Don't forget to add the `.env` file to your `.gitignore` file*
 
-3. You can finally use the basic Web Push API in your server! 
+3. You can finally use the basic Web Push API in your server! *Head over to [Customizing Push API](#customizing--extending-the-push-api) to learn more about how to customize the Push API.*
+
+[(Back to Top)](#table-of-content)
 
 ```tsx
 import { PushNotification } from "~utils/server/pwa-utils.server.ts
