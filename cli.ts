@@ -182,6 +182,7 @@ async function cli() {
       console.log(colorette.blueBright("Running npm install...."));
       execSync("npm install", {
         cwd: process.cwd(),
+        stdio: "inherit"
       });
       console.log(colorette.green("Successfully ran npm install!"));
     } else {
