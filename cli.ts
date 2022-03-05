@@ -6,7 +6,7 @@ const { execSync } = require("child_process");
 const colorette = require("colorette");
 const prettier = require("prettier");
 const esformatter = require("esformatter");
-const { Select, Confirm } = require("enquirer");
+const { Select, Confirm, prompt: questionnaire } = require("enquirer");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -102,26 +102,34 @@ async function cli() {
 
   const projectDir = process.cwd();
 
-  const prompt = new Select({
-    name: "lang",
-    message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
-    choices: [
-      {
-        name: "TypeScript",
-        value: "ts",
-      },
-      {
-        name: "JavaScript",
-        value: "js",
-      },
-    ],
-  });
+  const questions = await questionnaire([
+    {
+      name: "lang",
+      type: "select",
+      message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
+      choices: [
+        {
+          name: "TypeScript",
+          value: "ts",
+        },
+        {
+          name: "JavaScript",
+          value: "js",
+        },
+      ],
+    },
+    {
+      type: "confirm",
+      name: "question",
+      message: 'Do you want to immediately run "npm install"?',
+      initial: true
+    },
+  ]);
 
-  prompt
-    .run()
+  questions
     .then(async (answer: any) => {
       let lang: "ts" | "js";
-      answer === "TypeScript" ? (lang = "ts") : (lang = "js");
+      answer.lang === "TypeScript" ? (lang = "ts") : (lang = "js");
 
       await Promise.all([Run(projectDir, lang)]);
       console.log(
@@ -168,19 +176,10 @@ async function cli() {
 
       saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
       console.log(colorette.green("Successfully ran postinstall scripts!"));
-    })
-    .catch(console.error);
 
-  const option = new Confirm({
-    name: "question",
-    message: 'Do you want to immediately run "npm install"?',
-  });
+      await new Promise((res) => setTimeout(res, 1250));
 
-  console.log();
-  option
-    .run()
-    .then((answer: any) => {
-      if (answer) {
+      if (answer.question) {
         console.log(colorette.blueBright("Running npm install...."));
         execSync("npm install", {
           cwd: process.cwd(),
