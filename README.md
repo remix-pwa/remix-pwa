@@ -14,8 +14,6 @@
 
 Remix PWA is a lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿.
 
-> 💥 New breaking changes and fixes! Read the full changelog [here](https://github.com/ShafSpecs/remix-pwa/releases/tag/v0.7.0) 
-
 ## Features
 
 - Integrates Progressive Web App (PWA) features into Remix including offline support, caching, installability on Native devices and more.
@@ -32,6 +30,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
   - [Deployment](#deployment)
   - [Upgrading Guide](#upgrade-guide)
   - [Setting Up your PWA](#setting-up-your-pwa)
+- [Setting Up your PWA](#setting-up-your-pwa)
 - [API Documentation](#api-documentation)
   - [Client APIs](#client-apis)
     - [Type Annonations and Return Object](#type-annonations)
@@ -52,7 +51,6 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 - [Going Deeper](#going-deeper)
   - [Customizing your PWA `manifest` file](#customizing-your-pwa-manifest)
   - [Upgrading your PWA manifest](#upgrading-your-pwa-manifest)
-  - [Customizing and extending the Push API](#customizing--extending-the-push-api)
 - [Remix PWA Roadmap](#roadmap)
 - [Contributing Doc](#contributing)
 - [Help Support](#support)
@@ -140,7 +138,7 @@ This function is used to check wether a user is online or offline and execute a 
 display a particular UI or send a particular response to the server.
 
 ```ts
-import { checkConnectivity } from "~utils/client/pwa-utils.client";
+import { checkConnectivity } from "~/utils/client/pwa-utils.client";
 
 const online = () => {
   //..Do something for online state
@@ -162,7 +160,7 @@ useEffect(() => {
 The Clipboard API is a method used to access the clipboard of a device, native or web, and write to it. This function can be triggered by DOM events, i.e "click", "hover", etc. or window events i.e "load", "scroll", etc. 
 
 ```tsx
-import { copyText } from "~utils/client/pwa-utils.client";
+import { copyText } from "~/utils/client/pwa-utils.client";
 
 <button onClick={() => copyText("Test String")}>Copy to Clipboard</button>
 ```
@@ -175,7 +173,7 @@ import { copyText } from "~utils/client/pwa-utils.client";
 The WakeLock API is a function that when fired, is used to keep the screen of a device on at all times even when idle. It is usually fired when an app is started or when a particular route that needs screen-time is loaded (e.g A video app that has a `watch-video` route)
 
 ```tsx
-import { WakeLock } from "~utils/client/pwa-utils.client";
+import { WakeLock } from "~/utils/client/pwa-utils.client";
 
 useEffect(() => {
   WakeLock() // triggers the Wakelock api
@@ -194,7 +192,7 @@ The badge API makes it easy to silently notify the user that there is new activi
 The `addBadge` function takes a number as an argument (displays the number of notification) while the `removeBadge` function doesn't take any argument.
 
 ```tsx
-import { addBadge, removeBadge } from "~utils/client/pwa-utils.client";
+import { addBadge, removeBadge } from "~/utils/client/pwa-utils.client";
 
 // used to clear away all notification badges
 removeBadge()
@@ -353,11 +351,25 @@ import { WebShare } from "~/utils/client/pwa-utils.client";
 ## Server API
 
 ### Push Notification API
-#### `PushNotification(content: string, delay: number = 0) => void`
+#### `PushNotification(content: PushObject, delay: number = 0) => Promise<void>`
+
+```ts
+interface PushObject {
+  title: string;
+  body: string;
+  icon?: string;
+  badge?: string;
+  dir?: string;
+  image?: string;
+  silent?: boolean;
+}
+```
 
 > **This is a server API. All Server APIs are to be run in the server (i.e Loaders, Actions & `.server` files)** 
 
-Push Notification API is finally here! Push Notification API is used to by the server to generate Notifications for the user. It is used when you want to push a notification that is triggered by events from outside the App (e.g A message is sent to your user from another user's app, in a messaging app). It takes in two arguments, a content which is the body of the notification (e.g Content of the message sent to your user) and the delay is an optional argument used to set the delay (*in seconds*) between the event happening and the server triggering the notification. It has a default value of zero.
+Push Notification API is finally here (*with some updates*)! Push Notification API is used to by the server to generate Notifications for the user. It is used when you want to push a notification that is triggered by events from outside the App (e.g A message is sent to your user from another user's app, in a messaging app). It takes in quite a lot of arguments, a content argument which is an object containing methods to style your notification. The *title* property is the title of your Notification, the *body* is for the main text of the notification and the delay is an optional argument used to set the delay (*in seconds*) between the event happening and the server triggering the notification. It has a default value of zero.
+
+> *To reference the other properties of `PushObject`, check out the [properties section](https://developer.mozilla.org/en-US/docs/Web/API/Notification) of this MDN doc.*
 
 Setting up and using `remix-pwa` first-ever server utility requires some steps to be functional, let's break them down:
 
@@ -368,28 +380,27 @@ npx web-push generate-vapid-keys
 
 You would get two keys in your console, a PRIVATE key and a PUBLIC key. Keep your PRIVATE key safe!
 
-2. Create a `.env` file, and save your keys using the variable name `VAPID_PUBLIC_KEY` for the public key and `VAPID_PRIVATE_KEY`for the private key. If you haven't installed the package: `dotenv` yet, then do so by running:
-```sh
-npm i dotenv
-```
-And put the following line of code in `entry.server.ts`:
+2. Create a `.env` file, and save your keys using the variable name `VAPID_PUBLIC_KEY` for the public key and `VAPID_PRIVATE_KEY`for the private key.
+
+Add the following line of code in `entry.server.ts`:
 ```ts
 import "dotenv/config"
 ```
 
 > *Don't forget to add the `.env` file to your `.gitignore` file*
 
-3. You can finally use the basic Web Push API in your server! *Head over to [Customizing Push API](#customizing--extending-the-push-api) to learn more about how to customize the Push API.*
-
-[(Back to Top)](#table-of-content)
+3. You can finally use the basic Web Push API in your server!
 
 ```tsx
-import { PushNotification } from "~utils/server/pwa-utils.server.ts
+import { PushNotification } from "~/utils/server/pwa-utils.server.ts
 
 export const action: ActionFunction = async ({ request }) => {
   // Get request and perform other operations
   
-  PushNotification("Content of Notification", 1)
+  await PushNotification({
+    title: "Remix PWA",
+    body: "A server generated text body."
+  }, 1)
 }
 ```
 
@@ -442,10 +453,6 @@ Our manifest is quite simple and default, the `name` of the app is something tha
 In v0.6.0, we created a new field in our manifest known as `shortcuts` and they do exactly what they say. They allow us to navigate to certain, specified pages (*routes*) directly from outside our App. I won't cover the fields used in the `shortcuts` and what they are meant to do, I would however, drop [this](https://dev.to/azure/09-creating-application-shortcuts-m0i) wonderful article by Microsoft Azure that explains the `shortcut` aspect of the manifest well.
 
 Another thing you would love to edit is the `icons` field in the manifest, we used default Remix icons for those but you would not want to. Instead replace the icons in `/icons` folder and specify their sizes. You could use [Sketch](https://sketch.com) or [Figma](https://figma.com) to design and resize icons. You could also delete the default `favicon.ico` that comes with Remix.
-
-### Customizing & Extending the Push API
-
-The Push API is something you definitely want to edit if you want to push your App to production or even just want a feel of ownership over your notifications. The default title of the notification and options are parameters that are set while in development. Unlike the Notification API that allows you to set the title, icon and other parameters each time, the Push API parameters are set by default in the `entry.worker.{lang}` file. In order to change the title of your Push Notifications, simply edit [this](https://github.com/ShafSpecs/remix-pwa/blob/main/templates/ts/app/entry.worker.ts#L151) line in **your** own worker file and rename `title` to whatever you want. To change your optiions, edit the [options object](https://github.com/ShafSpecs/remix-pwa/blob/main/templates/ts/app/entry.worker.ts#L152) (**do not edit the `body` parameter**), for the full list of options available, refer to this [MDN](https://developer.mozilla.org/en-US/docs/Web/API/notification#instance_properties) resource on PWA Notification options. 
 
 > This section is till WIP 🚧
 
