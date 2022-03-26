@@ -147,11 +147,16 @@ async function handleFetch(event) {
 }
 
 const handlePush = (event) => {
-  const title = "App Name";
+  const data = JSON.parse(event?.data?.text())
+  const title = data.title ? data.title : "Remix PWA";
+
   const options = {
-    body: event?.data?.text() || "Notification Body Text",
-    icon: "/icons/android-icon-192x192.png",
-    badge: "/icons/android-icon-48x48.png",
+    body: data.body ? data.body : "Notification Body Text",
+    icon: data.icon ? data.icon : "/icons/android-icon-192x192.png",
+    badge: data.badge ? data.badge : "/icons/android-icon-48x48.png",
+    dir: data.dir ? data.dir : "auto",
+    image: data.image ? data.image : undefined,
+    silent: data.silent ? data.silent : false, 
   }
 
   self.registration.showNotification(title, {
