@@ -29,7 +29,6 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
   - [Installation](#installation)
   - [Deployment](#deployment)
   - [Upgrading Guide](#upgrade-guide)
-  - [Setting Up your PWA](#setting-up-your-pwa)
 - [Setting Up your PWA](#setting-up-your-pwa)
 - [API Documentation](#api-documentation)
   - [Client APIs](#client-apis)
@@ -90,8 +89,6 @@ npm rm -D remix-pwa
 npx remix-pwa@latest
 ```
 and you can continue with your PWA
-
-> *Due to a massive setback with `remix-pwa` that made it impossible to successfully build and deploy your PWA (pre-0.7.0). I changed things around and shifted a lot of it's APIs to rely heavily on using `npx` instead of `npm install`. You **must** uninstall `remix-pwa` from your dependencies and then use `npx` to accomodate the new changes. Thanks for your support and patience.* 🥰
 
 ## Setting up your PWA
 
