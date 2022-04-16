@@ -1,5 +1,5 @@
-import { LoaderFunction, ActionFunction } from "remix";
 import { PushNotification, SaveSubscription } from "../../utils/server/pwa-utils.server";
+import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 
 const webPush = require("web-push");
 

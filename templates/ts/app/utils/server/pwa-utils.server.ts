@@ -32,11 +32,12 @@ export async function PushNotification(content: PushObject, delay: number = 0) {
     process.env.VAPID_PRIVATE_KEY
   );
 
+  await storage.init();
   const subscription = await storage.getItem("subscription");
 
   setTimeout(() => {
     webPush
-      .sendNotification(subscription, content)
+      .sendNotification(subscription, JSON.stringify(content))
       .then(() => {
         return new Response("success", {
           status: 200,
