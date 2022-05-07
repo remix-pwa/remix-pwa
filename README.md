@@ -14,8 +14,6 @@
 
 Remix PWA is a lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿.
 
-> 💥 New breaking changes and fixes! Read the full changelog [here](https://github.com/ShafSpecs/remix-pwa/releases/tag/v0.7.0) 
-
 ## Features
 
 - Integrates Progressive Web App (PWA) features into Remix including offline support, caching, installability on Native devices and more.
@@ -31,7 +29,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
   - [Installation](#installation)
   - [Deployment](#deployment)
   - [Upgrading Guide](#upgrade-guide)
-  - [Setting Up your PWA](#setting-up-your-pwa)
+- [Setting Up your PWA](#setting-up-your-pwa)
 - [API Documentation](#api-documentation)
   - [Client APIs](#client-apis)
     - [Type Annonations and Return Object](#type-annonations)
@@ -68,14 +66,7 @@ To integrate PWA features into your Remix App with `remix-pwa`, run the followin
 npx remix-pwa@latest
 ```
 
-During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript.
-
-After integrating `remix-pwa`, run the command:
-
-```sh
-npm run pwa
-```
-to successfully complete the PWA installation
+During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript. Make sure to pick "yes" to run `npm install` after the installation
 
 ### Deployment
 
@@ -89,27 +80,22 @@ at build time and then, you can host it on any hosting providers you prefer.
 
 ### Upgrade Guide
 
-To upgrade to a newer version of `remix-pwa`, simply run these three commands one after the other 
+To upgrade to a newer version of `remix-pwa`, simply run these two commands one after the other 
 ```sh
-# Uninstall remix-pwa to remove it from your package.json
+# Uninstall remix-pwa to remove it from your package.json (if present. If not, skip this command)
 npm rm -D remix-pwa
 
 # Use npx to integrate PWA features without modifying your dependencies
 npx remix-pwa@latest
-
-# Complete the integration in your App by installing required dependencies
-npm run pwa
 ```
 and you can continue with your PWA
-
-> *Due to a massive setback with `remix-pwa` that made it impossible to successfully build and deploy your PWA. I changed things around and shifted a lot of it's APIs to rely heavily on using `npx` instead of `npm install`. You **must** uninstall `remix-pwa` from your dependencies and then use `npx` to accomodate the new changes. Thanks for your support and patience.* 🥰
 
 ## Setting up your PWA
 
 After installing `remix-pwa`, link the `manifest` file in order to get installability feature of PWA as well as app characteristics and other features. To do that, simply add the following block of code to the head in your `root` file above the `<Links />` tag:
 
 ```jsx
-<link rel="manifest" href="/resources/manifest.json" />
+<link rel="manifest" href="/resources/manifest.webmanifest" />
 ```
 
 To run your app, simply run the command:
@@ -149,7 +135,7 @@ This function is used to check wether a user is online or offline and execute a 
 display a particular UI or send a particular response to the server.
 
 ```ts
-import { checkConnectivity } from "~utils/client/pwa-utils.client";
+import { checkConnectivity } from "~/utils/client/pwa-utils.client";
 
 const online = () => {
   //..Do something for online state
@@ -171,7 +157,7 @@ useEffect(() => {
 The Clipboard API is a method used to access the clipboard of a device, native or web, and write to it. This function can be triggered by DOM events, i.e "click", "hover", etc. or window events i.e "load", "scroll", etc. 
 
 ```tsx
-import { copyText } from "~utils/client/pwa-utils.client";
+import { copyText } from "~/utils/client/pwa-utils.client";
 
 <button onClick={() => copyText("Test String")}>Copy to Clipboard</button>
 ```
@@ -184,7 +170,7 @@ import { copyText } from "~utils/client/pwa-utils.client";
 The WakeLock API is a function that when fired, is used to keep the screen of a device on at all times even when idle. It is usually fired when an app is started or when a particular route that needs screen-time is loaded (e.g A video app that has a `watch-video` route)
 
 ```tsx
-import { WakeLock } from "~utils/client/pwa-utils.client";
+import { WakeLock } from "~/utils/client/pwa-utils.client";
 
 useEffect(() => {
   WakeLock() // triggers the Wakelock api
@@ -203,7 +189,7 @@ The badge API makes it easy to silently notify the user that there is new activi
 The `addBadge` function takes a number as an argument (displays the number of notification) while the `removeBadge` function doesn't take any argument.
 
 ```tsx
-import { addBadge, removeBadge } from "~utils/client/pwa-utils.client";
+import { addBadge, removeBadge } from "~/utils/client/pwa-utils.client";
 
 // used to clear away all notification badges
 removeBadge()
@@ -238,14 +224,14 @@ interface NotificationOptions {
   body: string | "Notification body";
   badge?: string;
   icon?: string;
-  silent?: boolean | false;
+  silent: boolean | false;
   image?: string
 }
 ```
 
 The `SendNotification` API is a client-only function driven only by the [Notifications API](https://developer.mozilla.org/en-US/docs/Web/API/Notification), it is different from the Push API which is another API handled and executed by the server (arriving to `remix-pwa` soon). The `SendNotification` function is executed by the client and takes in two arguments, one is the title of the notification and that's the top header (Title) of the notification your user would see. The second option is an object that would contain additional options for the API.
 
-The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notifivcation content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**), it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
+The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notifivcation content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**) that is <u>required</u>, it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
 
 The Notification API can take values from the server (e.g `loader`) or from the client but it must be called and executed on the client side. We are working on adding the Push API that allows you to execute a Notification API together with the Push API on the server side in response to anything (for example, when a message is sent to a user in a messaging App).
 
@@ -255,11 +241,11 @@ The Notification API can take values from the server (e.g `loader`) or from the 
 import { SendNotification } from "~/utils/client/pwa-utils.client";
 
 const options = {
-  body: "Hello, take a break and drink some water! 💧",
+  body: "Hello, take a break and drink some water! 💧", // required
   badge: "/icons/notification-badge.png", // not required
   icon: "/icons/app-icon.png", // not required
-  silent: false, // not required
-  image: string // NEW! Not required
+  silent: false, // required
+  image: "/images/Nature.png" // NEW! Not required
 }
 
 let minutes = 30
@@ -362,11 +348,25 @@ import { WebShare } from "~/utils/client/pwa-utils.client";
 ## Server API
 
 ### Push Notification API
-#### `PushNotification(content: string, delay: number = 0) => void`
+#### `PushNotification(content: PushObject, delay: number = 0) => Promise<void>`
+
+```ts
+interface PushObject {
+  title: string;
+  body: string;
+  icon?: string;
+  badge?: string;
+  dir?: string;
+  image?: string;
+  silent?: boolean;
+}
+```
 
 > **This is a server API. All Server APIs are to be run in the server (i.e Loaders, Actions & `.server` files)** 
 
-Push Notification API is finally here! Push Notification API is used to by the server to generate Notifications for the user. It is used when you want to push a notification that is triggered by events from outside the App (e.g A message is sent to your user from another user's app, in a messaging app). It takes in two arguments, a content which is the body of the notification (e.g Content of the message sent to your user) and the delay is an optional argument used to set the delay (*in seconds*) between the event happening and the server triggering the notification. It has a default value of zero.
+Push Notification API is finally here (*with some updates*)! Push Notification API is used to by the server to generate Notifications for the user. It is used when you want to push a notification that is triggered by events from outside the App (e.g A message is sent to your user from another user's app, in a messaging app). It takes in quite a lot of arguments, a content argument which is an object containing methods to style your notification. The *title* property is the title of your Notification, the *body* is for the main text of the notification and the delay is an optional argument used to set the delay (*in seconds*) between the event happening and the server triggering the notification. It has a default value of zero.
+
+> *To reference the other properties of `PushObject`, check out the [properties section](https://developer.mozilla.org/en-US/docs/Web/API/Notification) of this MDN doc.*
 
 Setting up and using `remix-pwa` first-ever server utility requires some steps to be functional, let's break them down:
 
@@ -377,26 +377,27 @@ npx web-push generate-vapid-keys
 
 You would get two keys in your console, a PRIVATE key and a PUBLIC key. Keep your PRIVATE key safe!
 
-2. Create a `.env` file, and save your keys using the variable name `VAPID_PUBLIC_KEY` for the public key and `VAPID_PRIVATE_KEY`for the private key. If you haven't installed the package: `dotenv` yet, then do so by running:
-```sh
-npm i dotenv
-```
-And put the following line of code in `entry.server.ts`:
+2. Create a `.env` file, and save your keys using the variable name `VAPID_PUBLIC_KEY` for the public key and `VAPID_PRIVATE_KEY`for the private key.
+
+Add the following line of code in `entry.server.ts`:
 ```ts
 import "dotenv/config"
 ```
 
 > *Don't forget to add the `.env` file to your `.gitignore` file*
 
-3. You can finally use the basic Web Push API in your server! 
+3. You can finally use the basic Web Push API in your server!
 
 ```tsx
-import { PushNotification } from "~utils/server/pwa-utils.server.ts
+import { PushNotification } from "~/utils/server/pwa-utils.server.ts
 
 export const action: ActionFunction = async ({ request }) => {
   // Get request and perform other operations
   
-  PushNotification("Content of Notification", 1)
+  await PushNotification({
+    title: "Remix PWA",
+    body: "A server generated text body."
+  }, 1)
 }
 ```
 

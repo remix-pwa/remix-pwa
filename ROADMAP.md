@@ -32,12 +32,13 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 ### In the Works
 
-- **Auto-detect language**: Allow `remix-pwa` to automatically detect user's language and act on that without the question prompt
 - **Create a custom download utility**: Create a custom handler for downloading the PWA onto the user's device
+- **Improve the Push API**: The push API currently doesn't support complex data placeholders, so let's change that and make it more sophisticated.
 
 ### Draft
 
 - **Possible enhancement to customization proposal**: Improve the above point (In the works no. 4) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features.
+- **API Analytics**: Add analytics tooling API to allow you to set up a personal, custom Analytic service for your site without losing client's data to companies
 - **Background Sync**: Create a background sync API utility
 
 ### Proposals

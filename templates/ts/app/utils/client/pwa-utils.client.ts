@@ -8,6 +8,11 @@
   ⚠ Except you understand & know the implication of what you're what you are doing, don't modify this file! ⚠
 */
 
+/**
+ * Response Object returned by Client APIs. It serves as a good debugging 
+ * and error-checking method.
+ */
+
 interface ResponseObject {
   status: "success" | "bad";
   message: string;
@@ -15,6 +20,12 @@ interface ResponseObject {
 
 // Clipboard Copy API
 
+/**
+ * Copies text to the clipboard of the device.
+ * 
+ * @typeParam {string} - The text to copy to the device
+ * @return {ResponseObject} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function copyText(text: string): Promise<ResponseObject> {
   try {
     if (navigator.clipboard) {

@@ -2,10 +2,11 @@
 
 const fse = require("fs-extra");
 const path = require("path");
+const { execSync } = require("child_process");
 const colorette = require("colorette");
 const prettier = require("prettier");
 const esformatter = require("esformatter");
-const { Select } = require("enquirer");
+const { Select, Confirm, prompt: questionnaire } = require("enquirer");
 
 async function Run(projectDir: string, lang: "ts" | "js") {
   !fse.existsSync(projectDir + "/app/routes/resources") &&
@@ -94,73 +95,106 @@ async function Run(projectDir: string, lang: "ts" | "js") {
 }
 
 async function cli() {
-  console.log(colorette.magenta("Welcome to Remix PWA!"));
+  console.log(colorette.bold(colorette.magenta("Welcome to Remix PWA!")));
   console.log();
 
   await new Promise((res) => setTimeout(res, 1000));
 
-  // const projectDir = path.resolve("../../");
-
-  /* Debugging purposes ONLY: Uncomment 👇 */
   const projectDir = process.cwd();
 
-  const prompt = new Select({
-    name: "lang",
-    message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
-    choices: [
-      {
-        name: "TypeScript",
-        value: "ts",
-      },
-      {
-        name: "JavaScript",
-        value: "js",
-      },
-    ],
-  });
+  const questions = await questionnaire([
+    {
+      name: "lang",
+      type: "select",
+      message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
+      choices: [
+        {
+          name: "TypeScript",
+          value: "ts",
+        },
+        {
+          name: "JavaScript",
+          value: "js",
+        },
+      ],
+    },
+    {
+      type: "confirm",
+      name: "question",
+      message: 'Do you want to immediately run "npm install"?',
+      initial: true,
+    },
+  ]);
 
-  prompt
-    .run()
-    .then(async (answer: any) => {
-      let lang: "ts" | "js";
-      answer === "TypeScript" ? (lang = "ts") : (lang = "js");
+  async function Setup(questions: any) {
+    let lang: "ts" | "js";
+    questions.lang === "TypeScript" ? (lang = "ts") : (lang = "js");
 
-      await Promise.all([Run(projectDir, lang)]);
-      console.log(
-        colorette.green(
-          "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
-        ),
-      );
-      console.log();
-      console.log(colorette.blue("Running postinstall scripts...."));
+    await Promise.all([Run(projectDir, lang)]);
+    console.log(
+      colorette.green(
+        "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
+      ),
+    );
+    console.log();
+    console.log(colorette.blue("Running postinstall scripts...."));
 
-      const saveFile = fse.writeFileSync;
+    const saveFile = fse.writeFileSync;
 
-      //@ts-ignore
-      // const pkgJsonPath = require.main.paths[0].split("node_modules")[0] + "package.json";
-      const pkgJsonPath = path.resolve(process.cwd(), "package.json");
-      const json = require(pkgJsonPath);
+    //@ts-ignore
+    const pkgJsonPath = path.resolve(process.cwd(), "package.json");
+    const json = require(pkgJsonPath);
 
-      if (!json.hasOwnProperty("scripts")) {
-        json.scripts = {};
-      }
+    if (!json.hasOwnProperty("dependencies")) {
+      json.dependencies = {};
+    }
 
-      json.scripts["pwa"] = "npm install node-persist npm-run-all web-push";
-      json.scripts["build"] = "npm-run-all -p build:*";
-      json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
-      json.scripts[
-        "build:worker"
-      ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
-      json.scripts["dev"] = "npm-run-all -p dev:*";
-      json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
-      json.scripts[
-        "dev:worker"
-      ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
+    if (!json.hasOwnProperty("devDependencies")) {
+      json.devDependencies = {};
+    }
 
-      saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
-      console.log(colorette.green("Successfully ran postinstall scripts!"));
-    })
-    .catch(console.error);
+    if (!json.hasOwnProperty("scripts")) {
+      json.scripts = {};
+    }
+
+    json.dependencies["node-persist"] = "^3.1.0";
+    json.dependencies["web-push"] = "^3.4.5";
+    json.dependencies["npm-run-all"] = "^4.1.5";
+    json.dependencies["cross-env"] = "^7.0.3";
+    json.dependencies["dotenv"] = "^16.0.0";
+    
+    json.devDependencies["@types/node-persist"] = "^3.1.2";
+
+    json.scripts["build"] = "npm-run-all -p build:*";
+    json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
+    json.scripts[
+      "build:worker"
+    ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
+    json.scripts["dev"] = "npm-run-all -p dev:*";
+    json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
+    json.scripts[
+      "dev:worker"
+    ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
+
+    saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
+    console.log(colorette.green("Successfully ran postinstall scripts!"));
+
+    await new Promise((res) => setTimeout(res, 1250));
+
+    if (questions.question) {
+      console.log(colorette.blueBright("Running npm install...."));
+      execSync("npm install", {
+        cwd: process.cwd(),
+        stdio: "inherit"
+      });
+      console.log(colorette.green("Successfully ran npm install!"));
+    } else {
+      console.log(colorette.red("Skipping npm install...."));
+      console.log(colorette.red("Don't forget to run npm install!"));
+    }
+  }
+
+  await Setup(questions).catch((err) => console.error(err));
 }
 
 cli();

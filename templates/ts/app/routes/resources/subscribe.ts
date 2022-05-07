@@ -1,7 +1,7 @@
-const webPush = require("web-push");
+import { PushNotification, SaveSubscription } from "../../utils/server/pwa-utils.server";
+import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 
-import { LoaderFunction, ActionFunction } from "remix";
-import { PushNotification, SaveSubscription } from "~utils/server/pwa-utils.server";
+const webPush = require("web-push");
 
 export const action: ActionFunction = async ({ request }) => {
   const data = await request.json();
@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async () => {
         "environment variables. You can use the following ones:"
     );
     console.log(webPush.generateVAPIDKeys());
-    return;
+    return null;
   }
 
   const publicKey = process.env.VAPID_PUBLIC_KEY;

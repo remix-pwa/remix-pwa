@@ -1,4 +1,4 @@
-import { json } from "remix";
+import { json } from "@remix-run/node";
 
 export let loader = () => {
   return json(
@@ -65,6 +65,7 @@ export let loader = () => {
     {
       headers: {
         "Cache-Control": "public, max-age=600",
+        "Content-Type": "application/manifest+json"
       },
     },
   );

@@ -1,5 +1,5 @@
-import { json } from "remix";
-import type { LoaderFunction } from "remix";
+import { json } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
 
 export let loader: LoaderFunction = () => {
   return json(
@@ -66,6 +66,7 @@ export let loader: LoaderFunction = () => {
     {
       headers: {
         "Cache-Control": "public, max-age=600",
+        "Content-Type": "application/manifest+json"
       },
     },
   );
