@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async () => {
         "environment variables. You can use the following ones:"
     );
     console.log(webPush.generateVAPIDKeys());
-    return;
+    return null;
   }
 
   const publicKey = process.env.VAPID_PUBLIC_KEY;

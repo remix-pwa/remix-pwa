@@ -95,7 +95,7 @@ and you can continue with your PWA
 After installing `remix-pwa`, link the `manifest` file in order to get installability feature of PWA as well as app characteristics and other features. To do that, simply add the following block of code to the head in your `root` file above the `<Links />` tag:
 
 ```jsx
-<link rel="manifest" href="/resources/manifest.json" />
+<link rel="manifest" href="/resources/manifest.webmanifest" />
 ```
 
 To run your app, simply run the command:
