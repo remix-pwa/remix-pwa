@@ -6,19 +6,19 @@ const { execSync } = require("child_process");
 const colorette = require("colorette");
 const prettier = require("prettier");
 const esformatter = require("esformatter");
-const { Select, Confirm, prompt: questionnaire } = require("enquirer");
+const { Select, Confirm, prompt: questionnaire, Input } = require("enquirer");
 
-async function Run(projectDir: string, lang: "ts" | "js") {
-  !fse.existsSync(projectDir + "/app/routes/resources") &&
-    fse.mkdirSync(projectDir + "/app/routes/resources", { recursive: true });
+async function Run(projectDir: string, lang: "ts" | "js", dir: string) {
+  !fse.existsSync(projectDir + `/${dir}/routes/resources`) &&
+    fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
 
   !fse.existsSync(projectDir + "/public/icons") && fse.mkdirSync(projectDir + "/public/icons", { recursive: true });
 
-  !fse.existsSync(projectDir + "/app/utils/server") &&
-    fse.mkdirSync(projectDir + "/app/utils/server", { recursive: true });
+  !fse.existsSync(projectDir + `/${dir}/utils/server`) &&
+    fse.mkdirSync(projectDir + `/${dir}/utils/server`, { recursive: true });
 
-  !fse.existsSync(projectDir + "/app/utils/client") &&
-    fse.mkdirSync(projectDir + "/app/utils/client", { recursive: true });
+  !fse.existsSync(projectDir + `/${dir}/utils/client`) &&
+    fse.mkdirSync(projectDir + `/${dir}/utils/client`, { recursive: true });
 
   const publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
   const appDir = path.resolve(__dirname, "..", "templates", lang, "app");
@@ -31,26 +31,26 @@ async function Run(projectDir: string, lang: "ts" | "js") {
 
   // Check if manifest file exist and if not, create `manifest.json` file && service worker entry point
   const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
-  fse.existsSync(projectDir + "/app/routes/resources/manifest[.]json." + lang)
+  fse.existsSync(projectDir + `/${dir}/routes/resources/manifest[.]json.` + lang)
     ? null
-    : fse.writeFileSync(projectDir + `/app/routes/resources/manifest[.]json.${lang}`, fileContent);
+    : fse.writeFileSync(projectDir + `/${dir}/routes/resources/manifest[.]json.${lang}`, fileContent);
 
   // Create resource route for push notifications
   const subscribeContent = fse.readFileSync(appDir + `/routes/resources/subscribe.${lang}`).toString();
-  fse.existsSync(projectDir + "/app/routes/resources/subscribe." + lang)
+  fse.existsSync(projectDir + `/${dir}/routes/resources/subscribe.` + lang)
     ? null
-    : fse.writeFileSync(projectDir + `/app/routes/resources/subscribe.${lang}`, subscribeContent);
+    : fse.writeFileSync(projectDir + `/${dir}/routes/resources/subscribe.${lang}`, subscribeContent);
 
   // Register worker in `entry.client.tsx`
-  const remoteClientContent: string = fse.readFileSync(projectDir + "/app/entry.client." + lang + "x").toString();
+  const remoteClientContent: string = fse.readFileSync(projectDir + `/${dir}/entry.client.` + lang + "x").toString();
   const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
 
   remoteClientContent.includes(ClientContent)
     ? null
-    : fse.appendFileSync(projectDir + "/app/entry.client." + lang + "x", `\n${ClientContent}`);
+    : fse.appendFileSync(projectDir + `/${dir}/entry.client.` + lang + "x", `\n${ClientContent}`);
 
   // Acknowledge SW in the browser
-  const RootDir = projectDir + "/app/root." + lang + "x";
+  const RootDir = projectDir + `/${dir}/root.` + lang + "x";
 
   const RootDirContent = fse.readFileSync(RootDir).toString();
   const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString();
@@ -71,22 +71,22 @@ async function Run(projectDir: string, lang: "ts" | "js") {
 
   // Create and write pwa-utils client file
   const ClientUtils = fse.readFileSync(appDir + "/utils/client/pwa-utils.client." + lang).toString();
-  fse.writeFileSync(projectDir + "/app/utils/client/pwa-utils.client." + lang, ClientUtils);
+  fse.writeFileSync(projectDir + `/${dir}/utils/client/pwa-utils.client.` + lang, ClientUtils);
 
   // Create and write pwa-utils server file
   const ServerUtils = fse.readFileSync(appDir + "/utils/server/pwa-utils.server." + lang).toString();
-  fse.writeFileSync(projectDir + "/app/utils/server/pwa-utils.server." + lang, ServerUtils);
+  fse.writeFileSync(projectDir + `/${dir}/utils/server/pwa-utils.server.` + lang, ServerUtils);
 
   try {
     fse.readdirSync(appDir).map((worker: string) => {
       if (!worker.includes(lang)) {
         return false;
       } else if (worker.includes("entry.worker")) {
-        const workerDir = path.resolve(projectDir, `app/${worker}`);
+        const workerDir = path.resolve(projectDir, `${dir}/${worker}`);
         const fileContent = fse.readFileSync(`${appDir}/${worker}`);
         fse.existsSync(workerDir) && workerDir.includes(fileContent)
           ? null
-          : fse.writeFileSync(path.resolve(projectDir, `app/${worker}`), fileContent.toString());
+          : fse.writeFileSync(path.resolve(projectDir, `${dir}/${worker}`), fileContent.toString());
       }
     });
   } catch (error) {
@@ -124,13 +124,21 @@ async function cli() {
       message: 'Do you want to immediately run "npm install"?',
       initial: true,
     },
+    {
+      name: "dir",
+      type: "input",
+      message: "What is the location of your Remix app?",
+      initial: "app"
+    }
   ]);
 
   async function Setup(questions: any) {
     let lang: "ts" | "js";
     questions.lang === "TypeScript" ? (lang = "ts") : (lang = "js");
 
-    await Promise.all([Run(projectDir, lang)]);
+    const dir = questions.dir;
+
+    await Promise.all([Run(projectDir, lang, dir)]);
     console.log(
       colorette.green(
         "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
