@@ -241,7 +241,7 @@ The Notification API can take values from the server (e.g `loader`) or from the 
 import { SendNotification } from "~/utils/client/pwa-utils.client";
 
 const options = {
-  body: "Hello, take a break and drink some water! 💧", // required
+  body: "Hello, take a break and drink some water! 💧", // required!
   badge: "/icons/notification-badge.png", // not required
   icon: "/icons/app-icon.png", // not required
   silent: false, // required
@@ -470,6 +470,8 @@ If you want to get help on an issue or have a question, you could either [open a
 ## Authors
 
 - Abdur-Rahman Fashola (aka [@ShafSpecs](https://github.com/ShafSpecs))
+
+- Douglas Muhone ([theeomm](https://github.com/theeomm))
 
 - Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for his contribution and help with the creation of `remix-pwa`!
 
