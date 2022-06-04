@@ -38,10 +38,6 @@ If you think you found a bug that you can fix, clone the repo, make your changes
 
 If you feel you have a great idea for `remix-pwa` or you can improve an existing one, don't hesitate to work on it! No matter how small, we love it! Fork the repo and then, when you want to merge, create a PR to the `dev` branch. We would review it and if it passes all tests and scrutiny would be merged directly to `main`.
 
-## 🧪 Contribute Tests? 
-
-If you want to contribute tests and help improve the safety and confidence of `remix-pwa`, simply fork the repo, clone it and write your tests! Then when you're done and made sure your tests pass, simply create a PR to the `test` branch.
-
 ## 📬 Neglected Issue?
 
 If you happen to come across an issue that you think is important but neglected, you can fork the repo and after you're done, if it involves changes to `remix-pwa` itself including template workers and the CLI, create a PR to the `dev` branch. If it involves tests, then create a PR to the `test` brnch.
