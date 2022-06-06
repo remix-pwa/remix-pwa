@@ -33,6 +33,7 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 ### In the Works
 
 - **Create a custom download utility**: Create a custom handler for downloading the PWA onto the user's device.
+- **Improve mounting of Service Worker**: Minor (but major) tweaks to the mounting Service Worker code. 
 
 ### Draft
 
