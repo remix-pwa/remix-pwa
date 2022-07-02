@@ -1,4 +1,4 @@
-// #!/usr/bin/env node
+#!/usr/bin/env node
 
 // const coreJs = require("core-js/proposals");
 // const fse = require("fs-extra");
@@ -305,8 +305,6 @@
 // }
 
 // cli();
-
-#!/usr/bin/env node
 
 const fse = require("fs-extra");
 const path = require("path");
