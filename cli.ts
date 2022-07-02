@@ -8,7 +8,6 @@ const colorette = require("colorette");
 const prettier = require("prettier");
 const esformatter = require("esformatter");
 const { Select, Confirm, prompt: questionnaire, Input } = require("enquirer");
-const inquirer = require("inquirer");
 
 async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: string, features: string[]) {
   const publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
