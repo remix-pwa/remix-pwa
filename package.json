@@ -90,6 +90,7 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.16.7",
     "colorette": "^2.0.16",
+    "core-js": "^3.23.3",
     "cross-env": "^7.0.3",
     "dotenv-cli": "^4.1.1",
     "enquirer": "^2.3.6",
