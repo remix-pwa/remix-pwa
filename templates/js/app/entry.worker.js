@@ -2,8 +2,6 @@
 
 import { json } from "@remix-run/server-runtime";
 
-let self;
-
 const STATIC_ASSETS = ["/build/", "/icons/", "/"];
 
 const ASSET_CACHE = "asset-cache";
