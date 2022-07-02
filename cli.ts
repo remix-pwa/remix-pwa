@@ -186,46 +186,47 @@ async function cli() {
         value: "jit",
       },
     ],
-  },
-  {
-    name: "feat",
-    type: "multiselect",
-    message: "What features of remix-pwa do you need? Don't be afraid to pick all! (Use 'space' to select options)",
-    choices: [
-      {
-        name: "Service Workers",
-        value: "sw",
-      },
-      {
-        name: "Web Manifest",
-        value: "manifest",
-      },
-      {
-        name: "Push Notifications",
-        value: "push",
-      },
-      {
-        name: "PWA Client Utilities",
-        value: "utils",
-      },
-      {
-        name: "Development Icons",
-        value: "icons",
-      },
-    ],
-  },
-  {
-    name: "dir",
-    type: "input",
-    message: "What is the location of your Remix app?",
-    initial: "app",
-  },
-  {
-    type: "confirm",
-    name: "question",
-    message: 'Do you want to immediately run "npm install"?',
-    initial: true,
-  },
+  }
+  // {
+  //   name: "feat",
+  //   type: "multiselect",
+  //   hint: '(Use <space> to select, <return> to submit)',
+  //   message: "What features of remix-pwa do you need? Don't be afraid to pick all!",
+  //   choices: [
+  //     {
+  //       name: "Service Workers",
+  //       value: "sw",
+  //     },
+  //     {
+  //       name: "Web Manifest",
+  //       value: "manifest",
+  //     },
+  //     {
+  //       name: "Push Notifications",
+  //       value: "push",
+  //     },
+  //     {
+  //       name: "PWA Client Utilities",
+  //       value: "utils",
+  //     },
+  //     {
+  //       name: "Development Icons",
+  //       value: "icons",
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "dir",
+  //   type: "input",
+  //   message: "What is the location of your Remix app?",
+  //   initial: "app",
+  // },
+  // {
+  //   type: "confirm",
+  //   name: "question",
+  //   message: 'Do you want to immediately run "npm install"?',
+  //   initial: true,
+  // },
   ]);
 
   async function Setup(questions: any) {
