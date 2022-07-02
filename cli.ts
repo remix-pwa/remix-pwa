@@ -157,149 +157,77 @@ async function cli() {
 
   const projectDir = process.cwd();
 
-  const questions = await inquirer.prompt([
-    {
-      name: "lang",
-      type: "list",
-      message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
-      choices: [
-        {
-          name: "TypeScript",
-          value: "ts",
-        },
-        {
-          name: "JavaScript",
-          value: "js",
-        },
-      ],
-    },
-    {
-      name: "cache",
-      type: "list",
-      message: "What caching strategy do you want to use? Check out the docs for more info.",
-      choices: [
-        {
-          name: "Precaching",
-          value: "pre",
-        },
-        {
-          name: "Just-In-Time Caching",
-          value: "jit",
-        },
-      ],
-    },
-    {
-      name: "feat",
-      type: "checkbox",
-      message: "What features of remix-pwa do you need? Don't be afraid to pick all! (Use 'space' to select options)",
-      choices: [
-        {
-          name: "Service Workers",
-          value: "sw",
-        },
-        {
-          name: "Web Manifest",
-          value: "manifest",
-        },
-        {
-          name: "Push Notifications",
-          value: "push",
-        },
-        {
-          name: "PWA Client Utilities",
-          value: "utils",
-        },
-        {
-          name: "Development Icons",
-          value: "icons",
-        },
-      ],
-    },
-    {
-      name: "dir",
-      type: "input",
-      message: "What is the location of your Remix app?",
-      default: "app",
-    },
-    {
-      type: "confirm",
-      name: "question",
-      message: 'Do you want to immediately run "npm install"?',
-      default: true,
-    },
+  const questions = await questionnaire([
+  {
+    name: "lang",
+    type: "select",
+    message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
+    choices: [
+      {
+        name: "TypeScript",
+        value: "ts",
+      },
+      {
+        name: "JavaScript",
+        value: "js",
+      },
+    ],
+  },
+  {
+    name: "cache",
+    type: "select",
+    message: "What caching strategy do you want to use? Check out the docs for more info.",
+    choices: [
+      {
+        name: "Precaching",
+        value: "pre",
+      },
+      {
+        name: "Just-In-Time Caching",
+        value: "jit",
+      },
+    ],
+  },
+  {
+    name: "feat",
+    type: "multiselect",
+    message: "What features of remix-pwa do you need? Don't be afraid to pick all! (Use 'space' to select options)",
+    choices: [
+      {
+        name: "Service Workers",
+        value: "sw",
+      },
+      {
+        name: "Web Manifest",
+        value: "manifest",
+      },
+      {
+        name: "Push Notifications",
+        value: "push",
+      },
+      {
+        name: "PWA Client Utilities",
+        value: "utils",
+      },
+      {
+        name: "Development Icons",
+        value: "icons",
+      },
+    ],
+  },
+  {
+    name: "dir",
+    type: "input",
+    message: "What is the location of your Remix app?",
+    initial: "app",
+  },
+  {
+    type: "confirm",
+    name: "question",
+    message: 'Do you want to immediately run "npm install"?',
+    initial: true,
+  },
   ]);
-
-  // const questions = await questionnaire([
-  // {
-  //   name: "lang",
-  //   type: "select",
-  //   message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
-  //   choices: [
-  //     {
-  //       name: "TypeScript",
-  //       value: "ts",
-  //     },
-  //     {
-  //       name: "JavaScript",
-  //       value: "js",
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: "cache",
-  //   type: "select",
-  //   message: "What caching strategy do you want to use? Check out the docs for more info.",
-  //   choices: [
-  //     {
-  //       name: "Precaching",
-  //       value: "pre",
-  //     },
-  //     {
-  //       name: "Just-In-Time Caching",
-  //       value: "jit",
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: "feat",
-  //   type: "multiselect",
-  //   message: "What features of remix-pwa do you need? Don't be afraid to pick all! (Use 'space' to select options)",
-  //   choices: [
-  //     {
-  //       name: "Service Workers",
-  //       value: "sw",
-  //     },
-  //     {
-  //       name: "Web Manifest",
-  //       value: "manifest",
-  //     },
-  //     {
-  //       name: "Push Notifications",
-  //       value: "push",
-  //     },
-  //     {
-  //       name: "PWA Client Utilities",
-  //       value: "utils",
-  //     },
-  //     {
-  //       name: "Development Icons",
-  //       value: "icons",
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: "dir",
-  //   type: "input",
-  //   message: "What is the location of your Remix app?",
-  //   initial: "app",
-  // },
-  // {
-  //   type: "confirm",
-  //   name: "question",
-  //   message: 'Do you want to immediately run "npm install"?',
-  //   initial: true,
-  // },
-  // ]);
 
   async function Setup(questions: any) {
     let lang: "ts" | "js";
