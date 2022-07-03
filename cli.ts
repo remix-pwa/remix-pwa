@@ -8,13 +8,14 @@ const colorette = require("colorette");
 const prettier = require("prettier");
 const esformatter = require("esformatter");
 const { Select, Confirm, prompt: questionnaire, Input } = require("enquirer");
+const chalk = require("chalk");
 
 async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: string, features: string[]) {
   const publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
   const appDir = path.resolve(__dirname, "..", "templates", lang, "app");
 
   // Create `public/icons` and store PWA icons
-  if (features.includes("icons")) {
+  if (features.includes("Development Icons")) {
     !fse.existsSync(projectDir + "/public/icons") && fse.mkdirSync(projectDir + "/public/icons", { recursive: true });
 
     fse.readdirSync(`${publicDir}/icons`).map((file: string) => {
@@ -24,7 +25,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   }
 
   // Check if manifest file exist and if not, create `manifest.json` file && service worker entry point
-  if (features.includes("manifest")) {
+  if (features.includes("Web Manifest")) {
     !fse.existsSync(projectDir + `/${dir}/routes/resources`) &&
       fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
 
@@ -35,7 +36,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   }
 
   // Create resource route for push notifications
-  if (features.includes("push")) {
+  if (features.includes("Push Notifications")) {
     !fse.existsSync(projectDir + `/${dir}/routes/resources`) &&
       fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
 
@@ -50,13 +51,13 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
   const PushContent = fse.readFileSync(appDir + "/push.entry.client." + lang).toString();
 
-  if (features.includes("sw")) {
+  if (features.includes("Service Workers")) {
     remoteClientContent.includes(ClientContent)
       ? null
       : fse.appendFileSync(projectDir + `/${dir}/entry.client.` + lang + "x", `\n${ClientContent}`);
   }
 
-  if (features.includes("push")) {
+  if (features.includes("Push Notifications")) {
     remoteClientContent.includes(PushContent)
       ? null
       : fse.appendFileSync(projectDir + `/${dir}/entry.client.` + lang + "x", `\n${PushContent}`);
@@ -74,12 +75,11 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   const parser = lang === "ts" ? "-ts" : "";
 
   if (!RootDirContent.includes("React")) {
-    RootDirContent = "import React from 'react';\n" + RootDirContent.slice(0, RootDirContent.length - 1);
+    RootDirContent = "import React from 'react';\n" + RootDirContent;
   }
 
   if (!RootDirContent.includes("useLocation") && !RootDirContent.includes("useMatches")) {
-    "import { useLocation, useMatches } from '@remix-run/react';\n" +
-      RootDirContent.slice(0, RootDirContent.length - 1);
+    "import { useLocation, useMatches } from '@remix-run/react';\n" + RootDirContent;
   }
 
   const rootArray: string[] = RootDirContent.split("\n");
@@ -106,7 +106,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   /* End of `root` meddling */
 
   // Create and write pwa-utils client file
-  if (features.includes("utils")) {
+  if (features.includes("PWA Client Utilities")) {
     !fse.existsSync(projectDir + `/${dir}/utils/client`) &&
       fse.mkdirSync(projectDir + `/${dir}/utils/client`, { recursive: true });
 
@@ -115,7 +115,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   }
 
   // Create and write pwa-utils server file
-  if (features.includes("push")) {
+  if (features.includes("ush Notifications")) {
     !fse.existsSync(projectDir + `/${dir}/utils/server`) &&
       fse.mkdirSync(projectDir + `/${dir}/utils/server`, { recursive: true });
 
@@ -124,7 +124,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   }
 
   try {
-    if (features.includes("sw")) {
+    if (features.includes("Service Workers")) {
       fse.readdirSync(appDir).map((worker: string) => {
         if (!worker.includes(lang)) {
           return false;
@@ -155,16 +155,9 @@ async function Setup(questions: any) {
   questions.lang === "TypeScript" ? (lang = "ts") : (lang = "js");
 
   const dir = questions.dir;
-  const cache = questions.cache;
+  let cache: "pre" | "jit"
+  questions.cache === "Precaching" ? (cache = "pre") : (cache = "jit");
   const features = questions.feat;
-
-  // await Promise.resolve(Run(projectDir, lang, dir, cache, features))
-  //   .then(() => {
-  //     console.log(colorette.green("\nSetup complete!\n"));
-  //   })
-  //   .catch((error: Error) => {
-  //     console.error(colorette.red(error.message));
-  //   })
 
   await Run(projectDir, lang, dir, cache, features)
   
@@ -275,6 +268,10 @@ async function cli() {
     type: "multiselect",
     hint: '(Use <space> to select, <return> to submit)',
     message: "What features of remix-pwa do you need? Don't be afraid to pick all!",
+    //@ts-ignore
+    indicator(state: any, choice: any) {
+      return choice.enabled ? ' ' + chalk.green('✔') : ' ' + chalk.gray('o')
+    },
     choices: [
       {
         name: "Service Workers",
@@ -311,8 +308,8 @@ async function cli() {
     initial: true,
   },
   ]);
-
-  await Setup(questions).catch((err) => console.error(err));
+  console.log(questions)
+  // await Setup(questions).catch((err) => console.error(err));
 }
 
 cli();
