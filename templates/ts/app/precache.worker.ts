@@ -1,8 +1,8 @@
 /// <reference lib="WebWorker" />
 
 import { json } from "@remix-run/server-runtime";
-import type { AssetsManifest } from "@remix-run/react/entry";
-import type { EntryRoute } from "@remix-run/react/routes";
+import type { AssetsManifest } from "@remix-run/react/dist/entry";
+import type { EntryRoute } from "@remix-run/react/dist/routes";
 
 export type {};
 declare let self: ServiceWorkerGlobalScope;
