@@ -8,7 +8,7 @@ const prettier = require("prettier");
 const esformatter = require("esformatter");
 const { Select, Confirm, prompt: questionnaire, Input } = require("enquirer");
 const chalk = require("chalk");
-const shell = require("shelljs")
+const shell = require("shelljs");
 
 async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: string, features: string[]) {
   const publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
@@ -74,26 +74,30 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   const index = RootDirNull.search(rootRegex);
   const parser = lang === "ts" ? "-ts" : "";
 
-  const RootDirContent2 = "import React from 'react';\nimport { useLocation, useMatches } from '@remix-run/react';\n" + RootDirContent;
+  const rootArray: string[] = RootDirContent.split("\n");
 
-  const rootArray: string[] = RootDirContent2.split("\n");
-
-  let totalImportCount = 0;
-
-  for (let index = 0; index < rootArray.length; index++) {
-    if (rootArray[index].includes("import")) {
-      totalImportCount = index;
+  const lastIndexOf = (arr: any[], item: any) => {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i].includes(item)) {
+        return i;
+      }
     }
+    return -1;
+  };
 
-    if(index > 35) {
-      break;
-    }
-  }
+  let totalImportCount = lastIndexOf(rootArray, "} from");
 
   rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
+  rootArray.unshift("import { useLocation, useMatches } from '@remix-run/react';");
+  rootArray.unshift("import React from 'react';");
   const RootDirContent3 = rootArray.join("\n");
 
-  const RootDirContent4 = RootDirContent3.slice(0, totalImportCount) + "\n" + localeRootDir + "\n" + RootDirContent3.slice(totalImportCount + 1);
+  const RootDirContent4 =
+    RootDirContent3.slice(0, totalImportCount) +
+    "\n" +
+    localeRootDir +
+    "\n" +
+    RootDirContent3.slice(totalImportCount + 1);
 
   const NewContent = RootDirContent4.includes(localeRootDir)
     ? RootDirContent3
@@ -155,18 +159,16 @@ async function Setup(questions: any) {
   questions.lang === "TypeScript" ? (lang = "ts") : (lang = "js");
 
   const dir = questions.dir;
-  let cache: "pre" | "jit"
+  let cache: "pre" | "jit";
   questions.cache === "Precaching" ? (cache = "pre") : (cache = "jit");
   const features = questions.feat;
 
-  await Run(projectDir, lang, dir, cache, features)
-  
+  await Run(projectDir, lang, dir, cache, features);
+
   await new Promise((res) => setTimeout(res, 500));
 
   console.log(
-    colorette.green(
-      "PWA Service workers successfully integrated into Remix! Check out the docs for additional info.",
-    ),
+    colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
   );
   console.log();
   console.log(colorette.blue("Running postinstall scripts...."));
@@ -233,80 +235,80 @@ async function cli() {
   await new Promise((res) => setTimeout(res, 1000));
 
   const questions = await questionnaire([
-  {
-    name: "lang",
-    type: "select",
-    message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
-    choices: [
-      {
-        name: "TypeScript",
-        value: "ts",
-      },
-      {
-        name: "JavaScript",
-        value: "js",
-      },
-    ],
-  },
-  {
-    name: "cache",
-    type: "select",
-    message: "What caching strategy do you want to use? Check out the docs for more info.",
-    choices: [
-      {
-        name: "Precaching",
-        value: "pre",
-      },
-      {
-        name: "Just-In-Time Caching",
-        value: "jit",
-      },
-    ],
-  },
-  {
-    name: "feat",
-    type: "multiselect",
-    hint: '(Use <space> to select, <return> to submit)',
-    message: "What features of remix-pwa do you need? Don't be afraid to pick all!",
-    //@ts-ignore
-    indicator(state: any, choice: any) {
-      return choice.enabled ? ' ' + chalk.green('✔') : ' ' + chalk.gray('o')
+    {
+      name: "lang",
+      type: "select",
+      message: "Is this a TypeScript or JavaScript project? Pick the opposite for chaos!",
+      choices: [
+        {
+          name: "TypeScript",
+          value: "ts",
+        },
+        {
+          name: "JavaScript",
+          value: "js",
+        },
+      ],
     },
-    choices: [
-      {
-        name: "Service Workers",
-        value: "sw",
+    {
+      name: "cache",
+      type: "select",
+      message: "What caching strategy do you want to use? Check out the docs for more info.",
+      choices: [
+        {
+          name: "Precaching",
+          value: "pre",
+        },
+        {
+          name: "Just-In-Time Caching",
+          value: "jit",
+        },
+      ],
+    },
+    {
+      name: "feat",
+      type: "multiselect",
+      hint: "(Use <space> to select, <return> to submit)",
+      message: "What features of remix-pwa do you need? Don't be afraid to pick all!",
+      //@ts-ignore
+      indicator(state: any, choice: any) {
+        return choice.enabled ? " " + chalk.green("✔") : " " + chalk.gray("o");
       },
-      {
-        name: "Web Manifest",
-        value: "manifest",
-      },
-      {
-        name: "Push Notifications",
-        value: "push",
-      },
-      {
-        name: "PWA Client Utilities",
-        value: "utils",
-      },
-      {
-        name: "Development Icons",
-        value: "icons",
-      },
-    ],
-  },
-  {
-    name: "dir",
-    type: "input",
-    message: "What is the location of your Remix app?",
-    initial: "app",
-  },
-  {
-    type: "confirm",
-    name: "question",
-    message: 'Do you want to immediately run "npm install"?',
-    initial: true,
-  },
+      choices: [
+        {
+          name: "Service Workers",
+          value: "sw",
+        },
+        {
+          name: "Web Manifest",
+          value: "manifest",
+        },
+        {
+          name: "Push Notifications",
+          value: "push",
+        },
+        {
+          name: "PWA Client Utilities",
+          value: "utils",
+        },
+        {
+          name: "Development Icons",
+          value: "icons",
+        },
+      ],
+    },
+    {
+      name: "dir",
+      type: "input",
+      message: "What is the location of your Remix app?",
+      initial: "app",
+    },
+    {
+      type: "confirm",
+      name: "question",
+      message: 'Do you want to immediately run "npm install"?',
+      initial: true,
+    },
   ]);
   // console.log(questions)
   await Setup(questions).catch((err) => console.error(err));
