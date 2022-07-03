@@ -74,20 +74,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   const index = RootDirNull.search(rootRegex);
   const parser = lang === "ts" ? "-ts" : "";
 
-  // if (!RootDirContent.includes("React")) {
-  //   RootDirContent = "import React from 'react';\n" + RootDirContent;
-  // }
-
-  // if (!RootDirContent.includes("useLocation") && !RootDirContent.includes("useMatches")) {
-  //   "import { useLocation, useMatches } from '@remix-run/react';\n" + RootDirContent;
-  // }
-
-  shell
-    .echo("import React from 'react';\nimport { useLocation, useMatches } from '@remix-run/react';\n")
-    .cat(RootDir)
-    .to(RootDir);
-
-  RootDirContent = fse.readFileSync(RootDir).toString();
+  RootDirContent = "import React from 'react';\nimport { useLocation, useMatches } from '@remix-run/react';\n" + RootDirContent;
 
   const rootArray: string[] = RootDirContent.split("\n");
 
@@ -96,6 +83,10 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   for (let index = 0; index < rootArray.length; index++) {
     if (rootArray[index].includes("import")) {
       totalImportCount = index;
+    }
+
+    if(index > 35) {
+      break;
     }
   }
 
