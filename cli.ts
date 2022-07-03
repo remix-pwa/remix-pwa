@@ -8,6 +8,7 @@ const prettier = require("prettier");
 const esformatter = require("esformatter");
 const { Select, Confirm, prompt: questionnaire, Input } = require("enquirer");
 const chalk = require("chalk");
+const shell = require("shelljs")
 
 async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: string, features: string[]) {
   const publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
@@ -73,13 +74,18 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   const index = RootDirNull.search(rootRegex);
   const parser = lang === "ts" ? "-ts" : "";
 
-  if (!RootDirContent.includes("React")) {
-    RootDirContent = "import React from 'react';\n" + RootDirContent;
-  }
+  // if (!RootDirContent.includes("React")) {
+  //   RootDirContent = "import React from 'react';\n" + RootDirContent;
+  // }
 
-  if (!RootDirContent.includes("useLocation") && !RootDirContent.includes("useMatches")) {
-    "import { useLocation, useMatches } from '@remix-run/react';\n" + RootDirContent;
-  }
+  // if (!RootDirContent.includes("useLocation") && !RootDirContent.includes("useMatches")) {
+  //   "import { useLocation, useMatches } from '@remix-run/react';\n" + RootDirContent;
+  // }
+
+  shell
+    .echo("import React from 'react';\nimport { useLocation, useMatches } from '@remix-run/react';\n")
+    .cat(RootDirContent)
+    .to(RootDir)
 
   const rootArray: string[] = RootDirContent.split("\n");
 
@@ -92,7 +98,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   }
 
   rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
-  rootArray.join("\n");
+  RootDirContent = rootArray.join("\n");
 
   const NewContent = RootDirContent.includes(localeRootDir)
     ? RootDirContent
