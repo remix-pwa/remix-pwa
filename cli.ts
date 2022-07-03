@@ -158,14 +158,16 @@ async function Setup(questions: any) {
   const cache = questions.cache;
   const features = questions.feat;
 
-  await Promise.resolve(Run(projectDir, lang, dir, cache, features))
-    .then(() => {
-      console.log(colorette.green("\nSetup complete!\n"));
-    })
-    .catch((error: Error) => {
-      console.error(colorette.red(error.message));
-    })
+  // await Promise.resolve(Run(projectDir, lang, dir, cache, features))
+  //   .then(() => {
+  //     console.log(colorette.green("\nSetup complete!\n"));
+  //   })
+  //   .catch((error: Error) => {
+  //     console.error(colorette.red(error.message));
+  //   })
 
+  await Run(projectDir, lang, dir, cache, features)
+  
   await new Promise((res) => setTimeout(res, 500));
 
   console.log(
