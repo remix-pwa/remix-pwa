@@ -307,8 +307,8 @@ async function cli() {
     initial: true,
   },
   ]);
-  console.log(questions)
-  // await Setup(questions).catch((err) => console.error(err));
+  // console.log(questions)
+  await Setup(questions).catch((err) => console.error(err));
 }
 
 cli();
