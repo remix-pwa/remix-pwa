@@ -87,7 +87,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
 
   let totalImportCount = lastIndexOf(rootArray, "} from");
 
-  rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
+  rootArray.splice(totalImportCount, 0, "let isMount = true;");
   rootArray.unshift("import { useLocation, useMatches } from '@remix-run/react';");
   rootArray.unshift("import React from 'react';");
   const RootDirContent3 = rootArray.join("\n");
