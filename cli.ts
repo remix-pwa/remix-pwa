@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const coreJs = require("core-js/proposals");
 const fse = require("fs-extra");
 const path = require("path");
 const { execSync } = require("child_process");
