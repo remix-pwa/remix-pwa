@@ -74,9 +74,9 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   const index = RootDirNull.search(rootRegex);
   const parser = lang === "ts" ? "-ts" : "";
 
-  RootDirContent = "import React from 'react';\nimport { useLocation, useMatches } from '@remix-run/react';\n" + RootDirContent;
+  const RootDirContent2 = "import React from 'react';\nimport { useLocation, useMatches } from '@remix-run/react';\n" + RootDirContent;
 
-  const rootArray: string[] = RootDirContent.split("\n");
+  const rootArray: string[] = RootDirContent2.split("\n");
 
   let totalImportCount = 0;
 
@@ -91,10 +91,12 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   }
 
   rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
-  RootDirContent = rootArray.join("\n");
+  const RootDirContent3 = rootArray.join("\n");
 
-  const NewContent = RootDirContent.includes(localeRootDir)
-    ? RootDirContent
+  const RootDirContent4 = RootDirContent3.slice(0, totalImportCount) + "\n" + localeRootDir + "\n" + RootDirContent3.slice(totalImportCount + 1);
+
+  const NewContent = RootDirContent4.includes(localeRootDir)
+    ? RootDirContent3
     : RootDirNull.slice(0, index - 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index);
   const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
   const cleanRegex: RegExp = /{" "}/g;
