@@ -85,7 +85,9 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   shell
     .echo("import React from 'react';\nimport { useLocation, useMatches } from '@remix-run/react';\n")
     .cat(RootDirContent)
-    .to(RootDir)
+    .to(RootDir);
+
+  RootDirContent = fse.readFileSync(RootDir).toString();
 
   const rootArray: string[] = RootDirContent.split("\n");
 
