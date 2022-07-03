@@ -114,7 +114,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   }
 
   // Create and write pwa-utils server file
-  if (features.includes("ush Notifications")) {
+  if (features.includes("Push Notifications")) {
     !fse.existsSync(projectDir + `/${dir}/utils/server`) &&
       fse.mkdirSync(projectDir + `/${dir}/utils/server`, { recursive: true });
 
