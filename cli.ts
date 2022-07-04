@@ -75,7 +75,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
 
   const rootArray: string[] = RootDirContent.split("\n");
 
-  const lastIndexOf = (arr: any[], item: any) => {
+  const lastIndexOf = (arr: Array<any>, item: any) => {
     for (let i = arr.length - 1; i >= 0; i--) {
       if (arr[i].includes(item)) {
         return i;
@@ -84,7 +84,7 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
     return -1;
   };
 
-  if ("Service Workers" || "Web Manifest") {
+  if (features.includes("Service Workers") || features.includes("Web Manifest")) {
     let totalImportCount = lastIndexOf(rootArray, "} from");
 
     rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
