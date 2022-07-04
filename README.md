@@ -442,6 +442,8 @@ Also known as `jit`. This is the default caching strategy remix-pwa has been usi
 
 This is the new one 🥁! It is a caching strategy that is used when you want to cache all the pages and responses of your application on first load. It is a good choice for small, static applications. It caches all the pages and responses of your application, and updates the cache when the page information changes and the user is online. This would be preferred when building a small, static application with few parametized routes. ⚠️ *Does not cache parametized routes!* ⚠️
 
+Thanks to [mokhtar](https://.github.com/m5r) for his contribution!
+
 ### PWA Features
 
 Another new feature and a way to install the minimal things you need automatically. Remix PWA comes with five major features:
@@ -539,6 +541,10 @@ If you want to get help on an issue or have a question, you could either [open a
 - Abdur-Rahman Fashola (aka [@ShafSpecs](https://github.com/ShafSpecs))
 
 - Douglas Muhone ([theeomm](https://github.com/theeomm))
+
+- Mokhtar ([mokhtar](https://github.com/m5r))
+
+- Tom ([pumpitbetter](https://github.com/pumpitbetter))
 
 - Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for his contribution and help with the creation of `remix-pwa`!
 
