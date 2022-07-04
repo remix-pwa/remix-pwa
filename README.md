@@ -29,9 +29,9 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 
 - [Getting Started](#getting-started)
   - [Installation](#installation)
-  - [Deployment](#deployment)
   - [Upgrading Guide](#upgrade-guide)
 - [Setting Up your PWA](#setting-up-your-pwa)
+- [Deployment](#deployment)
 - [API Documentation](#api-documentation)
   - [Client APIs](#client-apis)
     - [Type Annonations and Return Object](#type-annonations)
@@ -49,6 +49,12 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
       - [Miscellaneous Web Share API](#misc-web-share-api)
   - [Server APIs](#server-api)
     - [Push Notification API](#push-notification-api)
+-[Installation Manual Guide](#installation-manual-guide)
+  - [Language](#language)
+  - [Caching Strategy](#caching-strategy)
+  - [PWA Features](#pwa-features)
+  - [`app` Location](#app-location)
+  - [Installing Dependencies](#installing-dependencies)
 - [Going Deeper](#going-deeper)
   - [Customizing your PWA `manifest` file](#customizing-your-pwa-manifest)
   - [Upgrading your PWA manifest](#upgrading-your-pwa-manifest)
@@ -68,36 +74,31 @@ To integrate PWA features into your Remix App with `remix-pwa`, run the followin
 npx remix-pwa@latest
 ```
 
-During installation, you would be required to choose the current language you are using with your Remix project, JavaScript or TypeScript. Make sure to pick "yes" to run `npm install` after the installation
+During installation, you would be required to answer a few questions:
 
-### Deployment
+- The language you are using for the Remix project (TypeScript or JavaScript)
+- The caching strategy you are using. (`Precaching` or `Just-In-Time Caching`)
+- What services of Remix PWA you need. (*It is finally here* 🥳)
+- The location of your Remix `app` directory.
+- Do you want to install Remix PWA dependencies? (Default: `yes`)
 
-To build and deploy your Remix PWA App, simply run the command:
-
-```sh
-npm run build
-```
-
-at build time and then, you can host it on any hosting providers you prefer.
+Refer to [this](#installation-manual-guide) section for a detailed explanation of the above questions.
 
 ### Upgrade Guide
 
-To upgrade to a newer version of `remix-pwa`, simply run these two commands one after the other 
+To upgrade to a newer version of `remix-pwa`, simply run this command
 ```sh
-# Uninstall remix-pwa to remove it from your package.json (if present. If not, skip this command)
-npm rm -D remix-pwa
-
 # Use npx to integrate PWA features without modifying your dependencies
 npx remix-pwa@latest
 ```
 and you can continue with your PWA
 
-## Setting up your PWA
+## Setting up Remix for PWA
 
 After installing `remix-pwa`, link the `manifest` file in order to get installability feature of PWA as well as app characteristics and other features. To do that, simply add the following block of code to the head in your `root` file above the `<Links />` tag:
 
 ```jsx
-<link rel="manifest" href="/resources/manifest.json" />
+<link rel="manifest" href="/resources/manifest.webmanifest" />
 ```
 
 To run your app, simply run the command:
@@ -110,6 +111,16 @@ And voila! You are now ready to use your PWA!
 
 If you want to lay you hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
 in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/examples/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
+
+## Deployment
+
+To build and deploy your Remix PWA App, simply run the command:
+
+```sh
+npm run build
+```
+
+at build time and then, you can host it on any hosting providers you prefer.
 
 # API Documentation
 
@@ -406,6 +417,60 @@ export const action: ActionFunction = async ({ request }) => {
 [(Back to Top)](#table-of-content)
 
 > **⚠ Hang On tight! We are working on bringing more awesome features to you amazing folks. ⚠**
+
+## Installation Manual Guide
+
+Ahh! What a mouthful for a section topic 🤭. This section is to explain the various prompts that comes up during `remix-pwa` installation. 
+
+### Language
+
+This is quite self-explanatory. It is the language you used for your Remix project, possible options are:
+- TypeScript
+- JavaScript
+
+### Caching Strategy
+
+This is a new one 🎉🎉! There are two possible options:
+- Just-In-Time Caching
+- Precaching
+
+**Just-In-Time Caching:**
+
+Also known as `jit`. This is the default caching strategy remix-pwa has been using for a while. It is a good choice for most projects. It caches only pages and responses the user has navigated to, and updates the cache when the page information changes and the user is online. This would be preferred when building a large, dynamic application with notable parametized routes.
+
+**Precaching Strategy:**
+
+This is the new one 🥁! It is a caching strategy that is used when you want to cache all the pages and responses of your application on first load. It is a good choice for small, static applications. It caches all the pages and responses of your application, and updates the cache when the page information changes and the user is online. This would be preferred when building a small, static application with few parametized routes. ⚠️ *Does not cache parametized routes!* ⚠️
+
+### PWA Features
+
+Another new feature and a way to install the minimal things you need automatically. Remix PWA comes with five major features:
+- Service Workers
+- Web Manifest
+- Push API Services
+- Cient Utilities (APIs to help build a PWA)
+- Development Icons
+
+**Service Workers** are the standard and a vital part of every Progressive Web Application. Handles the caching and a lot more in Remix PWA.
+
+**Web Manifests** are the main file that is used to generate the Progressive Web App. It is a JSON file that provides information and characteristics for your application. *Needed if you want to deploy on App Stores*.
+
+**Push API** is a server API to integrate Push Notifications into your application. It was made standalone feature due to the amount of work needed to setup successfully and not all apps need it.
+
+**Client Utilities** are a set of APIs that help with getting that native feel of your PWA quickly. They consist of functions to toggle fullscreen, manage App badges, copy images, send files and much more.
+
+**Development Icons** are a set of Remix icons you can use to quickly get icons for your PWA. *They need to be linked though! Get the `link` from [here](https://github.com/ShafSpecs/remix-pwa/blob/main/examples/pwa-links.ts#L9)*
+
+### `app` location
+
+This is the location where your `app` folder is located. By default, remix uses the `/app` directory in your project root. But lots of users change the location of the app root folder (e.g. `/src/app`). This now allows app directory of all kinds to be used.
+**Note that the directory input must not have a trailing or leading slash!!** (e.g. `app` for `/app` and `src/app` for `/src/app/`)
+
+### Installing Dependencies
+
+This one is straightforward. Do you want to install Remix PWA dependencies right now and continue developing your app or do you want to skip it and continue your work with lots of errors due to missing dependencies?
+
+[(Back to Top)](#table-of-content)
 
 ## Going Deeper
 
