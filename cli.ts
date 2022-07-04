@@ -91,18 +91,9 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   rootArray.unshift("import React from 'react';");
   const RootDirContent3 = rootArray.join("\n");
 
-  const RootDirContent4 =
-    RootDirContent3.slice(0, totalImportCount) +
-    "\n" +
-    localeRootDir +
-    "\n" +
-    RootDirContent3.slice(totalImportCount + 1);
-
-  console.log(RootDirContent4, RootDirContent3)
-
-  const NewContent = RootDirContent4.includes(localeRootDir)
-    ? RootDirContent4
-    : RootDirNull.slice(0, index - 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index);
+  const NewContent = RootDirContent3.includes(localeRootDir)
+    ? RootDirContent3
+    : RootDirContent3.replace(/\s\s+/g, " ").slice(0, index - 1) + "\n" + localeRootDir + "\n" + RootDirContent3.replace(/\s\s+/g, " ").slice(index);
   const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
   const cleanRegex: RegExp = /{" "}/g;
   const newFormatted: string = formatted.replace(cleanRegex, " ");
