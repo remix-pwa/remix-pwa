@@ -23,14 +23,14 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 - PWA client-side utilities that comes bundled with your App to give you more options and freedom while building the PWA of tomorrow.
 - Server-side utilities to simplify a lot of PWA backend for you. Developing would be more exciting!
 
-**New release is here! 🥳🥳 Check it out [here](https://github.com/ShafSpecs/remix-pwa/releases/tag/v0.8.2)**
+**v1 is officially here 🎉🎉!! Check out the [release](https://github.com/ShafSpecs/remix-pwa/releases/tag/v1.0) changelog for a summary of the journey so far.** 
 
 ## Table Of Content
 
 - [Getting Started](#getting-started)
   - [Installation](#installation)
   - [Upgrading Guide](#upgrade-guide)
-- [Setting Up your PWA](#setting-up-your-pwa)
+- [Setting Up your PWA](#setting-up-remix-for-pwa)
 - [Deployment](#deployment)
 - [API Documentation](#api-documentation)
   - [Client APIs](#client-apis)
@@ -49,7 +49,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
       - [Miscellaneous Web Share API](#misc-web-share-api)
   - [Server APIs](#server-api)
     - [Push Notification API](#push-notification-api)
--[Installation Manual Guide](#installation-manual-guide)
+- [Installation Manual Guide](#installation-manual-guide)
   - [Language](#language)
   - [Caching Strategy](#caching-strategy)
   - [PWA Features](#pwa-features)
