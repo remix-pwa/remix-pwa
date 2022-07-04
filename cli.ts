@@ -68,15 +68,15 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   let RootDirContent: string = fse.readFileSync(RootDir).toString();
   const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString();
 
-  const RootDirNull: string = RootDirContent.replace(/\s\s+/g, " ");
-  const rootRegex: RegExp = /return \( <html/g;
-  const index = RootDirNull.search(rootRegex);
+  // const RootDirNull: string = RootDirContent.replace(/\s\s+/g, " ");
+  // const rootRegex: RegExp = /return \( <html/g;
+  // const index = RootDirNull.search(rootRegex);
   const parser = lang === "ts" ? "-ts" : "";
 
   const rootArray: string[] = RootDirContent.split("\n");
 
-  const lastIndexOf = (arr: any[], item: any) => {
-    for (let i = arr.length - 1; i >= 0; i--) {
+  const lastIndexOf = (arr: any[], item: any, start: number = arr.length - 1) => {
+    for (let i = start; i >= 0; i--) {
       if (arr[i].includes(item)) {
         return i;
       }
@@ -89,11 +89,22 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
   rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
   rootArray.unshift("import { useLocation, useMatches } from '@remix-run/react';");
   rootArray.unshift("import React from 'react';");
+
   const RootDirContent3 = rootArray.join("\n");
 
-  const NewContent = RootDirContent3.includes(localeRootDir)
-    ? RootDirContent3
-    : RootDirContent3.replace(/\s\s+/g, " ").slice(0, index - 1) + "\n" + localeRootDir + "\n" + RootDirContent3.replace(/\s\s+/g, " ").slice(index);
+  let NewContent;
+  if (RootDirContent3.includes(localeRootDir)) {
+    NewContent = RootDirContent3;
+  } else {
+    for (let index = 0; index < rootArray.length; index++) {
+      if (rootArray[index].includes("html")) {
+        const temp = lastIndexOf(rootArray, "return", index);
+        rootArray.splice(temp, 0, localeRootDir);
+        NewContent = rootArray.join("\n");
+      }
+    }
+  }
+  //   : RootDirContent3.replace(/\s\s+/g, " ").slice(0, index - 1) + "\n" + localeRootDir + "\n" + RootDirContent3.replace(/\s\s+/g, " ").slice(index);
   const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
   const cleanRegex: RegExp = /{" "}/g;
   const newFormatted: string = formatted.replace(cleanRegex, " ");
