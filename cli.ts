@@ -5,7 +5,6 @@ const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
 const prettier = require("prettier");
-const esformatter = require("esformatter");
 const { Select, Confirm, prompt: questionnaire, Input } = require("enquirer");
 const chalk = require("chalk");
 const shell = require("shelljs");
@@ -85,28 +84,22 @@ async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: st
     return -1;
   };
 
-  let totalImportCount = lastIndexOf(rootArray, "} from");
+  if ("Service Workers" || "Web Manifest") {
+    let totalImportCount = lastIndexOf(rootArray, "} from");
 
-  rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
-  rootArray.unshift("import { useLocation, useMatches } from '@remix-run/react';");
-  rootArray.unshift("import React from 'react';");
-  const RootDirContent3 = rootArray.join("\n");
+    rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
+    rootArray.unshift("import { useLocation, useMatches } from '@remix-run/react';");
+    rootArray.unshift("import React from 'react';");
+    const RootDirContent3 = rootArray.join("\n");
 
-  console.log(RootDirContent3)
-  // const RootDirContent4 =
-  //   RootDirContent3.slice(0, totalImportCount) +
-  //   "\n" +
-  //   localeRootDir +
-  //   "\n" +
-  //   RootDirContent3.slice(totalImportCount + 1);
-
-  const NewContent = RootDirContent3.includes(localeRootDir)
-    ? RootDirContent3
-    : RootDirNull.slice(0, index - 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index);
-  const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
-  const cleanRegex: RegExp = /{" "}/g;
-  const newFormatted: string = formatted.replace(cleanRegex, " ");
-  fse.writeFileSync(RootDir, newFormatted);
+    const NewContent = RootDirContent3.includes(localeRootDir)
+      ? RootDirContent3
+      : RootDirNull.slice(0, index - 1) + "\n" + localeRootDir + "\n" + RootDirNull.slice(index);
+    const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
+    const cleanRegex: RegExp = /{" "}/g;
+    const newFormatted: string = formatted.replace(cleanRegex, " ");
+    fse.writeFileSync(RootDir, newFormatted);
+  }
 
   /* End of `root` meddling */
 
