@@ -13,29 +13,29 @@ function urlBase64ToUint8Array(base64String) {
 
 navigator.serviceWorker.ready
   .then((registration) => {
-    const subscription = registration.pushManager.getSubscription()
+    const subscription = registration.pushManager.getSubscription();
     return { subscription, registration };
   })
   .then(async (sub) => {
     if (await sub.subscription) {
-      return sub.subscription
+      return sub.subscription;
     }
 
-    const subInfo = await fetch("/resources/subscribe")
+    const subInfo = await fetch("/resources/subscribe");
     const returnedSubscription = await subInfo.text();
 
-    const convertedVapidKey = urlBase64ToUint8Array(returnedSubscription)
+    const convertedVapidKey = urlBase64ToUint8Array(returnedSubscription);
     return sub.registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: convertedVapidKey
+      applicationServerKey: convertedVapidKey,
     });
   })
   .then(async (subscription) => {
-    await fetch('./resources/subscribe', {
-      method: 'POST',
+    await fetch("./resources/subscribe", {
+      method: "POST",
       body: JSON.stringify({
         subscription: subscription,
-        type: "POST_SUBSCRIPTION"
-      })
-    })
-  })
+        type: "POST_SUBSCRIPTION",
+      }),
+    });
+  });

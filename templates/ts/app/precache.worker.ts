@@ -27,96 +27,96 @@ const DOCUMENT_CACHE = "document-cache";
 const STATIC_ASSETS = ["/build/", "/icons/"];
 
 async function handleSyncRemixManifest(event: ExtendableMessageEvent) {
-	console.debug("sync manifest");
-	const cachePromises: Map<string, Promise<void>> = new Map();
-	const [dataCache, documentCache, assetCache] = await Promise.all([
-		caches.open(DATA_CACHE),
-		caches.open(DOCUMENT_CACHE),
-		caches.open(ASSET_CACHE),
-	]);
-	const manifest: AssetsManifest = event.data.manifest;
-	const routes = Object.values(manifest.routes);
+  console.debug("sync manifest");
+  const cachePromises: Map<string, Promise<void>> = new Map();
+  const [dataCache, documentCache, assetCache] = await Promise.all([
+    caches.open(DATA_CACHE),
+    caches.open(DOCUMENT_CACHE),
+    caches.open(ASSET_CACHE),
+  ]);
+  const manifest: AssetsManifest = event.data.manifest;
+  const routes = Object.values(manifest.routes);
 
-	for (const route of routes) {
-		if (route.id.includes("$")) {
-			console.debug("parametrized route", route.id);
-			continue;
-		}
+  for (const route of routes) {
+    if (route.id.includes("$")) {
+      console.debug("parametrized route", route.id);
+      continue;
+    }
 
-		cacheRoute(route);
-	}
+    cacheRoute(route);
+  }
 
-	await Promise.all(cachePromises.values());
+  await Promise.all(cachePromises.values());
 
-	function cacheRoute(route: EntryRoute) {
-		const pathname = getPathname(route);
-		if (route.hasLoader) {
-			cacheLoaderData(route);
-		}
+  function cacheRoute(route: EntryRoute) {
+    const pathname = getPathname(route);
+    if (route.hasLoader) {
+      cacheLoaderData(route);
+    }
 
-		if (route.module) {
-			cachePromises.set(route.module, cacheAsset(route.module));
-		}
+    if (route.module) {
+      cachePromises.set(route.module, cacheAsset(route.module));
+    }
 
-		if (route.imports) {
-			for (const assetUrl of route.imports) {
-        debug(route.index, route.parentId, route.imports, route.module)
-				if (cachePromises.has(assetUrl)) {
-					continue;
-				}
+    if (route.imports) {
+      for (const assetUrl of route.imports) {
+        debug(route.index, route.parentId, route.imports, route.module);
+        if (cachePromises.has(assetUrl)) {
+          continue;
+        }
 
-				cachePromises.set(assetUrl, cacheAsset(assetUrl));
-			}
-		}
+        cachePromises.set(assetUrl, cacheAsset(assetUrl));
+      }
+    }
 
-		cachePromises.set(
-			pathname,
-			documentCache.add(pathname).catch((error) => {
-				console.debug(`Failed to cache document ${pathname}:`, error);
-			}),
-		);
-	}
+    cachePromises.set(
+      pathname,
+      documentCache.add(pathname).catch((error) => {
+        console.debug(`Failed to cache document ${pathname}:`, error);
+      }),
+    );
+  }
 
-	function cacheLoaderData(route: EntryRoute) {
-		const pathname = getPathname(route);
-		const params = new URLSearchParams({ _data: route.id });
-		const search = `?${params.toString()}`;
-		const url = pathname + search;
-		if (!cachePromises.has(url)) {
-			console.debug("Caching data for", url);
-			cachePromises.set(
-				url,
-				dataCache.add(url).catch((error) => {
-					console.debug(`Failed to cache data for ${url}:`, error);
-				}),
-			);
-		}
-	}
+  function cacheLoaderData(route: EntryRoute) {
+    const pathname = getPathname(route);
+    const params = new URLSearchParams({ _data: route.id });
+    const search = `?${params.toString()}`;
+    const url = pathname + search;
+    if (!cachePromises.has(url)) {
+      console.debug("Caching data for", url);
+      cachePromises.set(
+        url,
+        dataCache.add(url).catch((error) => {
+          console.debug(`Failed to cache data for ${url}:`, error);
+        }),
+      );
+    }
+  }
 
-	async function cacheAsset(assetUrl: string) {
-		if (await assetCache.match(assetUrl)) {
-			return;
-		}
+  async function cacheAsset(assetUrl: string) {
+    if (await assetCache.match(assetUrl)) {
+      return;
+    }
 
-		console.debug("Caching asset", assetUrl);
-		return assetCache.add(assetUrl).catch((error) => {
-			console.debug(`Failed to cache asset ${assetUrl}:`, error);
-		});
-	}
+    console.debug("Caching asset", assetUrl);
+    return assetCache.add(assetUrl).catch((error) => {
+      console.debug(`Failed to cache asset ${assetUrl}:`, error);
+    });
+  }
 
-	function getPathname(route: EntryRoute) {
-		let pathname = "";
-		if (route.path && route.path.length > 0) {
-			pathname = "/" + route.path;
-		}
-		if (route.parentId) {
-			const parentPath = getPathname(manifest.routes[route.parentId]);
-			if (parentPath) {
-				pathname = parentPath + pathname;
-			}
-		}
-		return pathname;
-	}
+  function getPathname(route: EntryRoute) {
+    let pathname = "";
+    if (route.path && route.path.length > 0) {
+      pathname = "/" + route.path;
+    }
+    if (route.parentId) {
+      const parentPath = getPathname(manifest.routes[route.parentId]);
+      if (parentPath) {
+        pathname = parentPath + pathname;
+      }
+    }
+    return pathname;
+  }
 }
 
 async function handleFetch(event: FetchEvent): Promise<Response> {
@@ -150,10 +150,7 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
       await cache.put(event.request, response.clone());
       return response;
     } catch (error) {
-      debug(
-        "Serving data from network failed, falling back to cache",
-        url.pathname + url.search
-      );
+      debug("Serving data from network failed, falling back to cache", url.pathname + url.search);
       const response = await caches.match(event.request);
       if (response) {
         response.headers.set("X-Remix-Worker", "yes");
@@ -165,7 +162,7 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
         {
           status: 500,
           headers: { "X-Remix-Catch": "yes", "X-Remix-Worker": "yes" },
-        }
+        },
       );
     }
   }
@@ -180,16 +177,13 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
           return response;
         })
         .catch(async (error) => {
-          console.debug(
-            "Serving document from network failed, falling back to cache",
-            url.pathname
-          );
+          console.debug("Serving document from network failed, falling back to cache", url.pathname);
           const response = await caches.match(event.request);
           if (!response) {
             throw error;
           }
           return response;
-        })
+        }),
     );
   }
 
@@ -219,10 +213,7 @@ function isMethod(request: Request, methods: string[]) {
 }
 
 function isAssetRequest(request: Request) {
-  return (
-    isMethod(request, ["get"]) &&
-    STATIC_ASSETS.some((publicPath) => request.url.startsWith(publicPath))
-  );
+  return isMethod(request, ["get"]) && STATIC_ASSETS.some((publicPath) => request.url.startsWith(publicPath));
 }
 
 function isLoaderRequest(request: Request) {
@@ -260,9 +251,7 @@ self.addEventListener("push", (event) => {
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     (async () => {
-      const result = {} as
-        | { error: unknown; response: Response }
-        | { error: undefined; response: Response };
+      const result = {} as { error: unknown; response: Response } | { error: undefined; response: Response };
       try {
         result.response = await handleFetch(event);
       } catch (error) {
@@ -270,18 +259,13 @@ self.addEventListener("fetch", (event) => {
       }
 
       return appHandleFetch(event, result);
-    })()
+    })(),
   );
 });
 
 async function appHandleFetch(
   event: FetchEvent,
-  {
-    error,
-    response,
-  }:
-    | { error: unknown; response: Response }
-    | { error: undefined; response: Response }
+  { error, response }: { error: unknown; response: Response } | { error: undefined; response: Response },
 ): Promise<Response> {
   return response;
 }

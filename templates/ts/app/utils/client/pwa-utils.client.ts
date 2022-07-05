@@ -9,7 +9,7 @@
 */
 
 /**
- * Response Object returned by Client APIs. It serves as a good debugging 
+ * Response Object returned by Client APIs. It serves as a good debugging
  * and error-checking method.
  */
 
@@ -22,7 +22,7 @@ interface ResponseObject {
 
 /**
  * Copies text to the clipboard of the device.
- * 
+ *
  * @param {string} text - The text to copy to the device
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
@@ -50,7 +50,7 @@ export async function copyText(text: string): Promise<ResponseObject> {
 
 /**
  * Check wether the device is currently online and execute some function with respect to the user's device connectivity state.
- * 
+ *
  * @param {() => void} online - A function to be invoked if the device is online.
  * @param {() => void} offline - A function to be invoked if the device is not connected to an internet network.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
@@ -80,7 +80,7 @@ export async function checkConnectivity(online: () => void, offline: () => void)
 
 /**
  * Trigger the WakeLock API to keep the device's screen on.
- * 
+ *
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
 export async function WakeLock(): Promise<ResponseObject> {
@@ -117,7 +117,7 @@ export async function WakeLock(): Promise<ResponseObject> {
 
 /**
  * Display a notification badge with a number count on the app's icon.
- * 
+ *
  * @param {number} numberCount - The number of notifications that would be displayed on the App's Badge.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
@@ -147,7 +147,7 @@ export async function addBadge(numberCount: number): Promise<ResponseObject> {
 
 /**
  * Remove all notification badges from the App.
- * 
+ *
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
 export async function removeBadge(): Promise<ResponseObject> {
@@ -176,7 +176,7 @@ export async function removeBadge(): Promise<ResponseObject> {
 
 /**
  * Trigger full-screen mode on an element/page.
- * 
+ *
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
 export async function EnableFullScreenMode(): Promise<ResponseObject> {
@@ -203,7 +203,7 @@ export async function EnableFullScreenMode(): Promise<ResponseObject> {
 
 /**
  * Exit full-screen mode on an element/page.
- * 
+ *
  * @return {RPromise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
 export async function ExitFullScreenMode(): Promise<ResponseObject> {
@@ -238,7 +238,7 @@ interface NotificationOptions {
 
 /**
  * Trigger a notification client-side based on anything!
- * 
+ *
  * @param {string} title - The main title (header) of the notification
  * @param {NotificationOptions} options - An object consisting of the notification's body, badge, icon, image, and silent options. Refer to https://github.com/ShafSpecs/remix-pwa#client-notification-api for additional info.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
@@ -285,7 +285,7 @@ export async function SendNotification(title: string, options: NotificationOptio
 
 /**
  * Check wether an element is currently visible or not.
- * 
+ *
  * @param {() => void} isVisible - A function to be invoked if the element is currently visible on the page.
  * @param {() => void} notVisible - A function to be invoked if the element is not visible on the current page.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
@@ -324,7 +324,7 @@ export async function Visibility(isVisible: () => void, notVisible: () => void):
 
 /**
  * Copy an image to a device's clipboard.
- * 
+ *
  * @param {string} url - The url of the string to be copied.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
@@ -357,7 +357,7 @@ export async function copyImage(url: string): Promise<ResponseObject> {
 
 /**
  * Share info/links/random stuffs from your PWA to other apps.
- * 
+ *
  * @param {any} data - The data to be shared.
  * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
@@ -384,7 +384,7 @@ export async function WebShare(data: any): Promise<ResponseObject> {
 
 /**
  * Share a link to other apps from your app.
- * 
+ *
  * @param {string} url - The URL of the link to be shared.
  * @param {string} title - The title of the shared link embed.
  * @param {string} text - An accompanying text alongside the header.
@@ -417,7 +417,7 @@ export async function WebShareLink(url: string, title: string, text: string): Pr
 
 /**
  * Share a file (or array of files) to other apps directly from your PWA.
- * 
+ *
  * @param {string} title - The title of the shared link embed.
  * @param {any} data - An array of the files to be shared (e.g Images, PDFs, etc).
  * @param {string} text - An accompanying text alongside the header.

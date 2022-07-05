@@ -41,7 +41,7 @@ async function handleMessage(event) {
         documentUrl,
         documentCache.add(documentUrl).catch((error) => {
           debug(`Failed to cache document for ${documentUrl}:`, error);
-        })
+        }),
       );
     }
 
@@ -59,7 +59,7 @@ async function handleMessage(event) {
               url,
               dataCache.add(url).catch((error) => {
                 debug(`Failed to cache data for ${url}:`, error);
-              })
+              }),
             );
           }
         }
@@ -101,10 +101,7 @@ async function handleFetch(event) {
       await cache.put(event.request, response.clone());
       return response;
     } catch (error) {
-      debug(
-        "Serving data from network failed, falling back to cache",
-        url.pathname + url.search
-      );
+      debug("Serving data from network failed, falling back to cache", url.pathname + url.search);
       const response = await caches.match(event.request);
       if (response) {
         response.headers.set("X-Remix-Worker", "yes");
@@ -116,7 +113,7 @@ async function handleFetch(event) {
         {
           status: 500,
           headers: { "X-Remix-Catch": "yes", "X-Remix-Worker": "yes" },
-        }
+        },
       );
     }
   }
@@ -129,10 +126,7 @@ async function handleFetch(event) {
       await cache.put(event.request, response.clone());
       return response;
     } catch (error) {
-      debug(
-        "Serving document from network failed, falling back to cache",
-        url.pathname
-      );
+      debug("Serving document from network failed, falling back to cache", url.pathname);
       const response = await caches.match(event.request);
       if (response) {
         return response;
@@ -145,7 +139,7 @@ async function handleFetch(event) {
 }
 
 const handlePush = (event) => {
-  const data = JSON.parse(event?.data?.text())
+  const data = JSON.parse(event?.data?.text());
   const title = data.title ? data.title : "Remix PWA";
 
   const options = {
@@ -154,8 +148,8 @@ const handlePush = (event) => {
     badge: data.badge ? data.badge : "/icons/android-icon-48x48.png",
     dir: data.dir ? data.dir : "auto",
     image: data.image ? data.image : undefined,
-    silent: data.silent ? data.silent : false, 
-  }
+    silent: data.silent ? data.silent : false,
+  };
 
   self.registration.showNotification(title, {
     ...options,
@@ -167,10 +161,7 @@ function isMethod(request, methods) {
 }
 
 function isAssetRequest(request) {
-  return (
-    isMethod(request, ["get"]) &&
-    STATIC_ASSETS.some((publicPath) => request.url.startsWith(publicPath))
-  );
+  return isMethod(request, ["get"]) && STATIC_ASSETS.some((publicPath) => request.url.startsWith(publicPath));
 }
 
 function isLoaderRequest(request) {
@@ -196,18 +187,18 @@ self.addEventListener("message", (event) => {
 
 self.addEventListener("push", (event) => {
   // self.clients.matchAll().then(function (c) {
-    // if (c.length === 0) {
-      event.waitUntil(handlePush(event));
-    // } else {
-    //   console.log("Application is already open!");
-    // }
+  // if (c.length === 0) {
+  event.waitUntil(handlePush(event));
+  // } else {
+  //   console.log("Application is already open!");
+  // }
   // });
 });
 
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     (async () => {
-      const result = {}
+      const result = {};
       try {
         result.response = await handleFetch(event);
       } catch (error) {
@@ -215,16 +206,10 @@ self.addEventListener("fetch", (event) => {
       }
 
       return appHandleFetch(event, result);
-    })()
+    })(),
   );
 });
 
-async function appHandleFetch(
-  event,
-  {
-    error,
-    response,
-  }
-) {
+async function appHandleFetch(event, { error, response }) {
   return response;
 }

@@ -66,7 +66,7 @@ export let loader: LoaderFunction = () => {
     {
       headers: {
         "Cache-Control": "public, max-age=600",
-        "Content-Type": "application/manifest+json"
+        "Content-Type": "application/manifest+json",
       },
     },
   );
