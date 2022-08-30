@@ -26,7 +26,7 @@ This file documents the roadmap and changes for Remix PWA. It includes proposed 
 
 ## Goal
 
-The goal of `remix-pwa` is to create a standalone PWA package that would be used in Remix applications and allow Remix, a full-stack framework, to have the ability to create unparalelled PWAs like any other browser framework out there without any hindrance or problems.
+The goal of `remix-pwa` is to create a standalone PWA package that would be used in Remix applications and allow Remix, a full-stack framework, to have the ability to create unparalleled PWAs like any other browser framework out there without any hindrance or problems.
 
 <h2> Features </h2>
 

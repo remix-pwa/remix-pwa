@@ -130,9 +130,9 @@ at build time and then, you can host it on any hosting providers you prefer.
 
 They can be triggered by DOM events (click, hover, keypress, etc.) like other functions, but in order to trigger window events that happen at the start of a page lifecycle, e.g page "load" event, it is **highly recommended** to use these functions in a React's `useEffect` hook.
 
-#### <u>Type annonations</u>:
+#### <u>Type annotations</u>:
 
-Almost all Client APIs return a promise object (type `ReturnObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particluar UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
+Almost all Client APIs return a promise object (type `ReturnObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particular UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
 
 ```ts
 interface ReturnObject {
@@ -244,11 +244,11 @@ interface NotificationOptions {
 
 The `SendNotification` API is a client-only function driven only by the [Notifications API](https://developer.mozilla.org/en-US/docs/Web/API/Notification), it is different from the Push API which is another API handled and executed by the server (arriving to `remix-pwa` soon). The `SendNotification` function is executed by the client and takes in two arguments, one is the title of the notification and that's the top header (Title) of the notification your user would see. The second option is an object that would contain additional options for the API.
 
-The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notifivcation content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**) that is <u>required</u>, it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
+The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notification content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**) that is <u>required</u>, it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
 
 The Notification API can take values from the server (e.g `loader`) or from the client but it must be called and executed on the client side. We are working on adding the Push API that allows you to execute a Notification API together with the Push API on the server side in response to anything (for example, when a message is sent to a user in a messaging App).
 
-> This API is fully stable and is setup comepletely for your use cases including Notification permissions, however, we are working on adding more API options so that you can have the maximum custom experience!
+> This API is fully stable and is setup completely for your use cases including Notification permissions, however, we are working on adding more API options so that you can have the maximum custom experience!
 
 ```tsx
 import { SendNotification } from "~/utils/client/pwa-utils.client";
@@ -450,7 +450,7 @@ Another new feature and a way to install the minimal things you need automatical
 - Service Workers
 - Web Manifest
 - Push API Services
-- Cient Utilities (APIs to help build a PWA)
+- Client Utilities (APIs to help build a PWA)
 - Development Icons
 
 **Service Workers** are the standard and a vital part of every Progressive Web Application. Handles the caching and a lot more in Remix PWA.
@@ -476,7 +476,7 @@ This one is straightforward. Do you want to install Remix PWA dependencies right
 
 ## Going Deeper
 
-Want to upgrade your PWA utilities? Or need a bit of tips and hints on how to customize your PWA? Want to make a prduction-ready PWA with Remix? This is your section! Let's get down to the nitty-gritty of `remix-pwa`.
+Want to upgrade your PWA utilities? Or need a bit of tips and hints on how to customize your PWA? Want to make a production-ready PWA with Remix? This is your section! Let's get down to the nitty-gritty of `remix-pwa`.
 
 ### Customizing your PWA `manifest`
 
