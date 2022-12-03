@@ -154,7 +154,7 @@ const handlePush = (event: PushEvent) => {
     silent: data.silent ? data.silent : false,
   };
 
-  self.registration.showNotification(title, {
+  return self.registration.showNotification(title, {
     ...options,
   });
 };
