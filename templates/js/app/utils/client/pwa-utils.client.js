@@ -10,6 +10,12 @@
 
 // Clipboard Copy API
 
+/**
+ * Copies text to the clipboard of the device.
+ *
+ * @param {string} text - The text to copy to the device
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function copyText(text) {
   try {
     if (navigator.clipboard) {
@@ -25,13 +31,20 @@ export async function copyText(text) {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Unable to copy text to clipboard!");
   }
 }
 
 // Handle connectivity check and return one of the specifics
 
+/**
+ * Check wether the device is currently online and execute some function with respect to the user's device connectivity state.
+ *
+ * @param {() => void} online - A function to be invoked if the device is online.
+ * @param {() => void} offline - A function to be invoked if the device is not connected to an internet network.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function checkConnectivity(online, offline) {
   try {
     if (navigator.onLine) {
@@ -48,13 +61,18 @@ export async function checkConnectivity(online, offline) {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Unable to check network connectivity!");
   }
 }
 
 // Keep device awake for a determined period of time
 
+/**
+ * Trigger the WakeLock API to keep the device's screen on.
+ *
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function WakeLock() {
   try {
     if ("wakeLock" in navigator) {
@@ -80,13 +98,19 @@ export async function WakeLock() {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error activating WakeLock!");
   }
 }
 
 // Badge creator
 
+/**
+ * Display a notification badge with a number count on the app's icon.
+ *
+ * @param {number} numberCount - The number of notifications that would be displayed on the App's Badge.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function addBadge(numberCount) {
   try {
     //@ts-ignore
@@ -104,13 +128,18 @@ export async function addBadge(numberCount) {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error adding badge!");
   }
 }
 
 // remove Badges
 
+/**
+ * Remove all notification badges from the App.
+ *
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function removeBadge() {
   try {
     //@ts-ignore
@@ -128,13 +157,18 @@ export async function removeBadge() {
       };
     }
   } catch (error) {
-    console.debug(error)
+    console.debug(error);
     throw new Error("Error removing badge!");
   }
 }
 
 // Enable Full-Screen mode for an app
 
+/**
+ * Trigger full-screen mode on an element/page.
+ *
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function EnableFullScreenMode() {
   try {
     if (document.fullscreenEnabled) {
@@ -150,13 +184,18 @@ export async function EnableFullScreenMode() {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error activating fullscreen mode!");
   }
 }
 
 // Exit fullscreen mode
 
+/**
+ * Exit full-screen mode on an element/page.
+ *
+ * @return {RPromise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function ExitFullScreenMode() {
   try {
     if (document.exitFullscreen) {
@@ -172,31 +211,31 @@ export async function ExitFullScreenMode() {
       };
     }
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error deactivating fullscreen mode!");
   }
 }
 
 // Send a client notification to the user
 
-export async function SendNotification(
-  title,
-  options
-) {
+/**
+ * Trigger a notification client-side based on anything!
+ *
+ * @param {string} title - The main title (header) of the notification
+ * @param {NotificationOptions} options - An object consisting of the notification's body, badge, icon, image, and silent options. Refer to https://github.com/ShafSpecs/remix-pwa#client-notification-api for additional info.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
+export async function SendNotification(title, options) {
   try {
     if ("Notification" in window) {
-      const permissions = await (
-        await navigator.permissions.query({ name: "notifications" })
-      ).state;
-      navigator.permissions
-        .query({ name: "notifications" })
-        .then((permissionStatus) => {
-          if (permissionStatus.state === "granted") {
-            return;
-          } else {
-            return Notification.requestPermission();
-          }
-        });
+      const permissions = await (await navigator.permissions.query({ name: "notifications" })).state;
+      navigator.permissions.query({ name: "notifications" }).then((permissionStatus) => {
+        if (permissionStatus.state === "granted") {
+          return;
+        } else {
+          return Notification.requestPermission();
+        }
+      });
 
       if (permissions === "granted") {
         await navigator.serviceWorker.ready.then((registration) => {
@@ -219,14 +258,21 @@ export async function SendNotification(
       };
     }
   } catch (error) {
-    console.debug(error)
+    console.debug(error);
     throw new Error("Error sending notification!");
   }
 }
 
 // Page focus
 
-export async function Visibility (isVisible, notVisible) {
+/**
+ * Check wether an element is currently visible or not.
+ *
+ * @param {() => void} isVisible - A function to be invoked if the element is currently visible on the page.
+ * @param {() => void} notVisible - A function to be invoked if the element is not visible on the current page.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
+export async function Visibility(isVisible, notVisible) {
   try {
     if (document.visibilityState) {
       const visibleState = document.visibilityState;
@@ -249,15 +295,21 @@ export async function Visibility (isVisible, notVisible) {
     return {
       status: "bad",
       message: "Page focus API not supported",
-    }
+    };
   } catch (err) {
-    console.debug(err)
+    console.debug(err);
     throw new Error("Error checking page visibility!");
   }
 }
 
 // Copying Image to the clipboard
 
+/**
+ * Copy an image to a device's clipboard.
+ *
+ * @param {string} url - The url of the string to be copied.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function copyImage(url) {
   try {
     if (navigator.clipboard) {
@@ -285,6 +337,12 @@ export async function copyImage(url) {
 
 // Sharing information straight to other apps from PWA.
 
+/**
+ * Share info/links/random stuffs from your PWA to other apps.
+ *
+ * @param {any} data - The data to be shared.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function WebShare(data) {
   try {
     if (navigator.share && navigator.canShare(data)) {
@@ -306,6 +364,14 @@ export async function WebShare(data) {
 
 // Custom handler to share link to other apps from your app
 
+/**
+ * Share a link to other apps from your app.
+ *
+ * @param {string} url - The URL of the link to be shared.
+ * @param {string} title - The title of the shared link embed.
+ * @param {string} text - An accompanying text alongside the header.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function WebShareLink(url, title, text) {
   try {
     if (navigator.canShare({ url })) {
@@ -331,6 +397,14 @@ export async function WebShareLink(url, title, text) {
 
 // Special Web Share API for sharing files to your App.
 
+/**
+ * Share a file (or array of files) to other apps directly from your PWA.
+ *
+ * @param {string} title - The title of the shared link embed.
+ * @param {any} data - An array of the files to be shared (e.g Images, PDFs, etc).
+ * @param {string} text - An accompanying text alongside the header.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ */
 export async function WebShareFile(title, data, text) {
   let filesArray = [...data];
   try {

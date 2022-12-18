@@ -2,12 +2,6 @@
 
 import { json } from "@remix-run/server-runtime";
 
-const STATIC_ASSETS = ["/build/", "/icons/", "/"];
-
-const ASSET_CACHE = "asset-cache";
-const DATA_CACHE = "data-cache";
-const DOCUMENT_CACHE = "document-cache";
-
 function debug(...messages) {
   if (process.env.NODE_ENV === "development") {
     console.debug(...messages);
@@ -22,52 +16,102 @@ async function handleActivate(event) {
   debug("Service worker activated");
 }
 
-async function handleMessage(event) {
+const ASSET_CACHE = "asset-cache";
+const DATA_CACHE = "data-cache";
+const DOCUMENT_CACHE = "document-cache";
+const STATIC_ASSETS = ["/build/", "/icons/"];
+
+async function handleSyncRemixManifest(event) {
+  console.debug("sync manifest");
   const cachePromises = new Map();
+  const [dataCache, documentCache, assetCache] = await Promise.all([
+    caches.open(DATA_CACHE),
+    caches.open(DOCUMENT_CACHE),
+    caches.open(ASSET_CACHE),
+  ]);
+  const manifest = event.data.manifest;
+  const routes = Object.values(manifest.routes);
 
-  if (event.data.type === "REMIX_NAVIGATION") {
-    const { isMount, location, matches, manifest } = event.data;
-    const documentUrl = location.pathname + location.search + location.hash;
-
-    const [dataCache, documentCache, existingDocument] = await Promise.all([
-      caches.open(DATA_CACHE),
-      caches.open(DOCUMENT_CACHE),
-      caches.match(documentUrl),
-    ]);
-
-    if (!existingDocument || !isMount) {
-      debug("Caching document for", documentUrl);
-      cachePromises.set(
-        documentUrl,
-        documentCache.add(documentUrl).catch((error) => {
-          debug(`Failed to cache document for ${documentUrl}:`, error);
-        }),
-      );
+  for (const route of routes) {
+    if (route.id.includes("$")) {
+      console.debug("parametrized route", route.id);
+      continue;
     }
 
-    if (isMount) {
-      for (const match of matches) {
-        if (manifest.routes[match.id].hasLoader) {
-          const params = new URLSearchParams(location.search);
-          params.set("_data", match.id);
-          let search = params.toString();
-          search = search ? `?${search}` : "";
-          const url = location.pathname + search + location.hash;
-          if (!cachePromises.has(url)) {
-            debug("Caching data for", url);
-            cachePromises.set(
-              url,
-              dataCache.add(url).catch((error) => {
-                debug(`Failed to cache data for ${url}:`, error);
-              }),
-            );
-          }
-        }
-      }
-    }
+    cacheRoute(route);
   }
 
   await Promise.all(cachePromises.values());
+
+  function cacheRoute(route) {
+    const pathname = getPathname(route);
+    if (route.hasLoader) {
+      cacheLoaderData(route);
+    }
+
+    if (route.module) {
+      cachePromises.set(route.module, cacheAsset(route.module));
+    }
+
+    if (route.imports) {
+      for (const assetUrl of route.imports) {
+        debug(route.index, route.parentId, route.imports, route.module);
+        if (cachePromises.has(assetUrl)) {
+          continue;
+        }
+
+        cachePromises.set(assetUrl, cacheAsset(assetUrl));
+      }
+    }
+
+    cachePromises.set(
+      pathname,
+      documentCache.add(pathname).catch((error) => {
+        console.debug(`Failed to cache document ${pathname}:`, error);
+      }),
+    );
+  }
+
+  function cacheLoaderData(route) {
+    const pathname = getPathname(route);
+    const params = new URLSearchParams({ _data: route.id });
+    const search = `?${params.toString()}`;
+    const url = pathname + search;
+    if (!cachePromises.has(url)) {
+      console.debug("Caching data for", url);
+      cachePromises.set(
+        url,
+        dataCache.add(url).catch((error) => {
+          console.debug(`Failed to cache data for ${url}:`, error);
+        }),
+      );
+    }
+  }
+
+  async function cacheAsset(assetUrl) {
+    if (await assetCache.match(assetUrl)) {
+      return;
+    }
+
+    console.debug("Caching asset", assetUrl);
+    return assetCache.add(assetUrl).catch((error) => {
+      console.debug(`Failed to cache asset ${assetUrl}:`, error);
+    });
+  }
+
+  function getPathname(route) {
+    let pathname = "";
+    if (route.path && route.path.length > 0) {
+      pathname = "/" + route.path;
+    }
+    if (route.parentId) {
+      const parentPath = getPathname(manifest.routes[route.parentId]);
+      if (parentPath) {
+        pathname = parentPath + pathname;
+      }
+    }
+    return pathname;
+  }
 }
 
 async function handleFetch(event) {
@@ -119,27 +163,30 @@ async function handleFetch(event) {
   }
 
   if (isDocumentGetRequest(event.request)) {
-    try {
-      debug("Serving document from network", url.pathname);
-      const response = await fetch(event.request);
-      const cache = await caches.open(DOCUMENT_CACHE);
-      await cache.put(event.request, response.clone());
-      return response;
-    } catch (error) {
-      debug("Serving document from network failed, falling back to cache", url.pathname);
-      const response = await caches.match(event.request);
-      if (response) {
-        return response;
-      }
-      throw error;
-    }
+    const url = new URL(event.request.url);
+    console.debug("Serving document from network", url.pathname);
+    return caches.open(DOCUMENT_CACHE).then((cache) =>
+      fetch(event.request.clone())
+        .then((response) => {
+          cache.put(event.request, response.clone());
+          return response;
+        })
+        .catch(async (error) => {
+          console.debug("Serving document from network failed, falling back to cache", url.pathname);
+          const response = await caches.match(event.request);
+          if (!response) {
+            throw error;
+          }
+          return response;
+        }),
+    );
   }
 
   return fetch(event.request.clone());
 }
 
-const handlePush = async (event) => {
-  const data = JSON.parse(event?.data?.text());
+const handlePush = (event) => {
+  const data = JSON.parse(event.data.text());
   const title = data.title ? data.title : "Remix PWA";
 
   const options = {
@@ -182,7 +229,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("message", (event) => {
-  event.waitUntil(handleMessage(event));
+  // event.waitUntil(handleMessage(event));
+  event.waitUntil(handleSyncRemixManifest(event));
 });
 
 self.addEventListener("push", (event) => {
