@@ -531,6 +531,7 @@ We have a database hosted on an external platform and we are using [Prisma](http
 To solve this issue, we can simply import our `PrismaClient` into our manifest route's loader and interact with our db from there. Allowing us to get the preferences and set them as our PWA's theme and background color (for more info on themes and background-color, refer to [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/Manifest))
 
 ```ts
+// A mock implementation
 export let loader: LoaderFunction = async () => {
   const preference = await prismaClient().user.findUnique({
     where: {
@@ -581,11 +582,10 @@ If you want to get help on an issue or have a question, you could either [open a
 ### Extra Resources For Understanding PWAs
 
 [Mozilla: Introduction to PWAs](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Introduction)
-[]
 
 ## Authors
 
-- Abdur-Rahman Fashola (aka [@ShafSpecs](https://github.com/ShafSpecs))
+- Abdur-Rahman (aka [@ShafSpecs](https://github.com/ShafSpecs))
 
 - Douglas Muhone ([theeomm](https://github.com/theeomm))
 
@@ -593,9 +593,9 @@ If you want to get help on an issue or have a question, you could either [open a
 
 - Tom ([pumpitbetter](https://github.com/pumpitbetter))
 
-- Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for his contribution and help with the creation of `remix-pwa`!
+- Brock Donahue ([Brocktho](https://github.com/Brocktho/))
 
-See (todo: CONTRIBUTORS.md) for the list of awesome `remix-pwa` contributors!
+- Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for his contribution and help with the creation of `remix-pwa`!
 
 ## License
 
