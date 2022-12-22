@@ -28,6 +28,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 ## Table Of Content
 
 - [Getting Started](#getting-started)
+  - [Why Use remix-pwa?](#why-use-remix-pwa)
   - [Installation](#installation)
   - [Upgrading Guide](#upgrade-guide)
 - [Setting Up your PWA](#setting-up-remix-for-pwa)
@@ -65,6 +66,16 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 - [License](#license)  
 
 ## Getting Started
+
+### Why Use remix-pwa
+
+remix-pwa is a quick an easy way to get a standardized API to interact with service workers with your application. 
+
+remix-pwa will:
+
+- Generate a route to store your applications manifest data
+- Generate a route to handle service worker subscription
+- Generate standardized messaging protocol between service workers and your application.
 
 ### Installation
 
@@ -472,6 +483,37 @@ This is the location where your `app` folder is located. By default, remix uses 
 
 This one is straightforward. Do you want to install Remix PWA dependencies right now and continue developing your app or do you want to skip it and continue your work with lots of errors due to missing dependencies?
 
+### Using The Push Server API? (See also Server API)
+
+Setting up and using `remix-pwa`'s server APIs requires some steps to be functional, let's break them down:
+
+1. After installing `remix-pwa`, if you intend to use the Push API, run the command:
+```sh
+npx web-push generate-vapid-keys
+```
+
+You would get two keys in your console, a PRIVATE key and a PUBLIC key. Keep your PRIVATE key safe!
+
+2. Create a `.env` file, and save your keys using the variable name `VAPID_PUBLIC_KEY` for the public key and `VAPID_PRIVATE_KEY`for the private key.
+
+Add the following line of code in `entry.server.ts`:
+```ts
+import "dotenv/config"
+```
+
+> *Don't forget to add the `.env` file to your `.gitignore` file*
+
+3. You can finally use the basic Web Push API in your server!
+
+### Issues With The CLI Installation
+
+There is currently an issue you may run into with the CLI, if you have comments in your root.tsx file you may get an error when running: 
+
+```sh
+  npx remix-pwa@latest
+```
+Simply removing the comments and reattempting installation seems to fix any such errors.
+
 [(Back to Top)](#table-of-content)
 
 ## Going Deeper
@@ -535,6 +577,11 @@ Thank you for your interest in contributing 🙂. The contribution guidelines an
 ## Support 
 
 If you want to get help on an issue or have a question, you could either [open an issue](https://github.com/ShafSpecs/remix-pwa/issues/new/choose) or you could ask your questions in the [Official Remix's Discord Server](https://discord.gg/TTVwU2wZca) where there are a lot of helpful people to help you out.
+
+### Extra Resources For Understanding PWAs
+
+[Mozilla: Introduction to PWAs](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Introduction)
+[]
 
 ## Authors
 
