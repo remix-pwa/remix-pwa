@@ -15,7 +15,7 @@
   "license": "MIT",
   "author": {
     "name": "Abdur-Rahman Fashola",
-    "url": "https://shafspecs.vercel.app/"
+    "url": "https://shafspecs.fly.dev/"
   },
   "repository": {
     "type": "git",
@@ -48,10 +48,8 @@
     "eslint": "^8.9.0",
     "eslint-plugin-react": "^7.28.0",
     "install": "^0.13.0",
-    "jest": "^27.5.1",
     "prettier": "^2.5.1",
     "save-dev": "0.0.1-security",
-    "ts-jest": "^27.1.3",
     "ts-node": "^10.8.2",
     "typescript": "^4.5.5"
   },

@@ -40,7 +40,7 @@ If you feel you have a great idea for `remix-pwa` or you can improve an existing
 
 ## 📬 Neglected Issue?
 
-If you happen to come across an issue that you think is important but neglected, you can fork the repo and after you're done, if it involves changes to `remix-pwa` itself including template workers and the CLI, create a PR to the `dev` branch. If it involves tests, then create a PR to the `test` brnch.
+If you happen to come across an issue that you think is important but neglected, you can fork the repo and after you're done, if it involves changes to `remix-pwa` itself including template workers and the CLI, create a PR to the `dev` branch. If it involves tests, then create a PR to the `test` branch.
 
 ## 😄 First PR?
 

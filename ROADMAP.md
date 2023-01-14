@@ -26,36 +26,33 @@ This file documents the roadmap and changes for Remix PWA. It includes proposed 
 
 ## Goal
 
-The goal of `remix-pwa` is to create a standalone PWA package that would be used in Remix applications and allow Remix, a full-stack framework, to have the ability to create unparalelled PWAs like any other browser framework out there without any hindrance or problems.
+The goal of `remix-pwa` is to create a standalone PWA package that would be used in Remix applications and allow Remix, a full-stack framework, to have the ability to create unparalleled PWAs like any other browser framework out there without any hindrance or problems.
 
 <h2> Features </h2>
 
 ### In the Works
 
-- **Create a custom download utility**: Create a custom handler for downloading the PWA onto the user's device.
 - **Improve mounting of Service Worker**: Minor (but major) tweaks to the mounting Service Worker code. 
-- **Precaching**: Allow option for precaching entire modules and routes at once.
 
 ### Draft
 
-- **Possible enhancement to customization proposal**: Improve the above point (In the works no. 4) by allowing a user to choose what PWA features he/she wants during CLI installation instead of downloading all PWA features.
 - **API Analytics**: Add analytics tooling API to allow you to set up a personal, custom Analytic service for your site without losing client's data to companies
 - **Background Sync**: Create a background sync API utility
+- **Create a custom download utility**: Create a custom handler for downloading the PWA onto the user's device.
 
 ### Proposals
 
 - Create sample PWA apps under `example/` directory
-- Migrate manifest files from `.json` to `.webmanifest` files.
 
 ## Bug Fixes & Improvements
 
 ### In the Works
 
-- Create a stable standalone Push API package to make integrating API faster, easier and flexible across all browsers.
+#### 😐
 
 ### Draft
 
-#### 😐
+- Create a stable standalone Push API package to make integrating API faster, easier and flexible across all browsers.
 
 ### Proposals
 

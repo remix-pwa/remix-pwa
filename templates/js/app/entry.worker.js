@@ -138,7 +138,7 @@ async function handleFetch(event) {
   return fetch(event.request.clone());
 }
 
-const handlePush = (event) => {
+const handlePush = async (event) => {
   const data = JSON.parse(event?.data?.text());
   const title = data.title ? data.title : "Remix PWA";
 

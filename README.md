@@ -28,6 +28,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 ## Table Of Content
 
 - [Getting Started](#getting-started)
+  - [Why Use remix-pwa?](#why-use-remix-pwa)
   - [Installation](#installation)
   - [Upgrading Guide](#upgrade-guide)
 - [Setting Up your PWA](#setting-up-remix-for-pwa)
@@ -65,6 +66,16 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 - [License](#license)  
 
 ## Getting Started
+
+### Why Use remix-pwa
+
+remix-pwa is a quick an easy way to get a standardized API to interact with service workers with your application. 
+
+remix-pwa will:
+
+- Generate a route to store your applications manifest data
+- Generate a route to handle service worker subscription
+- Generate standardized messaging protocol between service workers and your application.
 
 ### Installation
 
@@ -130,9 +141,9 @@ at build time and then, you can host it on any hosting providers you prefer.
 
 They can be triggered by DOM events (click, hover, keypress, etc.) like other functions, but in order to trigger window events that happen at the start of a page lifecycle, e.g page "load" event, it is **highly recommended** to use these functions in a React's `useEffect` hook.
 
-#### <u>Type annonations</u>:
+#### <u>Type annotations</u>:
 
-Almost all Client APIs return a promise object (type `ReturnObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particluar UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
+Almost all Client APIs return a promise object (type `ReturnObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particular UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
 
 ```ts
 interface ReturnObject {
@@ -244,11 +255,11 @@ interface NotificationOptions {
 
 The `SendNotification` API is a client-only function driven only by the [Notifications API](https://developer.mozilla.org/en-US/docs/Web/API/Notification), it is different from the Push API which is another API handled and executed by the server (arriving to `remix-pwa` soon). The `SendNotification` function is executed by the client and takes in two arguments, one is the title of the notification and that's the top header (Title) of the notification your user would see. The second option is an object that would contain additional options for the API.
 
-The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notifivcation content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**) that is <u>required</u>, it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
+The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notification content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**) that is <u>required</u>, it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
 
 The Notification API can take values from the server (e.g `loader`) or from the client but it must be called and executed on the client side. We are working on adding the Push API that allows you to execute a Notification API together with the Push API on the server side in response to anything (for example, when a message is sent to a user in a messaging App).
 
-> This API is fully stable and is setup comepletely for your use cases including Notification permissions, however, we are working on adding more API options so that you can have the maximum custom experience!
+> This API is fully stable and is setup completely for your use cases including Notification permissions, however, we are working on adding more API options so that you can have the maximum custom experience!
 
 ```tsx
 import { SendNotification } from "~/utils/client/pwa-utils.client";
@@ -450,7 +461,7 @@ Another new feature and a way to install the minimal things you need automatical
 - Service Workers
 - Web Manifest
 - Push API Services
-- Cient Utilities (APIs to help build a PWA)
+- Client Utilities (APIs to help build a PWA)
 - Development Icons
 
 **Service Workers** are the standard and a vital part of every Progressive Web Application. Handles the caching and a lot more in Remix PWA.
@@ -472,11 +483,42 @@ This is the location where your `app` folder is located. By default, remix uses 
 
 This one is straightforward. Do you want to install Remix PWA dependencies right now and continue developing your app or do you want to skip it and continue your work with lots of errors due to missing dependencies?
 
+### Using The Push Server API? (See also Server API)
+
+Setting up and using `remix-pwa`'s server APIs requires some steps to be functional, let's break them down:
+
+1. After installing `remix-pwa`, if you intend to use the Push API, run the command:
+```sh
+npx web-push generate-vapid-keys
+```
+
+You would get two keys in your console, a PRIVATE key and a PUBLIC key. Keep your PRIVATE key safe!
+
+2. Create a `.env` file, and save your keys using the variable name `VAPID_PUBLIC_KEY` for the public key and `VAPID_PRIVATE_KEY`for the private key.
+
+Add the following line of code in `entry.server.ts`:
+```ts
+import "dotenv/config"
+```
+
+> *Don't forget to add the `.env` file to your `.gitignore` file*
+
+3. You can finally use the basic Web Push API in your server!
+
+### Issues With The CLI Installation
+
+There is currently an issue you may run into with the CLI, if you have comments in your root.tsx file you may get an error when running: 
+
+```sh
+  npx remix-pwa@latest
+```
+Simply removing the comments and reattempting installation seems to fix any such errors.
+
 [(Back to Top)](#table-of-content)
 
 ## Going Deeper
 
-Want to upgrade your PWA utilities? Or need a bit of tips and hints on how to customize your PWA? Want to make a prduction-ready PWA with Remix? This is your section! Let's get down to the nitty-gritty of `remix-pwa`.
+Want to upgrade your PWA utilities? Or need a bit of tips and hints on how to customize your PWA? Want to make a production-ready PWA with Remix? This is your section! Let's get down to the nitty-gritty of `remix-pwa`.
 
 ### Customizing your PWA `manifest`
 
@@ -489,6 +531,7 @@ We have a database hosted on an external platform and we are using [Prisma](http
 To solve this issue, we can simply import our `PrismaClient` into our manifest route's loader and interact with our db from there. Allowing us to get the preferences and set them as our PWA's theme and background color (for more info on themes and background-color, refer to [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/Manifest))
 
 ```ts
+// A mock implementation
 export let loader: LoaderFunction = async () => {
   const preference = await prismaClient().user.findUnique({
     where: {
@@ -536,9 +579,13 @@ Thank you for your interest in contributing 🙂. The contribution guidelines an
 
 If you want to get help on an issue or have a question, you could either [open an issue](https://github.com/ShafSpecs/remix-pwa/issues/new/choose) or you could ask your questions in the [Official Remix's Discord Server](https://discord.gg/TTVwU2wZca) where there are a lot of helpful people to help you out.
 
+### Extra Resources For Understanding PWAs
+
+[Mozilla: Introduction to PWAs](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Introduction)
+
 ## Authors
 
-- Abdur-Rahman Fashola (aka [@ShafSpecs](https://github.com/ShafSpecs))
+- Abdur-Rahman (aka [@ShafSpecs](https://github.com/ShafSpecs))
 
 - Douglas Muhone ([theeomm](https://github.com/theeomm))
 
@@ -546,9 +593,9 @@ If you want to get help on an issue or have a question, you could either [open a
 
 - Tom ([pumpitbetter](https://github.com/pumpitbetter))
 
-- Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for his contribution and help with the creation of `remix-pwa`!
+- Brock Donahue ([Brocktho](https://github.com/Brocktho/))
 
-See (todo: CONTRIBUTORS.md) for the list of awesome `remix-pwa` contributors!
+- Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for his contribution and help with the creation of `remix-pwa`!
 
 ## License
 
