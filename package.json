@@ -22,7 +22,6 @@
     "url": "https://github.com/ShafSpecs/remix-pwa"
   },
   "scripts": {
-    "test": "jest",
     "ts": "tsc",
     "prepublishOnly": "tsc"
   },
@@ -35,50 +34,17 @@
   "bin": {
     "remix-pwa": "dist/cli.js"
   },
-  "esformatter": {
-    "plugins": [
-      "esformatter-jsx",
-      "esformatter-quotes",
-      "esformatter-curly"
-    ],
-    "quotes": {
-      "type": "double"
-    },
-    "jsx": {
-      "formatJSXExpressions": true,
-      "JSXExpressionsSingleLine": true,
-      "formatJSX": true,
-      "attrsOnSameLineAsTag": false,
-      "maxAttrsOnTag": 1,
-      "firstAttributeOnSameLine": false,
-      "spaceInJSXExpressionContainers": " ",
-      "alignWithFirstAttribute": true,
-      "htmlOptions": {
-        "brace_style": "collapse",
-        "indent_char": " ",
-        "indent_size": 2,
-        "max_preserve_newlines": 2,
-        "preserve_newlines": true
-      }
-    }
-  },
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/preset-env": "^7.16.11",
     "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^8.2.0",
-    "@types/jest": "^27.4.0",
     "@types/prettier": "^2.4.4",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
-    "babel-jest": "^27.5.1",
     "core-js": "^3.23.3",
-    "esformatter": "^0.11.3",
-    "esformatter-curly": "0.0.2",
-    "esformatter-jsx": "^8.0.1",
-    "esformatter-semicolons": "^1.1.2",
     "eslint": "^8.9.0",
     "eslint-plugin-react": "^7.28.0",
     "install": "^0.13.0",
@@ -97,14 +63,7 @@
     "dotenv-cli": "^4.1.1",
     "enquirer": "2.3.6",
     "esbuild": "^0.14.23",
-    "esformatter": "^0.11.3",
-    "esformatter-curly": "0.0.2",
-    "esformatter-jsx": "^8.0.1",
-    "esformatter-semicolons": "^1.1.2",
     "fs-extra": "^10.0.0",
-    "inquirer": "^9.0.0",
-    "inquirer-path": "^1.0.0-beta5",
-    "js-beautify": "^1.14.0",
     "node-persist": "^3.1.0",
     "npm-run-all": "^4.1.5",
     "postinstall-js": "^0.7.2",
