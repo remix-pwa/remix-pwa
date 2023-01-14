@@ -1,7 +1,9 @@
 if ("serviceWorker" in navigator) {
   // Use the window load event to keep the page load performant
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
+  async function loadSW(){
+    console.log("loaded");
+    
+    return navigator.serviceWorker
       .register("/entry.worker.js")
       .then(() => navigator.serviceWorker.ready)
       .then(() => {
@@ -22,5 +24,11 @@ if ("serviceWorker" in navigator) {
       .catch((error) => {
         console.error("Service worker registration failed", error);
       });
-  });
+  };
+
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    loadSW();
+  } else {
+    window.addEventListener("load", loadSW);
+  }
 }
