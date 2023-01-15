@@ -32,7 +32,8 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 ### In the Works
 
-- **Improve mounting of Service Worker**: Minor (but major) tweaks to the mounting Service Worker code. 
+- **Creation of a standalone Remix PWA docs**: Create a site that delves deep into Remix PWA and its APIs
+- **CF Workers support**: Support for Cloudflare workers
 
 ### Draft
 
