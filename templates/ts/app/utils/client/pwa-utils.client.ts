@@ -5,7 +5,7 @@
 */
 
 /* 
-  ⚠ Except you understand & know the implication of what you're what you are doing, don't modify this file! ⚠
+  ⚠ Except you understand & know the implication of what you're doing, don't modify this file! ⚠
 */
 
 /**
