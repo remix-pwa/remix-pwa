@@ -69,7 +69,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 
 ### Why Use remix-pwa
 
-remix-pwa is a quick an easy way to get a standardized API to interact with service workers with your application. 
+remix-pwa is a quick and easy way to get standardized APIs to interact with service worker in your Remix application. 
 
 remix-pwa will:
 
@@ -120,7 +120,7 @@ npm run dev
 
 And voila! You are now ready to use your PWA! 
 
-If you want to lay you hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
+If you want to lay your hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
 in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/examples/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
 
 ## Deployment
@@ -143,19 +143,19 @@ They can be triggered by DOM events (click, hover, keypress, etc.) like other fu
 
 #### <u>Type annotations</u>:
 
-Almost all Client APIs return a promise object (type `ReturnObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particular UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
+Almost all Client APIs return a promise object (type `ResponseObject`) that consists of two properties: `status` and `message`. The `status` key is a string that would either be "success" or "bad". `remix-pwa` is set up by default, with error-catching procedures for these APIs. You can still set up your custom responses (to display a particular UI for example, if the particular API isn't supported in the user's browser) in case of an error or a successful request with the `status` response. The `message` key is a default message string that accompanies the status in case of a pass or fail.
 
 ```ts
-interface ReturnObject {
+interface ResponseObject {
   status: "success" | "bad",
   message: string;
 }
 ```
 
 ### Check Connectivity
-#### `checkConnectivity(online: () => void, offline: () => void): Promise<ReturnObject>`
+#### `checkConnectivity(online: () => void, offline: () => void): Promise<ResponseObject>`
 
-This function is used to check wether a user is online or offline and execute a function accordingly. It could be used to update a state,
+This function is used to check whether a user is online or offline and execute a function accordingly. It could be used to update a state,
 display a particular UI or send a particular response to the server.
 
 ```ts
@@ -176,7 +176,7 @@ useEffect(() => {
 ```
 
 ### Copy text to Clipboard
-#### `copyText(text: string) => Promise<ReturnObject>`
+#### `copyText(text: string) => Promise<ResponseObject>`
 
 The Clipboard API is a method used to access the clipboard of a device, native or web, and write to it. This function can be triggered by DOM events, i.e "click", "hover", etc. or window events i.e "load", "scroll", etc. 
 
@@ -187,7 +187,7 @@ import { copyText } from "~/utils/client/pwa-utils.client";
 ```
 
 ### WakeLock API
-#### `WakeLock() => Promise<ReturnObject>`
+#### `WakeLock() => Promise<ResponseObject>`
 
 > **🚨 This is still an experimental feature! Some browsers like FireFox would not work with this feature! 🚨**
 
@@ -202,9 +202,9 @@ useEffect(() => {
 ```
 
 ### App Badges
-#### `addBadge(numberCount: number) => Promise<ReturnObject>`
+#### `addBadge(numberCount: number) => Promise<ResponseObject>`
 
-#### `removeBadge() => Promise<ReturnObject>`
+#### `removeBadge() => Promise<ResponseObject>`
 
 The badge API is used by installed web apps to set an application-wide badge, shown in an "operating-system-specific" place associated with the application (such as the shelf or home screen or taskbar).
 
@@ -223,11 +223,11 @@ addBadge(3); // sets a new notification badge with 3 indicated notifications
 ```
 
 ### FullScreen Toggle
-#### `EnableFullScreenMode() => Promise<ReturnObject>`
+#### `EnableFullScreenMode() => Promise<ResponseObject>`
 
-#### `ExitFullScreenMode() => Promise<ReturnObject>`
+#### `ExitFullScreenMode() => Promise<ResponseObject>`
 
-The Full Screen feature is an additional utility you can integrate into your app while building your PWA, `EnableFullScreenMode()` enables an App to cover the entire breadth and width of the scree at the tap of a button and the `ExitFullScreenMode()` exits full-screen mode. They both don't take any arguments and can be invoked like any other normal function.
+The Full Screen feature is an additional utility you can integrate into your app while building your PWA, `EnableFullScreenMode()` enables an App to cover the entire breadth and width of the screen at the tap of a button and the `ExitFullScreenMode()` exits full-screen mode. They both don't take any arguments and can be invoked like any other normal function.
 
 ```tsx
 import { EnableFullScreenMode, ExitFullScreenMode } from "~/utils/client/pwa-utils.client";
@@ -240,7 +240,7 @@ import { EnableFullScreenMode, ExitFullScreenMode } from "~/utils/client/pwa-uti
 ```
 
 ### (Client) Notification API
-#### `SendNotification(title: string, option: NotificationOptions) => Promise<ReturnObject>`
+#### `SendNotification(title: string, option: NotificationOptions) => Promise<ResponseObject>`
 
 ```ts
 // Interface `NotificationOptions`
@@ -255,7 +255,7 @@ interface NotificationOptions {
 
 The `SendNotification` API is a client-only function driven only by the [Notifications API](https://developer.mozilla.org/en-US/docs/Web/API/Notification), it is different from the Push API which is another API handled and executed by the server (arriving to `remix-pwa` soon). The `SendNotification` function is executed by the client and takes in two arguments, one is the title of the notification and that's the top header (Title) of the notification your user would see. The second option is an object that would contain additional options for the API.
 
-The first key for the `NotificationsObject` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notification content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**) that is <u>required</u>, it is used to determine wether a notification should be sent silently regardless of the device's settings, it is by default set to false.
+The first key for the `NotificationOptions` argument is the `body` and that is a required argument. The body is the main content of your notification that would contain the details of what you want to pass to the user. The `badge` argument is an optional argument and it's the image URL string of the Notification badge, and it's what the user would see when there is no space for the Notification content to show. It is recommended to use a 96px by 96px square image for the badge. The next argument is the `icon` argument which is the image that would be displayed alongside your Notification. The `image` parameter is a string argument (*url of your image*) and is used to display an image along with your notification. The final argument is the silent parameter and it's a boolean argument (**true** or **false**) that is <u>required</u>, it is used to determine whether a notification should be sent silently regardless of the device's settings, it is by default set to false.
 
 The Notification API can take values from the server (e.g `loader`) or from the client but it must be called and executed on the client side. We are working on adding the Push API that allows you to execute a Notification API together with the Push API on the server side in response to anything (for example, when a message is sent to a user in a messaging App).
 
@@ -286,7 +286,7 @@ setTimeout(() => {
 ### Visibility State
 #### `Visibility (isVisible: () => void, notVisible: () => void): Promise<ResponseObject>`
 
-This utility is used to get wether a document is visible or is minimized (or in the background, etc). It takes two functions as its parameter, one for a visible state, and the other for an invisible state. A common use case for this is to stop a process (e.g video playing, downloading process, etc) when the app is minimized or to run a process *only* when the App is minimized.
+This utility is used to get whether a document is visible or is minimized (or in the background, etc). It takes two functions as it's parameter, one for a visible state, and the other for an invisible state. A common use case for this is to stop a process (e.g video playing, downloading process, etc) when the app is minimized or to run a process *only* when the App is minimized.
 
 ```tsx
 import { Visibility } from "~/utils/client/pwa-utils.client";
@@ -357,7 +357,7 @@ const data = useLoaderData()
 ### Misc. Web Share API
 #### ` WebShare(data: any): Promise<ResponseObject>`
 
-The Miscellaneous Webs Share Api is intended to be a simple Web Share Api that should be used if you intend to send something a bit more loose and simple compared to files & URLs. 
+The Miscellaneous Web Share Api is intended to be a simple Web Share Api that should be used if you intend to send something a bit more loose and simple compared to files & URLs. 
 
 > *I would advise against using this API except when the other two don't meet your data criteria. As this is loosely typed and ~~could~~ cause errors when used with heavy, technical data.*
 
@@ -401,7 +401,7 @@ npx web-push generate-vapid-keys
 
 You would get two keys in your console, a PRIVATE key and a PUBLIC key. Keep your PRIVATE key safe!
 
-2. Create a `.env` file, and save your keys using the variable name `VAPID_PUBLIC_KEY` for the public key and `VAPID_PRIVATE_KEY`for the private key.
+2. Create a `.env` file, and save your keys using the variable name `VAPID_PUBLIC_KEY` for the public key and `VAPID_PRIVATE_KEY` for the private key.
 
 Add the following line of code in `entry.server.ts`:
 ```ts
@@ -413,7 +413,7 @@ import "dotenv/config"
 3. You can finally use the basic Web Push API in your server!
 
 ```tsx
-import { PushNotification } from "~/utils/server/pwa-utils.server.ts
+import { PushNotification } from "~/utils/server/pwa-utils.server.ts"
 
 export const action: ActionFunction = async ({ request }) => {
   // Get request and perform other operations
@@ -447,11 +447,11 @@ This is a new one 🎉🎉! There are two possible options:
 
 **Just-In-Time Caching:**
 
-Also known as `jit`. This is the default caching strategy remix-pwa has been using for a while. It is a good choice for most projects. It caches only pages and responses the user has navigated to, and updates the cache when the page information changes and the user is online. This would be preferred when building a large, dynamic application with notable parametized routes.
+Also known as `jit`. This is the default caching strategy remix-pwa has been using for a while. It is a good choice for most projects. It caches only pages and responses the user has navigated to, and updates the cache when the page information changes and the user is online. This would be preferred when building a large, dynamic application with notable parameterized routes.
 
 **Precaching Strategy:**
 
-This is the new one 🥁! It is a caching strategy that is used when you want to cache all the pages and responses of your application on first load. It is a good choice for small, static applications. It caches all the pages and responses of your application, and updates the cache when the page information changes and the user is online. This would be preferred when building a small, static application with few parametized routes. ⚠️ *Does not cache parametized routes!* ⚠️
+This is the new one 🥁! It is a caching strategy that is used when you want to cache all the pages and responses of your application on first load. It is a good choice for small, static applications. It caches all the pages and responses of your application, and updates the cache when the page information changes and the user is online. This would be preferred when building a small, static application with few parameterized routes. ⚠️ *Does not cache parameterized routes!* ⚠️
 
 Thanks to [mokhtar](https://.github.com/m5r) for his contribution!
 
