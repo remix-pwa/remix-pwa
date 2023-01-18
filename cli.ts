@@ -5,9 +5,9 @@ const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
 const prettier = require("prettier");
-const { Select, Confirm, prompt: questionnaire, Input } = require("enquirer");
+const { prompt: questionnaire } = require("enquirer");
 const chalk = require("chalk");
-const shell = require("shelljs");
+const arg = require("arg");
 
 async function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: string, features: string[]) {
   const publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
@@ -227,13 +227,92 @@ async function Setup(questions: any) {
   }
 }
 
+const helpText = `
+  ${colorette.bold("REMIX-PWA")}
+  
+  ${colorette.underline(colorette.whiteBright("Options:"))}
+  --typescript, --ts        Create project with typescript template
+  --no-typescript, --no-ts  Create project with javascript template
+  --no-install              Skip the installation process
+  --cache                   Preferred \`Caching Strategy\` for the service worker. Either \`jit\` or \`pre\`
+  --features, --feat        \`Remix-Pwa\` features you want to include
+                            ${colorette.underline(colorette.whiteBright('Example:'))}${colorette.whiteBright(` 'sw, manifest, utils'`)}
+                            - 'sw' for Service Workers
+                            - 'manifest' for Web Manifest
+                            - 'push' for Push Notifications
+                            - 'utils' for PWA Client Utilities
+                            - 'icons' for Development Icons
+  --dir                     The location of your Remix \`app\` directory
+  --help, -h                Print this help message and exit
+  --version, -v             Print the CLI version and exit
+`;
+
+const getCliVersion = () => {
+  const version = require('../package.json').version
+  return version
+} 
+
+const featLookup = {
+  sw: "Service Workers",
+  manifest: "Web Manifest",
+  push: "Push Notifications",
+  utils: "PWA Client Utilities",
+  icons: "Development Icons",
+};
+
 async function cli() {
+  const args = arg({
+    "--help": Boolean,
+    "--version": Boolean,
+    "--typescript": Boolean,
+    "--no-typescript": Boolean,
+    "--install": Boolean,
+    "--no-install": Boolean,
+    "--cache": String,
+    "--features": String,
+    "--dir": String,
+    // Aliases for aboves
+    "-h": "--help",
+    "-v": "--version",
+    "--ts": "--typescript",
+    "--feat": "--features",
+    "--no-ts": "--no-typescript",
+  });
+
+  // If help option is passed log help and return
+  if (args["--help"]) {
+    console.log(helpText);
+    return;
+  }
+
+  // If version option is passed log cli verion and return
+  if (args["--version"]) {
+    console.log(getCliVersion());
+    return;
+  }
+
   console.log(colorette.bold(colorette.magenta("Welcome to Remix PWA!")));
   console.log();
 
+  const lang = (args["--typescript"] && "TypeScript") || (args["--no-typescript"] && "JavaScript") || null;
+  const cache =
+    (args["--cache"] === "pre" && "Precaching") || (args["--cache"] === "jit" && "Just-In-Time Caching") || null;
+  const dir = (typeof args["--dir"] === "string" && args["--dir"]) || null;
+  const question = args["--install"] || (args["--no-install"] ? false : null);
+
+  const feat =
+    (args["--features"] &&
+    args["--features"]
+      .replace(/,\s/g, ",")
+      .split(",")
+      // @ts-ignore
+      .filter((elem: string) => typeof featLookup[elem] !== "undefined")
+      // @ts-ignore
+      .map((feat: string) => featLookup[feat])) || null
+
   await new Promise((res) => setTimeout(res, 1000));
 
-  const questions = await questionnaire([
+  const promptAnswers = await questionnaire([
     {
       name: "lang",
       type: "select",
@@ -248,6 +327,7 @@ async function cli() {
           value: "js",
         },
       ],
+      skip: lang !== null,
     },
     {
       name: "cache",
@@ -263,8 +343,13 @@ async function cli() {
           value: "jit",
         },
       ],
+      skip: cache !== null,
     },
-    {
+    /*
+      Passing skip option to multiselect throws an error below is the workaround
+      untils this get resolved https://github.com/enquirer/enquirer/issues/339
+    */
+    ...(feat === null ? [{
       name: "feat",
       type: "multiselect",
       hint: "(Use <space> to select, <return> to submit)",
@@ -294,22 +379,43 @@ async function cli() {
           name: "Development Icons",
           value: "icons",
         },
-      ],
-    },
+      ]
+    }] : []),
     {
       name: "dir",
       type: "input",
       message: "What is the location of your Remix app?",
       initial: "app",
+      skip: dir !== null,
     },
     {
       type: "confirm",
       name: "question",
       message: 'Do you want to immediately run "npm install"?',
       initial: true,
+      skip: question !== null,
     },
   ]);
-  // console.log(questions)
+
+  /*
+    Currently there is a bug in `enquirer` https://github.com/enquirer/enquirer/issues/340
+    where if a question is skipped instead of returning falsy value it returns
+    default or first option's value.
+    Following is the workaround for now.
+  */
+  // 1) We create an Ojbect from initial cli options with truthy or appropriate values only
+  let initialChoices = {
+    ...(lang ? { lang } : {}),
+    ...(cache ? { cache } : {}),
+    ...(feat ? { feat } : {}),
+    ...(dir ? { dir } : {}),
+    ...(question !== null ? { question } : {}),
+  };
+
+  // 2) We merge answers from the prompt with initial choices made from cli
+  //    So the skipped question's answers get overriden by the initial choices.
+  const questions = { ...promptAnswers, ...initialChoices };
+
   await Setup(questions).catch((err) => console.error(err));
 }
 
