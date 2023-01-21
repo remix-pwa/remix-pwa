@@ -23,7 +23,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 - PWA client-side utilities that comes bundled with your App to give you more options and freedom while building the PWA of tomorrow.
 - Server-side utilities to simplify a lot of PWA backend for you. Developing would be more exciting!
 
-**v1 is officially here 🎉🎉!! Check out the [release](https://github.com/ShafSpecs/remix-pwa/releases/tag/v1.0) changelog for a summary of the journey so far.** 
+**v1.1 is finally here 🎉🎉!! Check out the [release](https://github.com/ShafSpecs/remix-pwa/releases/tag/v1.0) changelog for a summary of the journey so far.** 
 
 ## Table Of Content
 
@@ -85,13 +85,6 @@ To integrate PWA features into your Remix App with `remix-pwa`, run the followin
 npx remix-pwa@latest
 ```
 
-If you are utilising Yarn package manager:
-
-```sh
-yarn add remix-pwa@latest
-yarn remix-pwa --pwa
-```
-
 During installation, you would be required to answer a few questions:
 
 - The language you are using for the Remix project (TypeScript or JavaScript)
@@ -105,6 +98,12 @@ During installation, you would be required to answer a few questions:
 > *`remix-pwa` causes errors if comments are present in your root file, make sure to remove them before installing!*
 
 Refer to [this](#installation-manual-guide) section for a detailed explanation of the above questions.
+
+> **`remix-pwa` now includes command flags!** *Run*
+> ```sh
+> npx remix-pwa@latest -h
+> ```
+> *to view the commands* 
 
 ### Upgrade Guide
 
@@ -443,6 +442,8 @@ export const action: ActionFunction = async ({ request }) => {
 ## Installation Manual Guide
 
 Ahh! What a mouthful for a section topic 🤭. This section is to explain the various prompts that comes up during `remix-pwa` installation. 
+
+> *Or you can alternatively run `npx remix-pwa@latest -h` to view help* 
 
 ### Language
 
