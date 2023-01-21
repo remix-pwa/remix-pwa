@@ -11,7 +11,7 @@ const { detect } = require("detect-package-manager");
 
 let publicDir: string; // location of the `public` folder in the Remix app
 let appDir: string; // location of the `app` folder in the Remix app
-let packageManager: string; // package manager user is utilising ('npm', 'yarn', 'pnpm')
+let packageManager: string = 'npm'; // package manager user is utilising ('npm', 'yarn', 'pnpm')
 
 function integrateIcons(projectDir: string) {
   if (!fse.existsSync(projectDir + "/public/icons")) {
@@ -171,10 +171,6 @@ function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: string, 
 
 async function Setup(questions: any) {
   const projectDir = process.cwd();
-  
-  detect(projectDir).then((pm: string) => {
-    packageManager = pm
-  });
 
   let lang: "ts" | "js";
   questions.lang === "TypeScript" ? (lang = "ts") : (lang = "js");
@@ -252,6 +248,12 @@ async function Setup(questions: any) {
 async function cli() {
   console.log(colorette.bold(colorette.magenta("Welcome to Remix PWA!")));
   console.log();
+
+  const projectDir = process.cwd();
+
+  detect(projectDir).then((pm: string) => {
+    packageManager = pm
+  });
 
   await new Promise((res) => setTimeout(res, 1000));
 
