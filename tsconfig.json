@@ -1,5 +1,5 @@
 {
-  "exclude": ["__tests__", "templates"],
+  "exclude": ["templates"],
   "include": ["cli.ts"],
   "compilerOptions": {
     "target": "es5",
