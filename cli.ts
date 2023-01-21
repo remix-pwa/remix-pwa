@@ -249,7 +249,11 @@ async function Setup(questions: any) {
 }
 
 const helpText = `
-  ${colorette.bold("REMIX-PWA")}
+${colorette.bold(colorette.magenta("REMIX-PWA"))}
+
+  Usage:  npx remix-pwa@latest [OPTIONS]
+
+  A stand-alone package for integrating PWA solutions into Remix application.
   
   ${colorette.underline(colorette.whiteBright("Options:"))}
   --typescript, --ts        Create project with typescript template
@@ -265,8 +269,7 @@ const helpText = `
                             - 'icons' for Development Icons
   --dir                     The location of your Remix \`app\` directory
   --help, -h                Print this help message and exit
-  --version, -v             Print the CLI version and exit
-`;
+  --version, -v             Print the CLI version and exit`;
 
 const getCliVersion = () => {
   const version = require('../package.json').version
