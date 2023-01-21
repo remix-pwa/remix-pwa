@@ -67,7 +67,7 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 
 ## Getting Started
 
-### Why Use remix-pwa
+### Why Use `remix-pwa`
 
 remix-pwa is a quick and easy way to get standardized APIs to interact with service worker in your Remix application. 
 
@@ -85,6 +85,13 @@ To integrate PWA features into your Remix App with `remix-pwa`, run the followin
 npx remix-pwa@latest
 ```
 
+If you are utilising Yarn package manager:
+
+```sh
+yarn add remix-pwa@latest
+yarn remix-pwa --pwa
+```
+
 During installation, you would be required to answer a few questions:
 
 - The language you are using for the Remix project (TypeScript or JavaScript)
@@ -92,6 +99,10 @@ During installation, you would be required to answer a few questions:
 - What services of Remix PWA you need. (*It is finally here* 🥳)
 - The location of your Remix `app` directory.
 - Do you want to install Remix PWA dependencies? (Default: `yes`)
+
+> *The yarn issue has been fixed*
+
+> *`remix-pwa` causes errors if comments are present in your root file, make sure to remove them before installing!*
 
 Refer to [this](#installation-manual-guide) section for a detailed explanation of the above questions.
 
@@ -481,7 +492,9 @@ This is the location where your `app` folder is located. By default, remix uses 
 
 ### Installing Dependencies
 
-This one is straightforward. Do you want to install Remix PWA dependencies right now and continue developing your app or do you want to skip it and continue your work with lots of errors due to missing dependencies?
+This one is straightforward. Do you want to install Remix PWA dependencies right now and continue developing your app or do you want to skip it and continue your work with lots of errors due to missing dependencies? 
+
+P.S. This section was buggy when used with yarn. The issue has been successfully patched
 
 ### Using The Push Server API? (See also Server API)
 
