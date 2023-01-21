@@ -215,7 +215,7 @@ async function Setup(questions: any) {
   json.dependencies["web-push"] = "^3.4.5";
   json.dependencies["npm-run-all"] = "^4.1.5";
   json.dependencies["cross-env"] = "^7.0.3";
-  json.dependencies["dotenv"] = "^16.0.0";
+  json.dependencies["dotenv"] = "^16.0.3";
 
   json.devDependencies["@types/node-persist"] = "^3.1.2";
 
