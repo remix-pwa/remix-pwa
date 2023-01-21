@@ -608,6 +608,8 @@ If you want to get help on an issue or have a question, you could either [open a
 
 - Brock Donahue ([Brocktho](https://github.com/Brocktho/))
 
+- Afzal Ansari ([dev-afzalansari](https://github.com/dev-afzalansari))
+
 - Special thanks to [jacob-ebey](https://github.com/jacob-ebey) for his contribution and help with the creation of `remix-pwa`!
 
 ## License
