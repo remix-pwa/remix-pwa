@@ -9,10 +9,12 @@ const { prompt: questionnaire } = require("enquirer");
 const chalk = require("chalk");
 const { detect } = require("detect-package-manager");
 const arg = require("arg");
+import { PackageManager, Language, CacheStrategy } from './types';
+
 
 let publicDir: string; // location of the `public` folder in the Remix app
 let appDir: string; // location of the `app` folder in the Remix app
-let packageManager: string = 'npm'; // package manager user is utilising ('npm', 'yarn', 'pnpm')
+let packageManager: PackageManager = 'npm'; // package manager user is utilising ('npm', 'yarn', 'pnpm')
 
 function integrateIcons(projectDir: string) {
   if (!fse.existsSync(projectDir + "/public/icons")) {
@@ -25,7 +27,7 @@ function integrateIcons(projectDir: string) {
   });
 }
 
-function integrateManifest(projectDir: string, lang: string, dir: string) {
+function integrateManifest(projectDir: string, lang: Language, dir: string) {
   if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
     fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
   }
@@ -37,7 +39,7 @@ function integrateManifest(projectDir: string, lang: string, dir: string) {
     : fse.writeFileSync(projectDir + `/${dir}/routes/resources/manifest[.]webmanifest.${lang}`, fileContent);
 }
 
-function integratePushNotifications(projectDir: string, lang: string, dir: string) {
+function integratePushNotifications(projectDir: string, lang: Language, dir: string) {
   // `/resources/subscribe`
   if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
     fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
@@ -58,7 +60,7 @@ function integratePushNotifications(projectDir: string, lang: string, dir: strin
   fse.writeFileSync(projectDir + `/${dir}/utils/server/pwa-utils.server.` + lang, ServerUtils);
 }
 
-function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: string, features: string[]) {
+function Run(projectDir: string, lang: Language, dir: string, cache: string, features: string[]) {
   publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
   appDir = path.resolve(__dirname, "..", "templates", lang, "app");
 
@@ -173,11 +175,11 @@ function Run(projectDir: string, lang: "ts" | "js", dir: string, cache: string, 
 async function Setup(questions: any) {
   const projectDir = process.cwd();
 
-  let lang: "ts" | "js";
+  let lang: Language;
   questions.lang === "TypeScript" ? (lang = "ts") : (lang = "js");
 
   const dir = questions.dir;
-  let cache: "pre" | "jit";
+  let cache: CacheStrategy;
   questions.cache === "Precaching" ? (cache = "pre") : (cache = "jit");
   const features = questions.feat;
 
@@ -315,7 +317,7 @@ async function cli() {
 
   const projectDir = process.cwd();
 
-  detect(projectDir).then((pm: string) => {
+  detect(projectDir).then((pm: PackageManager) => {
     packageManager = pm
   });
   
