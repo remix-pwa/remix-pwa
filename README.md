@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://ucarecdn.com/ab502fed-46f6-4db0-866a-42d82b5d296d/UntitledDesign3.png" width="250" alt="remix-pwa"/>
+<img src="https://user-images.githubusercontent.com/104901333/214333106-a659657a-3e98-4be6-addf-a145bcf6df2e.png" alt="logo" width="300"/>
 
 # Remix PWA
 
