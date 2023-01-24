@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://user-images.githubusercontent.com/104901333/214333106-a659657a-3e98-4be6-addf-a145bcf6df2e.png" alt="drawing" width="300"/>
+<img src="https://user-images.githubusercontent.com/104901333/214333106-a659657a-3e98-4be6-addf-a145bcf6df2e.png" alt="logo" width="300"/>
 
 # Remix PWA
 
