@@ -246,7 +246,7 @@ interface NotificationOptions {
 export async function SendNotification(title: string, options: NotificationOptions): Promise<ResponseObject> {
   try {
     if ("Notification" in window) {
-      const permissions = await (await navigator.permissions.query({ name: "notifications" })).state;
+      const permissions = (await navigator.permissions.query({ name: "notifications" })).state;
       navigator.permissions.query({ name: "notifications" }).then((permissionStatus) => {
         if (permissionStatus.state === "granted") {
           return;
@@ -256,13 +256,12 @@ export async function SendNotification(title: string, options: NotificationOptio
       });
 
       if (permissions === "granted") {
-        await navigator.serviceWorker.ready.then((registration) => {
-          registration.showNotification(title, options);
-          return {
-            status: "success",
-            message: "Sent Notification to user successfully",
-          };
-        });
+        const registration = await navigator.serviceWorker.ready
+        await registration.showNotification(title, options);
+        return {
+          status: "success",
+          message: "Sent Notification to user successfully",
+        };
       } else {
         return {
           status: "bad",
@@ -340,7 +339,7 @@ export async function copyImage(url: string): Promise<ResponseObject> {
       ]);
       return {
         status: "success",
-        message: "Image copied successfully successfully!",
+        message: "Image copied successfully!",
       };
     } else {
       return {
