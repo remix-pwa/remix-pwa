@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node";
 
-export let loader = () => {
+export let loader = async () => {
   return json(
     {
       short_name: "PWA",
