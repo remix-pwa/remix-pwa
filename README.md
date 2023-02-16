@@ -85,6 +85,8 @@ To integrate PWA features into your Remix App with `remix-pwa`, run the followin
 npx remix-pwa@latest
 ```
 
+> *`remix-pwa` causes errors if comments are present in your root file, make sure to remove them before installing!*
+
 During installation, you would be required to answer a few questions:
 
 - The language you are using for the Remix project (TypeScript or JavaScript)
@@ -92,10 +94,6 @@ During installation, you would be required to answer a few questions:
 - What services of Remix PWA you need. (*It is finally here* 🥳)
 - The location of your Remix `app` directory.
 - Do you want to install Remix PWA dependencies? (Default: `yes`)
-
-> *The yarn issue has been fixed*
-
-> *`remix-pwa` causes errors if comments are present in your root file, make sure to remove them before installing!*
 
 Refer to [this](#installation-manual-guide) section for a detailed explanation of the above questions.
 
@@ -131,7 +129,7 @@ npm run dev
 And voila! You are now ready to use your PWA! 
 
 If you want to lay your hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
-in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/examples/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
+in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/links/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
 
 ## Deployment
 
