@@ -79,7 +79,7 @@ export async function WakeLock() {
       // This is an experimental feature!
 
       //@ts-ignore
-      const wakelock = navigator.wakeLock.request("screen");
+      const wakelock = await navigator.wakeLock.request("screen");
       if (wakelock) {
         return {
           status: "success",
@@ -172,7 +172,7 @@ export async function removeBadge() {
 export async function EnableFullScreenMode() {
   try {
     if (document.fullscreenEnabled) {
-      document.documentElement.requestFullscreen();
+      await document.documentElement.requestFullscreen();
       return {
         status: "success",
         message: "Fullscreen mode activated",
@@ -199,7 +199,7 @@ export async function EnableFullScreenMode() {
 export async function ExitFullScreenMode() {
   try {
     if (document.exitFullscreen) {
-      document.exitFullscreen();
+      await document.exitFullscreen();
       return {
         status: "success",
         message: "Fullscreen mode deactivated",
@@ -228,16 +228,15 @@ export async function ExitFullScreenMode() {
 export async function SendNotification(title, options) {
   try {
     if ("Notification" in window) {
-      const permissions = (await navigator.permissions.query({ name: "notifications" })).state;
-      navigator.permissions.query({ name: "notifications" }).then((permissionStatus) => {
-        if (permissionStatus.state === "granted") {
-          return;
-        } else {
-          return Notification.requestPermission();
-        }
-      });
+      const permission = (await navigator.permissions.query({ name: "notifications" })).state;
+      let requestedPermission = null
 
-      if (permissions === "granted") {
+      // Send permission request only if the permission is not granted neither denied.
+      if(permission === 'prompt') {
+        requestedPermission = await Notification.requestPermission()
+      }
+
+      if (permission === "granted" || requestedPermission === 'granted') {
         const registration = await navigator.serviceWorker.ready
         await registration.showNotification(title, options);
         return {
