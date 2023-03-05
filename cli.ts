@@ -1,19 +1,18 @@
 #!/usr/bin/env node
 
-const fse = require("fs-extra");
+const fse = require('fs-extra');
 const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
 const prettier = require("prettier");
 const { prompt: questionnaire } = require("enquirer");
 const chalk = require("chalk");
-const { detect } = require("detect-package-manager");
 const arg = require("arg");
 import { PackageManager, Language, CacheStrategy } from "./types";
 
 let publicDir: string; // location of the `public` folder in the Remix app
 let appDir: string; // location of the `app` folder in the Remix app
-let packageManager: PackageManager = "npm"; // package manager user is utilising ('npm', 'yarn', 'pnpm')
+let packageManager: PackageManager = null; // package manager user is utilising ('npm', 'yarn', 'pnpm')
 
 function integrateIcons(projectDir: string) {
   if (!fse.existsSync(projectDir + "/public/icons")) {
@@ -242,8 +241,12 @@ async function Setup(questions: any) {
     });
     console.log(colorette.green(`Successfully ran ${packageManager} install!`));
   } else {
-    console.log(colorette.red(`Skipping ${packageManager} install....`));
-    console.log(colorette.red(`Don't forget to run ${packageManager} install!`));
+    console.log(colorette.red(`Skipping ${packageManager ? `${packageManager} install....` : "installation...."}`));
+    console.log(
+      colorette.red(
+        `Don't forget to ${packageManager ? `run ${packageManager} install!` : "install your dependencies"}`,
+      ),
+    );
   }
 }
 
@@ -259,6 +262,7 @@ ${colorette.bold(colorette.magenta("REMIX-PWA"))}
   --no-typescript, --no-ts  Create project with javascript template
   --install                 Install dependencies after creating the project
   --no-install              Skip the installation process
+  --package-manager, --pm   Preferred package manager if your project is not using any
   --cache                   Preferred \`Caching Strategy\` for the service worker. Either \`jit\` or \`pre\`
   --features, --feat        \`Remix-Pwa\` features you want to include
                             ${colorette.underline(colorette.whiteBright("Example:"))}${colorette.whiteBright(
@@ -297,12 +301,14 @@ async function cli() {
     "--cache": String,
     "--features": String,
     "--dir": String,
+    "--package-manager": String,
     // Aliases for aboves
     "-h": "--help",
     "-v": "--version",
     "--ts": "--typescript",
     "--feat": "--features",
     "--no-ts": "--no-typescript",
+    "--pm": "--package-manager",
   });
 
   // If help option is passed log help and return
@@ -322,15 +328,31 @@ async function cli() {
 
   const projectDir = process.cwd();
 
-  detect(projectDir).then((pm: PackageManager) => {
-    packageManager = pm;
-  });
+  // Look if any lock file exists so we can identify the preferred package manager.
+  packageManager = await (async () => {
+    const [isNpm, isYarn, isPnpm] = await Promise.all([
+      fse.pathExists(path.resolve(projectDir, "package-lock.json")),
+      fse.pathExists(path.resolve(projectDir, "yarn.lock")),
+      fse.pathExists(path.resolve(projectDir, "pnpm-lock.yaml")),
+    ]);
+
+    if (isNpm) {
+      return "npm";
+    } else if (isYarn) {
+      return "yarn";
+    } else if (isPnpm) {
+      return "pnpm";
+    }
+
+    return null;
+  })();
 
   const lang = (args["--typescript"] && "TypeScript") || (args["--no-typescript"] && "JavaScript") || null;
   const cache =
     (args["--cache"] === "pre" && "Precaching") || (args["--cache"] === "jit" && "Just-In-Time Caching") || null;
   const dir = (typeof args["--dir"] === "string" && args["--dir"]) || null;
   const question = args["--install"] || (args["--no-install"] ? false : null);
+  const pm = (typeof args["--package-manager"] === "string" && args["--package-manager"]) || null;
 
   const feat =
     (args["--features"] &&
@@ -428,7 +450,9 @@ async function cli() {
     {
       type: "confirm",
       name: "question",
-      message: `Do you want to immediately run "${packageManager} install"?`,
+      message: `Do you want to immediately ${
+        packageManager ? `run "${packageManager} install"?` : "install dependencies?"
+      }`,
       initial: true,
       skip: question !== null,
     },
@@ -452,6 +476,32 @@ async function cli() {
   // 2) We merge answers from the prompt with initial choices made from cli
   //    So the skipped question's answers get overriden by the initial choices.
   const questions = { ...promptAnswers, ...initialChoices };
+
+  // We will prompt for package manager only if there is no detected package manager
+  // and the user wants to install dependencies after creating the project.
+  const forPackageManager = await questionnaire([
+    {
+      type: "input",
+      name: "packageManager",
+      message: "Which package manager you want to use?",
+      skip: () => {
+        if (packageManager) return true;
+
+        if (!packageManager && questions.question === false) {
+          return true;
+        } else if (!packageManager && questions.question === true) {
+          if (pm) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      },
+    },
+  ]);
+
+  // Our final packageManager. Note: it still can be null.
+  packageManager = packageManager || pm || forPackageManager?.packageManager || null;
 
   await Setup(questions).catch((err) => console.error(err));
 }

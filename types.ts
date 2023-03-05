@@ -4,6 +4,6 @@
 
 export type Language = "js" | "ts"
 
-export type PackageManager = "npm" | "pnpm" | "yarn"
+export type PackageManager = "npm" | "pnpm" | "yarn" | null
 
 export type CacheStrategy = "pre" | "jit"
