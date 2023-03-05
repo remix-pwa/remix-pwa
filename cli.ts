@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as fse from "fs-extra";
+const fse = require('fs-extra');
 const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
