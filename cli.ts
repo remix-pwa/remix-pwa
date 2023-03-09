@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fse = require('fs-extra');
+const fse = require("fs-extra");
 const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
@@ -73,8 +73,11 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
   }
 
   // Register worker in `entry.client.tsx`
-  const remoteClientContent: string = fse.readFileSync(projectDir + `/${dir}/entry.client.` + lang + "x").toString();
-  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
+  const remoteClientPath = projectDir + `/${dir}/entry.client.` + lang + "x";
+  const ClientContent =
+    (fse.pathExistsSync(remoteClientPath) ? "" : "export {}\n") +
+    fse.readFileSync(appDir + "/entry.client." + lang).toString();
+  const remoteClientContent: string = (fse.ensureFileSync(remoteClientPath) || "").toString();
 
   if (features.includes("Service Workers")) {
     remoteClientContent.includes(ClientContent)
