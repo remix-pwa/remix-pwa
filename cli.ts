@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fse = require('fs-extra');
+const fse = require("fs-extra");
 const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
@@ -73,8 +73,18 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
   }
 
   // Register worker in `entry.client.tsx`
-  const remoteClientContent: string = fse.readFileSync(projectDir + `/${dir}/entry.client.` + lang + "x").toString();
+  const remoteClientPath = projectDir + `/${dir}/entry.client.` + lang + "x";
+  const remoteClientExists = fse.pathExistsSync(remoteClientPath);
+  const remoteClientContent: string = remoteClientExists ? fse.readFileSync(remoteClientPath).toString() : "";
   const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
+
+  // If client entry file is not available reveal it with `remix reveal entry.client`
+  if (!remoteClientExists) {
+    execSync(`npx remix reveal entry.client ${lang === "js" ? "--no-typescript" : ""}`.trim(), {
+      cwd: process.cwd(),
+      stdio: "inherit",
+    });
+  }
 
   if (features.includes("Service Workers")) {
     remoteClientContent.includes(ClientContent)
