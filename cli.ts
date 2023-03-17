@@ -129,7 +129,8 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
   const newFormatted: string = formatted.replace(cleanRegex, " ");
 
   const rootArray: string[] = newFormatted.split("\n");
-  !newFormatted.includes('import { useSWEffect } from') && rootArray.unshift("import { useSWEffect } from '~/utils/client/sw-hook';");
+  !newFormatted.includes("import { useSWEffect } from") &&
+    rootArray.unshift("import { useSWEffect } from '~/utils/client/sw-hook';");
 
   const extraFormatted = rootArray.join("\n");
   const newText = extraFormatted.replace(cleanRegex, " ");
