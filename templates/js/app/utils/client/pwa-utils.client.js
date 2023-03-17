@@ -194,7 +194,7 @@ export async function EnableFullScreenMode() {
 /**
  * Exit full-screen mode on an element/page.
  *
- * @return {RPromise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
+ * @return {Promise<ResponseObject>} An object consisting of two properties: A status to indicate the status of the invocation and also an accompanying message.
  */
 export async function ExitFullScreenMode() {
   try {

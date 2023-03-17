@@ -103,20 +103,24 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
 
   // Acknowledge SW in the browser
   const RootDir = projectDir + `/${dir}/root.` + lang + "x";
+  const remoteSWHook: string = fse.readFileSync(appDir + "/utils/client/sw-hook." + lang).toString();
+
+  fse.mkdirSync(projectDir + `/${dir}/utils/client`, { recursive: true });
+  fse.writeFileSync(projectDir + `/${dir}/utils/client/sw-hook.` + lang, remoteSWHook);
 
   let RootDirContent: string = fse.readFileSync(RootDir).toString();
-  const localeRootDir = fse.readFileSync(appDir + "/root." + lang).toString();
+  const swHook = "useSWEffect()";
 
   const RootDirNull: string = RootDirContent.replace(/\s\s+/g, " ");
   const rootRegex: RegExp = /return \( <html/g;
   const index = RootDirNull.search(rootRegex);
   const parser = lang === "ts" ? "-ts" : "";
 
-  const NewContent = RootDirContent.includes(localeRootDir)
+  const NewContent = RootDirContent.includes(swHook)
     ? RootDirContent
     : RootDirNull.replace(/\s\s+/g, " ").slice(0, index - 1) +
       "\n" +
-      localeRootDir +
+      swHook +
       "\n" +
       RootDirNull.replace(/\s\s+/g, " ").slice(index);
 
@@ -125,21 +129,8 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
   const newFormatted: string = formatted.replace(cleanRegex, " ");
 
   const rootArray: string[] = newFormatted.split("\n");
-
-  const lastIndexOf = (arr: any[], item: any, start: number = arr.length - 1) => {
-    for (let i = start; i >= 0; i--) {
-      if (arr[i].includes(item)) {
-        return i;
-      }
-    }
-    return -1;
-  };
-
-  let totalImportCount = lastIndexOf(rootArray, "} from", 40);
-
-  rootArray.splice(totalImportCount + 1, 0, "let isMount = true;");
-  rootArray.unshift("import { useLocation, useMatches } from '@remix-run/react';");
-  rootArray.unshift("import React from 'react';");
+  !newFormatted.includes("import { useSWEffect } from") &&
+    rootArray.unshift("import { useSWEffect } from '~/utils/client/sw-hook';");
 
   const extraFormatted = rootArray.join("\n");
   const newText = extraFormatted.replace(cleanRegex, " ");
