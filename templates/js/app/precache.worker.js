@@ -208,7 +208,7 @@ function isMethod(request, methods) {
 }
 
 function isAssetRequest(request) {
-  return isMethod(request, ["get"]) && STATIC_ASSETS.some((publicPath) => request.url.startsWith(publicPath));
+  return isMethod(request, ["get"]) && STATIC_ASSETS.some((publicPath) => request.url.includes(publicPath));
 }
 
 function isLoaderRequest(request) {

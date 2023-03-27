@@ -5,7 +5,7 @@ import { json } from "@remix-run/server-runtime";
 export type {};
 declare let self: ServiceWorkerGlobalScope;
 
-const STATIC_ASSETS = ["/build/", "/icons/", "/"];
+const STATIC_ASSETS = ["/build/", "/icons/"];
 
 const ASSET_CACHE = "asset-cache";
 const DATA_CACHE = "data-cache";
@@ -164,7 +164,7 @@ function isMethod(request: Request, methods: string[]) {
 }
 
 function isAssetRequest(request: Request) {
-  return isMethod(request, ["get"]) && STATIC_ASSETS.some((publicPath) => request.url.startsWith(publicPath));
+  return isMethod(request, ["get"]) && STATIC_ASSETS.some((publicPath) => request.url.includes(publicPath));
 }
 
 function isLoaderRequest(request: Request) {
