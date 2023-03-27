@@ -2,7 +2,7 @@
 
 import { json } from "@remix-run/server-runtime";
 
-const STATIC_ASSETS = ["/build/", "/icons/", "/"];
+const STATIC_ASSETS = ["/build/", "/icons/"];
 
 const ASSET_CACHE = "asset-cache";
 const DATA_CACHE = "data-cache";
@@ -161,7 +161,7 @@ function isMethod(request, methods) {
 }
 
 function isAssetRequest(request) {
-  return isMethod(request, ["get"]) && STATIC_ASSETS.some((publicPath) => request.url.startsWith(publicPath));
+  return isMethod(request, ["get"]) && STATIC_ASSETS.some((publicPath) => request.url.includes(publicPath));
 }
 
 function isLoaderRequest(request) {
