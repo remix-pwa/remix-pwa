@@ -34,16 +34,20 @@ The goal of `remix-pwa` is to create a standalone PWA package that would be used
 
 - **Creation of a standalone Remix PWA docs**: Create a site that delves deep into Remix PWA and its APIs
 - **CF Workers support**: Support for Cloudflare workers
+- **Support for `routes_v2`**: Add support for Remix new convention
+- **Create a package for SW**: Create a standalone package that allows you to create your own very Service Worker.
+- **Caching strategies**: Add support for more caching strategies.
 
 ### Draft
 
 - **API Analytics**: Add analytics tooling API to allow you to set up a personal, custom Analytic service for your site without losing client's data to companies
 - **Background Sync**: Create a background sync API utility
 - **Create a custom download utility**: Create a custom handler for downloading the PWA onto the user's device.
+- **PWA demo apps**: Create an `example` repo that showcases multiple use-cases for `remix-pwa`
 
 ### Proposals
 
-- Create sample PWA apps under `example/` directory
+#### 😐
 
 ## Bug Fixes & Improvements
 
