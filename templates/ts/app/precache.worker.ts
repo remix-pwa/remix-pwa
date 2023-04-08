@@ -105,6 +105,8 @@ async function handleSyncRemixManifest(event: ExtendableMessageEvent) {
   }
 
   function getPathname(route: EntryRoute) {
+    if(route.index) return "/"
+
     let pathname = "";
     if (route.path && route.path.length > 0) {
       pathname = "/" + route.path;
