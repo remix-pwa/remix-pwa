@@ -3,3 +3,4 @@ dist
 index.js
 dist/**/*
 coverage
+.DS_Store
