@@ -115,18 +115,9 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
       cwd: process.cwd(),
       stdio: "inherit",
     });
-
-    remoteClientExists = true;
   }
 
-  const remoteClientContent: string = remoteClientExists ? fse.readFileSync(remoteClientPath).toString() : "";
-  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
-
-  if (features.includes("Service Workers")) {
-    remoteClientContent.includes(ClientContent)
-      ? null
-      : fse.appendFileSync(projectDir + `/${dir}/entry.client.` + lang + "x", `\n${ClientContent}`);
-  }
+  const remoteClientContent: string = fse.readFileSync(remoteClientPath).toString();
 
   if (features.includes("Push Notifications")) {
     integratePushNotifications(projectDir, lang, dir);
