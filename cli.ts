@@ -8,11 +8,19 @@ const prettier = require("prettier");
 const { prompt: questionnaire } = require("enquirer");
 const chalk = require("chalk");
 const arg = require("arg");
-import { PackageManager, Language, CacheStrategy } from "./types";
+
+import type { PackageManager, Language, CacheStrategy, Option } from "./types";
 
 let publicDir: string; // location of the `public` folder in the Remix app
 let appDir: string; // location of the `app` folder in the Remix app
 let packageManager: PackageManager = null; // package manager user is utilising ('npm', 'yarn', 'pnpm')
+let v2_routeConvention: boolean = false; // if the user is using the v2 route convention
+
+const remixConfig = require(path.join(process.cwd(), "remix.config.js")); // remix.config.js file
+
+if (remixConfig.future.v2_routeConvention == true) {
+  v2_routeConvention = true;
+}
 
 function integrateIcons(projectDir: string) {
   if (!fse.existsSync(projectDir + "/public/icons")) {
@@ -26,6 +34,18 @@ function integrateIcons(projectDir: string) {
 }
 
 function integrateManifest(projectDir: string, lang: Language, dir: string) {
+  if (v2_routeConvention) {
+    if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
+      fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
+    }
+
+    const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
+
+    fse.existsSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.` + lang)
+      ? null
+      : fse.writeFileSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.${lang}`, fileContent);
+  }
+
   if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
     fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
   }
@@ -38,16 +58,29 @@ function integrateManifest(projectDir: string, lang: Language, dir: string) {
 }
 
 function integratePushNotifications(projectDir: string, lang: Language, dir: string) {
-  // `/resources/subscribe`
-  if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
-    fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
+  if (v2_routeConvention) {
+    // `/resources/subscribe`
+    if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
+      fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
+    }
+
+    const subscribeContent = fse.readFileSync(appDir + `/routes/resources/subscribe.${lang}`).toString();
+
+    fse.existsSync(projectDir + `/${dir}/routes/resources/subscribe.` + lang)
+      ? null
+      : fse.writeFileSync(projectDir + `/${dir}/routes/resources.subscribe.${lang}`, subscribeContent);
+  } else {
+    // `/resources/subscribe`
+    if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
+      fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
+    }
+
+    const subscribeContent = fse.readFileSync(appDir + `/routes/resources/subscribe.${lang}`).toString();
+
+    fse.existsSync(projectDir + `/${dir}/routes/resources/subscribe.` + lang)
+      ? null
+      : fse.writeFileSync(projectDir + `/${dir}/routes/resources/subscribe.${lang}`, subscribeContent);
   }
-
-  const subscribeContent = fse.readFileSync(appDir + `/routes/resources/subscribe.${lang}`).toString();
-
-  fse.existsSync(projectDir + `/${dir}/routes/resources/subscribe.` + lang)
-    ? null
-    : fse.writeFileSync(projectDir + `/${dir}/routes/resources/subscribe.${lang}`, subscribeContent);
 
   // `/utils/server/pwa-utils.server.ts`
   if (!fse.existsSync(projectDir + `/${dir}/utils/server`)) {
@@ -58,7 +91,7 @@ function integratePushNotifications(projectDir: string, lang: Language, dir: str
   fse.writeFileSync(projectDir + `/${dir}/utils/server/pwa-utils.server.` + lang, ServerUtils);
 }
 
-function Run(projectDir: string, lang: Language, dir: string, cache: string, features: string[]) {
+function Run(projectDir: string, lang: Language, dir: string, cache: string, features: string[], workbox: boolean) {
   publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
   appDir = path.resolve(__dirname, "..", "templates", lang, "app");
 
@@ -74,17 +107,20 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
 
   // Register worker in `entry.client.tsx`
   const remoteClientPath = projectDir + `/${dir}/entry.client.` + lang + "x";
-  const remoteClientExists = fse.pathExistsSync(remoteClientPath);
-  const remoteClientContent: string = remoteClientExists ? fse.readFileSync(remoteClientPath).toString() : "";
-  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
+  let remoteClientExists = fse.pathExistsSync(remoteClientPath);
 
   // If client entry file is not available reveal it with `remix reveal entry.client`
   if (!remoteClientExists) {
-    execSync(`npx remix reveal entry.client ${lang === "js" ? "--no-typescript" : ""}`.trim(), {
+    execSync(`npx remix reveal`.trim(), {
       cwd: process.cwd(),
       stdio: "inherit",
     });
+
+    remoteClientExists = true;
   }
+
+  const remoteClientContent: string = remoteClientExists ? fse.readFileSync(remoteClientPath).toString() : "";
+  const ClientContent = fse.readFileSync(appDir + "/entry.client." + lang).toString();
 
   if (features.includes("Service Workers")) {
     remoteClientContent.includes(ClientContent)
@@ -101,42 +137,6 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
       : fse.appendFileSync(projectDir + `/${dir}/entry.client.` + lang + "x", `\n${PushContent}`);
   }
 
-  // Acknowledge SW in the browser
-  const RootDir = projectDir + `/${dir}/root.` + lang + "x";
-  const remoteSWHook: string = fse.readFileSync(appDir + "/utils/client/sw-hook." + lang).toString();
-
-  fse.mkdirSync(projectDir + `/${dir}/utils/client`, { recursive: true });
-  fse.writeFileSync(projectDir + `/${dir}/utils/client/sw-hook.` + lang, remoteSWHook);
-
-  let RootDirContent: string = fse.readFileSync(RootDir).toString();
-  const swHook = "useSWEffect()";
-
-  const RootDirNull: string = RootDirContent.replace(/\s\s+/g, " ");
-  const rootRegex: RegExp = /return \( <html/g;
-  const index = RootDirNull.search(rootRegex);
-  const parser = lang === "ts" ? "-ts" : "";
-
-  const NewContent = RootDirContent.includes(swHook)
-    ? RootDirContent
-    : RootDirNull.replace(/\s\s+/g, " ").slice(0, index - 1) +
-      "\n" +
-      swHook +
-      "\n" +
-      RootDirNull.replace(/\s\s+/g, " ").slice(index);
-
-  const formatted: string = prettier.format(NewContent, { parser: `babel${parser}` });
-  const cleanRegex: RegExp = /{" "}/g;
-  const newFormatted: string = formatted.replace(cleanRegex, " ");
-
-  const rootArray: string[] = newFormatted.split("\n");
-  !newFormatted.includes("import { useSWEffect } from") &&
-    rootArray.unshift("import { useSWEffect } from '~/utils/client/sw-hook';");
-
-  const extraFormatted = rootArray.join("\n");
-  const newText = extraFormatted.replace(cleanRegex, " ");
-
-  fse.writeFileSync(RootDir, newText);
-
   // Create and write pwa-utils client file
   if (features.includes("PWA Client Utilities")) {
     !fse.existsSync(projectDir + `/${dir}/utils/client`) &&
@@ -151,14 +151,26 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
       fse.readdirSync(appDir).map((worker: string) => {
         if (!worker.includes(lang)) {
           return false;
-        } else if (worker.includes("entry.worker") && cache == "jit") {
+        } else if (worker.includes("entry.worker") && cache == "jit" && !workbox) {
           const workerDir = path.resolve(projectDir, `${dir}/${worker}`);
           const fileContent = fse.readFileSync(`${appDir}/${worker}`);
           fse.existsSync(workerDir) && workerDir.includes(fileContent)
             ? null
             : fse.writeFileSync(workerDir, fileContent.toString());
-        } else if (worker.includes("precache.worker") && cache == "pre") {
+        } else if (worker.includes("precache.worker") && cache == "pre" && !workbox) {
           const workerDir = path.resolve(projectDir, `${dir}/entry.worker.${lang}`);
+          const fileContent = fse.readFileSync(`${appDir}/${worker}`);
+          fse.existsSync(workerDir) && workerDir.includes(fileContent)
+            ? null
+            : fse.writeFileSync(workerDir, fileContent.toString());
+        } else if (worker.includes("entry.workbox") && workbox) {
+          const workerDir = path.resolve(projectDir, `${dir}/entry.workbox.${lang}`);
+          const fileContent = fse.readFileSync(`${appDir}/${worker}`);
+          fse.existsSync(workerDir) && workerDir.includes(fileContent)
+            ? null
+            : fse.writeFileSync(workerDir, fileContent.toString());
+        } else if (worker.includes("precache.workbox") && workbox) {
+          const workerDir = path.resolve(projectDir, `${dir}/entry.workbox.${lang}`);
           const fileContent = fse.readFileSync(`${appDir}/${worker}`);
           fse.existsSync(workerDir) && workerDir.includes(fileContent)
             ? null
@@ -182,7 +194,7 @@ async function Setup(questions: any) {
   questions.cache === "Precaching" ? (cache = "pre") : (cache = "jit");
   const features = questions.feat;
 
-  Run(projectDir, lang, dir, cache, features);
+  Run(projectDir, lang, dir, cache, features, questions.workbox);
 
   await new Promise((res) => setTimeout(res, 500));
 
@@ -215,19 +227,27 @@ async function Setup(questions: any) {
   json.dependencies["npm-run-all"] = "^4.1.5";
   json.dependencies["cross-env"] = "^7.0.3";
   json.dependencies["dotenv"] = "^16.0.3";
-
+  json.dependencies["@remix-pwa/sw"] = "^0.0.2-alpha";
+  questions.workbox ? (json.dependencies["workbox-background-sync"] = "^6.5.4") : null;
+  questions.workbox ? (json.dependencies["workbox-routing"] = "^6.5.4") : null;
+  questions.workbox ? (json.dependencies["workbox-strategies"] = "^6.5.4") : null;
+  
   json.devDependencies["@types/node-persist"] = "^3.1.2";
 
   json.scripts["build"] = "run-s build:*";
   json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
-  json.scripts[
-    "build:worker"
-  ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
+  json.scripts["build:worker"] = `esbuild ./app/entry.${
+    questions.workbox ? "workbox" : "worker"
+  }.${lang} --outfile=./public/entry.${
+    questions.workbox ? "workbox" : "worker"
+  }.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
   json.scripts["dev"] = "run-p dev:*";
   json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
-  json.scripts[
-    "dev:worker"
-  ] = `esbuild ./app/entry.worker.${lang} --outfile=./public/entry.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
+  json.scripts["dev:worker"] = `esbuild ./app/entry.${
+    questions.workbox ? "workbox" : "worker"
+  }.${lang} --outfile=./public/entry.${
+    questions.workbox ? "workbox" : "worker"
+  }.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
 
   saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
   console.log(colorette.green("Successfully ran postinstall scripts!"));
@@ -254,29 +274,29 @@ async function Setup(questions: any) {
 const helpText = `
 ${colorette.bold(colorette.magenta("REMIX-PWA"))}
 
-  Usage:  npx remix-pwa@latest [OPTIONS]
+Usage:  npx remix-pwa@latest [OPTIONS]
 
-  A stand-alone package for integrating PWA solutions into Remix application.
+A stand-alone package for integrating PWA solutions into Remix application.
   
-  ${colorette.underline(colorette.whiteBright("Options:"))}
-  --typescript, --ts        Create project with typescript template
-  --no-typescript, --no-ts  Create project with javascript template
-  --install                 Install dependencies after creating the project
-  --no-install              Skip the installation process
-  --package-manager, --pm   Preferred package manager if your project is not using any
-  --cache                   Preferred \`Caching Strategy\` for the service worker. Either \`jit\` or \`pre\`
-  --features, --feat        \`Remix-Pwa\` features you want to include
-                            ${colorette.underline(colorette.whiteBright("Example:"))}${colorette.whiteBright(
-  ` 'sw, manifest, utils'`,
-)}
-                            - 'sw' for Service Workers
-                            - 'manifest' for Web Manifest
-                            - 'push' for Push Notifications
-                            - 'utils' for PWA Client Utilities
-                            - 'icons' for Development Icons
-  --dir                     The location of your Remix \`app\` directory
-  --help, -h                Print this help message and exit
-  --version, -v             Print the CLI version and exit`;
+${colorette.underline(colorette.whiteBright("Options:"))}
+--typescript, --ts        Create project with typescript template
+--no-typescript, --no-ts  Create project with javascript template
+--workbox                 Integrate workbox into your project
+--no-workbox              Skip integrating workbox into your project  
+--install                 Install dependencies after creating the project
+--no-install              Skip the installation process
+--package-manager, --pm   Preferred package manager if your project is not using any
+--cache                   Preferred \`Caching Strategy\` for the service worker. Either \`jit\` or \`pre\`
+--features, --feat        \`Remix-Pwa\` features you want to include:
+                          - 'sw' for Service Workers
+                          - 'manifest' for Web Manifest
+                          - 'push' for Push Notifications
+                          - 'utils' for PWA Client Utilities
+                          - 'icons' for Development Icons
+--dir                     The location of your Remix \`app\` directory
+--help, -h                Print this help message and exit
+--version, -v             Print the CLI version and exit
+--docs                    Get the link to the remix-pwa docs`;
 
 const getCliVersion = () => {
   const version = require("../package.json").version;
@@ -297,6 +317,7 @@ async function cli() {
     "--version": Boolean,
     "--typescript": Boolean,
     "--no-typescript": Boolean,
+    "--workbox": Boolean,
     "--install": Boolean,
     "--no-install": Boolean,
     "--cache": String,
@@ -324,6 +345,12 @@ async function cli() {
     return;
   }
 
+  // If docs option is passed log docs link and return
+  if (args["--docs"]) {
+    console.log("https://remix-pwa.com");
+    return;
+  }
+
   console.log(colorette.bold(colorette.magenta("Welcome to Remix PWA!")));
   console.log();
 
@@ -348,12 +375,14 @@ async function cli() {
     return null;
   })();
 
-  const lang = (args["--typescript"] && "TypeScript") || (args["--no-typescript"] && "JavaScript") || null;
-  const cache =
+  const lang: Option<string> =
+    (args["--typescript"] && "TypeScript") || (args["--no-typescript"] && "JavaScript") || null;
+  const cache: Option<string> =
     (args["--cache"] === "pre" && "Precaching") || (args["--cache"] === "jit" && "Just-In-Time Caching") || null;
-  const dir = (typeof args["--dir"] === "string" && args["--dir"]) || null;
-  const question = args["--install"] || (args["--no-install"] ? false : null);
-  const pm = (typeof args["--package-manager"] === "string" && args["--package-manager"]) || null;
+  const dir: Option<string> = (typeof args["--dir"] === "string" && args["--dir"]) || null;
+  const question: Option<boolean> = args["--install"] || (args["--no-install"] ? false : null);
+  const pm: Option<string> = (typeof args["--package-manager"] === "string" && args["--package-manager"]) || null;
+  const workbox: Option<boolean> = (args["--workbox"] && true) || (args["--no-workbox"] ? false : null);
 
   const feat =
     (args["--features"] &&
@@ -442,6 +471,13 @@ async function cli() {
         ]
       : []),
     {
+      name: "workbox",
+      type: "confirm",
+      message: "Do you want to use Workbox?",
+      initial: false,
+      skip: workbox !== null || feat === null || !feat.includes("sw"),
+    },
+    {
       name: "dir",
       type: "input",
       message: "What is the location of your Remix app?",
@@ -470,6 +506,7 @@ async function cli() {
     ...(lang ? { lang } : {}),
     ...(cache ? { cache } : {}),
     ...(feat ? { feat } : {}),
+    ...(workbox ? { workbox } : {}),
     ...(dir ? { dir } : {}),
     ...(question !== null ? { question } : {}),
   };
