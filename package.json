@@ -35,6 +35,7 @@
     "remix-pwa": "dist/cli.js"
   },
   "devDependencies": {
+    "@remix-pwa/sw": "^0.0.2-alpha",
     "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^8.2.0",
     "@types/prettier": "^2.4.4",
