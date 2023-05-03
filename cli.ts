@@ -368,8 +368,10 @@ async function cli() {
 
   const lang: Option<string> =
     (args["--typescript"] && "TypeScript") || (args["--no-typescript"] && "JavaScript") || null;
+
   const cache: Option<string> =
     (args["--cache"] === "pre" && "Precaching") || (args["--cache"] === "jit" && "Just-In-Time Caching") || null;
+    
   const dir: Option<string> = (typeof args["--dir"] === "string" && args["--dir"]) || null;
   const question: Option<boolean> = args["--install"] || (args["--no-install"] ? false : null);
   const pm: Option<string> = (typeof args["--package-manager"] === "string" && args["--package-manager"]) || null;
