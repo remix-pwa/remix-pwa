@@ -339,7 +339,7 @@ async function cli() {
 
   // If docs option is passed log docs link and return
   if (args["--docs"]) {
-    console.log("https://remix-pwa.com");
+    console.log("https://remix-pwa.xyz");
     return;
   }
 
