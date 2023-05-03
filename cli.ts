@@ -187,7 +187,7 @@ async function Setup(questions: any) {
 
   Run(projectDir, lang, dir, cache, features, questions.workbox);
 
-  await new Promise((res) => setTimeout(res, 500));
+  await new Promise((res) => setTimeout(res, 750));
 
   console.log(
     colorette.green("PWA Service workers successfully integrated into Remix! Check out the docs for additional info."),
@@ -311,6 +311,7 @@ async function cli() {
     "--workbox": Boolean,
     "--install": Boolean,
     "--no-install": Boolean,
+    "--docs": Boolean,
     "--cache": String,
     "--features": String,
     "--dir": String,
