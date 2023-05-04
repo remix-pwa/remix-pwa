@@ -4,7 +4,6 @@ const fse = require("fs-extra");
 const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
-const prettier = require("prettier");
 const { prompt: questionnaire } = require("enquirer");
 const chalk = require("chalk");
 const arg = require("arg");
@@ -35,10 +34,6 @@ function integrateIcons(projectDir: string) {
 
 function integrateManifest(projectDir: string, lang: Language, dir: string) {
   if (v2_routeConvention) {
-    if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
-      fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
-    }
-
     const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
 
     fse.existsSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.` + lang)
@@ -60,9 +55,6 @@ function integrateManifest(projectDir: string, lang: Language, dir: string) {
 function integratePushNotifications(projectDir: string, lang: Language, dir: string) {
   if (v2_routeConvention) {
     // `/resources/subscribe`
-    if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
-      fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
-    }
 
     const subscribeContent = fse.readFileSync(appDir + `/routes/resources/subscribe.${lang}`).toString();
 
@@ -309,6 +301,7 @@ async function cli() {
     "--typescript": Boolean,
     "--no-typescript": Boolean,
     "--workbox": Boolean,
+    "--no-workbox": Boolean,
     "--install": Boolean,
     "--no-install": Boolean,
     "--docs": Boolean,
