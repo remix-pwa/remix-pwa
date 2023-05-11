@@ -21,6 +21,7 @@
     "type": "git",
     "url": "https://github.com/ShafSpecs/remix-pwa"
   },
+  "homepage": "https://remix-pwa-docs.vercel.app",
   "scripts": {
     "ts": "tsc",
     "prepublishOnly": "tsc"
