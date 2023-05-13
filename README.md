@@ -29,6 +29,8 @@ Check out the new [documentation](https://remix-pwa-docs.vercel.app) for the ful
 ## Table Of Content
 
 - [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Upgrade Guide](#upgrade-guide)
 - [API Documentation](#api-documentation)
 - [Remix PWA Roadmap](#roadmap)
 - [Contributing Doc](#contributing)
@@ -73,7 +75,7 @@ Check out the [quickstart guide](https://remix-pwa-docs.vercel.app/pwa/quickstar
 If you want to lay your hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
 in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/links/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
 
-# API Documentation
+## API Documentation
 
 The API documentation for `remix-pwa` is now available [here](https://remix-pwa-docs.vercel.app)
 
