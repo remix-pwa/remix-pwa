@@ -1,6 +1,6 @@
 {
   "name": "remix-pwa",
-  "version": "1.1.9",
+  "version": "2-prerelease.0",
   "description": "A PWA handler for Remix",
   "keywords": [
     "pwa",
@@ -34,6 +34,9 @@
   ],
   "bin": {
     "remix-pwa": "dist/cli.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@remix-pwa/sw": "^0.0.2-alpha",
