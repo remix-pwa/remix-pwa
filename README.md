@@ -87,6 +87,8 @@ Want to see proposed features and bug fixes? Or do you want to propose an idea/b
 
 Thank you for your interest in contributing 🙂. Check out the [contributing guide](https://remix-pwa-docs.vercel.app/pwa/contribute) to ensure you follow the right steps in contributing to `remix-pwa`.
 
+> You can also help out with the docs too which is definitely a great way to contribute to the project and also help with it's completion
+
 ## Support 
 
 If you want to get help on an issue or have a question, you could either [open an issue](https://github.com/ShafSpecs/remix-pwa/issues/new/choose) or you could ask your questions in the [Official Remix's Discord Server](https://discord.gg/TTVwU2wZca) where there are a lot of helpful people to help you out.
