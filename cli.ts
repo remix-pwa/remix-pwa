@@ -39,6 +39,8 @@ function integrateManifest(projectDir: string, lang: Language, dir: string) {
     fse.existsSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.` + lang)
       ? null
       : fse.writeFileSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.${lang}`, fileContent);
+
+    return;
   }
 
   if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
@@ -214,7 +216,7 @@ async function Setup(questions: any) {
   questions.workbox ? (json.dependencies["workbox-background-sync"] = "^6.5.4") : null;
   questions.workbox ? (json.dependencies["workbox-routing"] = "^6.5.4") : null;
   questions.workbox ? (json.dependencies["workbox-strategies"] = "^6.5.4") : null;
-  
+
   json.devDependencies["@types/node-persist"] = "^3.1.2";
 
   json.scripts["build"] = "run-s build:*";
@@ -365,7 +367,7 @@ async function cli() {
 
   const cache: Option<string> =
     (args["--cache"] === "pre" && "Precaching") || (args["--cache"] === "jit" && "Just-In-Time Caching") || null;
-    
+
   const dir: Option<string> = (typeof args["--dir"] === "string" && args["--dir"]) || null;
   const question: Option<boolean> = args["--install"] || (args["--no-install"] ? false : null);
   const pm: Option<string> = (typeof args["--package-manager"] === "string" && args["--package-manager"]) || null;
@@ -400,22 +402,6 @@ async function cli() {
         },
       ],
       skip: lang !== null,
-    },
-    {
-      name: "cache",
-      type: "select",
-      message: "What caching strategy do you want to use? Check out the docs for more info.",
-      choices: [
-        {
-          name: "Precaching",
-          value: "pre",
-        },
-        {
-          name: "Just-In-Time Caching",
-          value: "jit",
-        },
-      ],
-      skip: cache !== null,
     },
     /*
       Passing skip option to multiselect throws an error below is the workaround
@@ -458,6 +444,22 @@ async function cli() {
         ]
       : []),
     {
+      name: "cache",
+      type: "select",
+      message: "What caching strategy do you want to use? Check out the docs for more info.",
+      choices: [
+        {
+          name: "Precaching",
+          value: "pre",
+        },
+        {
+          name: "Just-In-Time Caching",
+          value: "jit",
+        },
+      ],
+      skip: cache !== null || feat === null || !feat.includes("sw"),
+    },
+    {
       name: "workbox",
       type: "confirm",
       message: "Do you want to use Workbox?",
@@ -491,8 +493,8 @@ async function cli() {
   // 1) We create an Ojbect from initial cli options with truthy or appropriate values only
   let initialChoices = {
     ...(lang ? { lang } : {}),
-    ...(cache ? { cache } : {}),
     ...(feat ? { feat } : {}),
+    ...(cache ? { cache } : {}),
     ...(workbox ? { workbox } : {}),
     ...(dir ? { dir } : {}),
     ...(question !== null ? { question } : {}),
