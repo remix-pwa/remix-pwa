@@ -3,7 +3,6 @@
  */
 
 export type Language = "js" | "ts"
-
 export type PackageManager = "npm" | "pnpm" | "yarn" | null
-
 export type CacheStrategy = "pre" | "jit"
+export type Option<T> = T | null

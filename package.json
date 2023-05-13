@@ -1,6 +1,6 @@
 {
   "name": "remix-pwa",
-  "version": "1.1.9",
+  "version": "2.0.0-prerelease",
   "description": "A PWA handler for Remix",
   "keywords": [
     "pwa",
@@ -21,6 +21,7 @@
     "type": "git",
     "url": "https://github.com/ShafSpecs/remix-pwa"
   },
+  "homepage": "https://remix-pwa-docs.vercel.app",
   "scripts": {
     "ts": "tsc",
     "prepublishOnly": "tsc"
@@ -34,9 +35,11 @@
   "bin": {
     "remix-pwa": "dist/cli.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
-    "@babel/core": "^7.17.5",
-    "@babel/preset-env": "^7.16.11",
+    "@remix-pwa/sw": "^0.0.2-alpha",
     "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^8.2.0",
     "@types/prettier": "^2.4.4",
@@ -54,7 +57,6 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@babel/preset-typescript": "^7.16.7",
     "arg": "^5.0.2",
     "chalk": "4.1.2",
     "colorette": "^2.0.16",
