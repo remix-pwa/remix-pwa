@@ -13,7 +13,11 @@ const assetHandler = new CacheFirst({ cacheName: ASSETS });
 const pageHandler = new NetworkFirst({ cacheName: PAGES });
 const dataHandler = new NetworkFirst({ cacheName: DATA, isLoader: true });
 
-const precacheHandler = new PrecacheHandler();
+const precacheHandler = new PrecacheHandler({
+  dataCacheName: DATA,
+  documentCacheName: PAGES,
+  assetCacheName: ASSETS
+});
 
 const fetchHandler = async (event) => {
   const { request } = event;
@@ -40,13 +44,7 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("message", (event) => {
-  event.waitUntil(precacheHandler.handle(event, {
-    caches: {
-      DOCUMENT_CACHE: PAGES,
-      DATA_CACHE: DATA,
-      ASSET_CACHE: ASSETS,
-    }
-  }));
+  event.waitUntil(precacheHandler.handle(event));
 });
 
 self.addEventListener("fetch", (event) => {

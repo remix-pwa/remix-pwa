@@ -43,7 +43,10 @@ registerRoute(
   }),
 );
 
-const messageHandler = new RemixNavigationHandler();
+const messageHandler = new RemixNavigationHandler({
+  dataCacheName: DATA,
+  documentCacheName: PAGES,
+});
 
 setDefaultHandler(({ request }) => {
   return fetch(request.clone());
@@ -58,12 +61,5 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("message", (event) => {
-  event.waitUntil(
-    messageHandler.handle(event, {
-      caches: {
-        DATA: DATA,
-        PAGES: PAGES,
-      },
-    }),
-  );
+  event.waitUntil(messageHandler.handle(event));
 });
