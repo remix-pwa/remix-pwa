@@ -41,7 +41,10 @@ const fetchHandler = (event) => {
   return fetch(event.request.clone());
 };
 
-const messageHandler = new RemixNavigationHandler();
+const messageHandler = new RemixNavigationHandler({
+  dataCacheName: DATA,
+  documentCacheName: DOCUMENTS,
+});
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());
@@ -57,12 +60,5 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("message", (event) => {
   logger.log("message", event.data.isMount);
-  event.waitUntil(
-    messageHandler.handle(event, {
-      caches: {
-        DATA,
-        PAGES: DOCUMENTS,
-      },
-    })
-  );
+  event.waitUntil(messageHandler.handle(event));
 });

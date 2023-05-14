@@ -11,7 +11,11 @@ const DATA = "data-cache-v1";
 const ASSETS = "assets-cache-v1";
 const staticAssets = ['/build/', '/icons/']
 
-const messageHandler = new PrecacheHandler()
+const messageHandler = new PrecacheHandler({
+  dataCacheName: DATA,
+  documentCacheName: PAGES,
+  assetCacheName: ASSETS
+})
 
 // Assets
 registerRoute((event) => matchAssetRequest(event, staticAssets),
@@ -51,11 +55,5 @@ self.addEventListener("activate", (event) => {
 
 
 self.addEventListener("message", (event) => {
-  event.waitUntil(messageHandler.handle(event, {
-    caches: {
-      DOCUMENT_CACHE: PAGES,
-      DATA_CACHE: DATA,
-      ASSET_CACHE: ASSETS,
-    }
-  }));
+  event.waitUntil(messageHandler.handle(event));
 });
