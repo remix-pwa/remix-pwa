@@ -207,12 +207,12 @@ async function Setup(questions: any) {
     json.scripts = {};
   }
 
-  json.dependencies["node-persist"] = "^3.1.0";
-  json.dependencies["web-push"] = "^3.4.5";
   json.dependencies["npm-run-all"] = "^4.1.5";
   json.dependencies["cross-env"] = "^7.0.3";
   json.dependencies["dotenv"] = "^16.0.3";
-  json.dependencies["@remix-pwa/sw"] = "^0.0.2-alpha";
+  questions.feat.includes("Push Notifications") ? json.dependencies["node-persist"] = "^3.1.0" : null;
+  questions.feat.includes("Push Notifications") ? json.dependencies["web-push"] = "^3.4.5" : null;
+  questions.feat.includes("Service Workers") ? json.dependencies["@remix-pwa/sw"] = "^0.0.3" : null;
   questions.workbox ? (json.dependencies["workbox-background-sync"] = "^6.5.4") : null;
   questions.workbox ? (json.dependencies["workbox-routing"] = "^6.5.4") : null;
   questions.workbox ? (json.dependencies["workbox-strategies"] = "^6.5.4") : null;
@@ -221,13 +221,16 @@ async function Setup(questions: any) {
 
   json.scripts["build"] = "run-s build:*";
   json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
+
   json.scripts["build:worker"] = `esbuild ./app/entry.${
     questions.workbox ? "workbox" : "worker"
   }.${lang} --outfile=./public/entry.${
     questions.workbox ? "workbox" : "worker"
   }.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
+
   json.scripts["dev"] = "run-p dev:*";
   json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
+
   json.scripts["dev:worker"] = `esbuild ./app/entry.${
     questions.workbox ? "workbox" : "worker"
   }.${lang} --outfile=./public/entry.${
@@ -457,14 +460,14 @@ async function cli() {
           value: "jit",
         },
       ],
-      skip: cache !== null || feat === null || !feat.includes("sw"),
+      skip: cache !== null || (feat && !feat.includes("Service Workers")),
     },
     {
       name: "workbox",
       type: "confirm",
       message: "Do you want to use Workbox?",
       initial: false,
-      skip: workbox !== null || feat === null || !feat.includes("sw"),
+      skip: workbox !== null || (feat && !feat.includes("Service Workers")),
     },
     {
       name: "dir",
