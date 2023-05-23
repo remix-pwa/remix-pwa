@@ -54,37 +54,6 @@ function integrateManifest(projectDir: string, lang: Language, dir: string) {
     : fse.writeFileSync(projectDir + `/${dir}/routes/resources/manifest[.]webmanifest.${lang}`, fileContent);
 }
 
-function integratePushNotifications(projectDir: string, lang: Language, dir: string) {
-  if (v2_routeConvention) {
-    // `/resources/subscribe`
-
-    const subscribeContent = fse.readFileSync(appDir + `/routes/resources/subscribe.${lang}`).toString();
-
-    fse.existsSync(projectDir + `/${dir}/routes/resources/subscribe.` + lang)
-      ? null
-      : fse.writeFileSync(projectDir + `/${dir}/routes/resources.subscribe.${lang}`, subscribeContent);
-  } else {
-    // `/resources/subscribe`
-    if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
-      fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
-    }
-
-    const subscribeContent = fse.readFileSync(appDir + `/routes/resources/subscribe.${lang}`).toString();
-
-    fse.existsSync(projectDir + `/${dir}/routes/resources/subscribe.` + lang)
-      ? null
-      : fse.writeFileSync(projectDir + `/${dir}/routes/resources/subscribe.${lang}`, subscribeContent);
-  }
-
-  // `/utils/server/pwa-utils.server.ts`
-  if (!fse.existsSync(projectDir + `/${dir}/utils/server`)) {
-    fse.mkdirSync(projectDir + `/${dir}/utils/server`, { recursive: true });
-  }
-
-  const ServerUtils = fse.readFileSync(appDir + "/utils/server/pwa-utils.server." + lang).toString();
-  fse.writeFileSync(projectDir + `/${dir}/utils/server/pwa-utils.server.` + lang, ServerUtils);
-}
-
 function Run(projectDir: string, lang: Language, dir: string, cache: string, features: string[], workbox: boolean) {
   publicDir = path.resolve(__dirname, "..", "templates", lang, "public");
   appDir = path.resolve(__dirname, "..", "templates", lang, "app");
@@ -97,29 +66,6 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
   // Check if manifest file exist and if not, create `manifest.json` file && service worker entry point
   if (features.includes("Web Manifest")) {
     integrateManifest(projectDir, lang, dir);
-  }
-
-  // Register worker in `entry.client.tsx`
-  const remoteClientPath = projectDir + `/${dir}/entry.client.` + lang + "x";
-  let remoteClientExists = fse.pathExistsSync(remoteClientPath);
-
-  // If client entry file is not available reveal it with `remix reveal entry.client`
-  if (!remoteClientExists) {
-    execSync(`npx remix reveal`.trim(), {
-      cwd: process.cwd(),
-      stdio: "inherit",
-    });
-  }
-
-  const remoteClientContent: string = fse.readFileSync(remoteClientPath).toString();
-
-  if (features.includes("Push Notifications")) {
-    integratePushNotifications(projectDir, lang, dir);
-
-    const PushContent = fse.readFileSync(appDir + "/push.entry.client." + lang).toString();
-    remoteClientContent.includes(PushContent)
-      ? null
-      : fse.appendFileSync(projectDir + `/${dir}/entry.client.` + lang + "x", `\n${PushContent}`);
   }
 
   // Create and write pwa-utils client file
@@ -210,14 +156,13 @@ async function Setup(questions: any) {
   json.dependencies["npm-run-all"] = "^4.1.5";
   json.dependencies["cross-env"] = "^7.0.3";
   json.dependencies["dotenv"] = "^16.0.3";
-  questions.feat.includes("Push Notifications") ? json.dependencies["node-persist"] = "^3.1.0" : null;
-  questions.feat.includes("Push Notifications") ? json.dependencies["web-push"] = "^3.4.5" : null;
-  questions.feat.includes("Service Workers") ? json.dependencies["@remix-pwa/sw"] = "^0.0.3" : null;
+  questions.feat.includes("Push Notifications") ? (json.dependencies["web-push"] = "^3.6.1") : null;
+  questions.feat.includes("Service Workers") || questions.feat.includes("Push Notifications")
+    ? (json.dependencies["@remix-pwa/sw"] = "^0.1.0")
+    : null;
   questions.workbox ? (json.dependencies["workbox-background-sync"] = "^6.5.4") : null;
   questions.workbox ? (json.dependencies["workbox-routing"] = "^6.5.4") : null;
   questions.workbox ? (json.dependencies["workbox-strategies"] = "^6.5.4") : null;
-
-  json.devDependencies["@types/node-persist"] = "^3.1.2";
 
   json.scripts["build"] = "run-s build:*";
   json.scripts["build:remix"] = "cross-env NODE_ENV=production remix build";
