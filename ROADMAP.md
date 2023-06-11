@@ -1,5 +1,7 @@
 # 🗺 Remix PWA Roadmap
 
+> In the middle of being deprecated
+
 This file documents the roadmap and changes for Remix PWA. It includes proposed features, changes, ideas and features that are already in the  works.
 
 ### Notes about the Roadmap
