@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-
-const fse = require("fs-extra");
+const fs = require("fs");
+const fse = require("fs-extra")
 const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
 const { prompt: questionnaire } = require("enquirer");
 const chalk = require("chalk");
 const arg = require("arg");
+const prependFile = require("prepend-file");
 
 import type { PackageManager, Language, CacheStrategy, Option } from "./types";
 
@@ -17,41 +18,41 @@ let v2_routeConvention: boolean = false; // if the user is using the v2 route co
 
 const remixConfig = require(path.join(process.cwd(), "remix.config.js")); // remix.config.js file
 
-if (remixConfig.future.v2_routeConvention == true) {
+if (remixConfig?.future.v2_routeConvention == true) {
   v2_routeConvention = true;
 }
 
 function integrateIcons(projectDir: string) {
-  if (!fse.existsSync(projectDir + "/public/icons")) {
-    fse.mkdirSync(projectDir + "/public/icons", { recursive: true });
+  if (!fs.existsSync(projectDir + "/public/icons")) {
+    fs.mkdirSync(projectDir + "/public/icons", { recursive: true });
   }
 
-  fse.readdirSync(`${publicDir}/icons`).map((file: string) => {
-    const fileContent = fse.readFileSync(publicDir + "/icons/" + file);
-    fse.writeFileSync(projectDir + `/public/icons/${file}`, fileContent);
+  fs.readdirSync(`${publicDir}/icons`).map((file: string) => {
+    const fileContent = fs.readFileSync(publicDir + "/icons/" + file);
+    fs.writeFileSync(projectDir + `/public/icons/${file}`, fileContent);
   });
 }
 
 function integrateManifest(projectDir: string, lang: Language, dir: string) {
   if (v2_routeConvention) {
-    const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
+    const fileContent = fs.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
 
-    fse.existsSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.` + lang)
+    fs.existsSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.` + lang)
       ? null
-      : fse.writeFileSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.${lang}`, fileContent);
+      : fs.writeFileSync(projectDir + `/${dir}/routes/resources.manifest[.]webmanifest.${lang}`, fileContent);
 
     return;
   }
 
-  if (!fse.existsSync(projectDir + `/${dir}/routes/resources`)) {
-    fse.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
+  if (!fs.existsSync(projectDir + `/${dir}/routes/resources`)) {
+    fs.mkdirSync(projectDir + `/${dir}/routes/resources`, { recursive: true });
   }
 
-  const fileContent = fse.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
+  const fileContent = fs.readFileSync(appDir + `/routes/resources/manifest[.]json.${lang}`).toString();
 
-  fse.existsSync(projectDir + `/${dir}/routes/resources/manifest[.]webmanifest.` + lang)
+  fs.existsSync(projectDir + `/${dir}/routes/resources/manifest[.]webmanifest.` + lang)
     ? null
-    : fse.writeFileSync(projectDir + `/${dir}/routes/resources/manifest[.]webmanifest.${lang}`, fileContent);
+    : fs.writeFileSync(projectDir + `/${dir}/routes/resources/manifest[.]webmanifest.${lang}`, fileContent);
 }
 
 function Run(projectDir: string, lang: Language, dir: string, cache: string, features: string[], workbox: boolean) {
@@ -70,44 +71,94 @@ function Run(projectDir: string, lang: Language, dir: string, cache: string, fea
 
   // Create and write pwa-utils client file
   if (features.includes("PWA Client Utilities")) {
-    !fse.existsSync(projectDir + `/${dir}/utils/client`) &&
-      fse.mkdirSync(projectDir + `/${dir}/utils/client`, { recursive: true });
+    !fs.existsSync(projectDir + `/${dir}/utils/client`) &&
+      fs.mkdirSync(projectDir + `/${dir}/utils/client`, { recursive: true });
 
-    const ClientUtils = fse.readFileSync(appDir + "/utils/client/pwa-utils.client." + lang).toString();
-    fse.writeFileSync(projectDir + `/${dir}/utils/client/pwa-utils.client.` + lang, ClientUtils);
+    const ClientUtils = fs.readFileSync(appDir + "/utils/client/pwa-utils.client." + lang).toString();
+    fs.writeFileSync(projectDir + `/${dir}/utils/client/pwa-utils.client.` + lang, ClientUtils);
   }
 
   try {
     if (features.includes("Service Workers")) {
-      fse.readdirSync(appDir).map((worker: string) => {
+      if (!fs.existsSync(projectDir + `/${dir}/entry.client.${lang}x`)) {
+        execSync(`npx remix reveal`, {
+          cwd: process.cwd(),
+          stdio: "inherit",
+        });
+      }
+
+      (async () =>
+        await prependFile(
+          projectDir + `/${dir}/entry.client.${lang}x`,
+          "import { loadServiceWorker } from '@remix-pwa/sw';\n",
+        ))();
+
+      fs.appendFileSync(projectDir + `/${dir}/entry.client.${lang}x`, "\nloadServiceWorker();\n");
+
+      let workerDir: string = "";
+
+      fs.readdirSync(appDir).map((worker: string) => {
         if (!worker.includes(lang)) {
           return false;
         } else if (worker.includes("entry.worker") && cache == "jit" && !workbox) {
-          const workerDir = path.resolve(projectDir, `${dir}/${worker}`);
-          const fileContent = fse.readFileSync(`${appDir}/${worker}`);
-          fse.existsSync(workerDir) && workerDir.includes(fileContent)
+          workerDir = path.resolve(projectDir, `${dir}/${worker}`);
+          const fileContent = fs.readFileSync(`${appDir}/${worker}`).toString();
+          fs.existsSync(workerDir) && workerDir.includes(fileContent)
             ? null
-            : fse.writeFileSync(workerDir, fileContent.toString());
+            : fs.writeFileSync(workerDir, fileContent.toString());
         } else if (worker.includes("precache.worker") && cache == "pre" && !workbox) {
-          const workerDir = path.resolve(projectDir, `${dir}/entry.worker.${lang}`);
-          const fileContent = fse.readFileSync(`${appDir}/${worker}`);
-          fse.existsSync(workerDir) && workerDir.includes(fileContent)
+          workerDir = path.resolve(projectDir, `${dir}/entry.worker.${lang}`);
+          const fileContent = fs.readFileSync(`${appDir}/${worker}`).toString();
+          fs.existsSync(workerDir) && workerDir.includes(fileContent)
             ? null
-            : fse.writeFileSync(workerDir, fileContent.toString());
+            : fs.writeFileSync(workerDir, fileContent.toString());
         } else if (worker.includes("entry.workbox") && workbox) {
-          const workerDir = path.resolve(projectDir, `${dir}/entry.workbox.${lang}`);
-          const fileContent = fse.readFileSync(`${appDir}/${worker}`);
-          fse.existsSync(workerDir) && workerDir.includes(fileContent)
+          workerDir = path.resolve(projectDir, `${dir}/entry.workbox.${lang}`);
+          const fileContent = fs.readFileSync(`${appDir}/${worker}`).toString();
+          fs.existsSync(workerDir) && workerDir.includes(fileContent)
             ? null
-            : fse.writeFileSync(workerDir, fileContent.toString());
+            : fs.writeFileSync(workerDir, fileContent.toString());
         } else if (worker.includes("precache.workbox") && workbox) {
-          const workerDir = path.resolve(projectDir, `${dir}/entry.workbox.${lang}`);
-          const fileContent = fse.readFileSync(`${appDir}/${worker}`);
-          fse.existsSync(workerDir) && workerDir.includes(fileContent)
+          workerDir = path.resolve(projectDir, `${dir}/entry.workbox.${lang}`);
+          const fileContent = fs.readFileSync(`${appDir}/${worker}`).toString();
+          fs.existsSync(workerDir) && workerDir.includes(fileContent)
             ? null
-            : fse.writeFileSync(workerDir, fileContent.toString());
+            : fs.writeFileSync(workerDir, fileContent.toString());
         }
       });
+
+      if (features.includes("Push Notifications")) {
+        const fileContent = `\n/******** Push Event ********/\nclass PushHandler extends Push {
+  async handlePush(event: PushEvent): Promise<void> {}
+
+  async handleNotificationClick(event: NotificationEvent): Promise<void> {}
+
+  async handleNotificationClose(event: NotificationEvent): Promise<void> {}
+
+  async handleError(error: ErrorEvent): Promise<void> {}
+}
+
+const pushHandler = new PushHandler();
+
+self.addEventListener("push", (event: PushEvent) => {
+  pushHandler.handlePush(event);
+});
+
+self.addEventListener("notificationclick", (event: NotificationEvent) => {
+  pushHandler.handleNotificationClick(event);
+});
+
+self.addEventListener("notificationclose", (event: NotificationEvent) => {
+  pushHandler.handleNotificationClose(event);
+});
+
+self.addEventListener("error", (error: ErrorEvent) => {
+  pushHandler.handleError(error);
+});\n`;
+        fs.existsSync(workerDir) && workerDir.includes(fileContent)
+          ? null
+          : fs.appendFileSync(workerDir, fileContent.toString());
+      }
     }
   } catch (error) {
     console.error(colorette.red("Error ocurred creating files. Could not create Service Worker files."));
@@ -135,7 +186,7 @@ async function Setup(questions: any) {
   console.log();
   console.log(colorette.blue("Running postinstall scripts...."));
 
-  const saveFile = fse.writeFileSync;
+  const saveFile = fs.writeFileSync;
 
   //@ts-ignore
   const pkgJsonPath = path.resolve(process.cwd(), "package.json");
@@ -157,8 +208,9 @@ async function Setup(questions: any) {
   json.dependencies["cross-env"] = "^7.0.3";
   json.dependencies["dotenv"] = "^16.0.3";
   questions.feat.includes("Push Notifications") ? (json.dependencies["web-push"] = "^3.6.1") : null;
+  questions.feat.includes("Push Notifications") ? (json.dependencies["@remix-pwa/sw"] = "*") : null;
   questions.feat.includes("Service Workers") || questions.feat.includes("Push Notifications")
-    ? (json.dependencies["@remix-pwa/sw"] = "^0.1.0")
+    ? (json.dependencies["@remix-pwa/push"] = "*")
     : null;
   questions.workbox ? (json.dependencies["workbox-background-sync"] = "^6.5.4") : null;
   questions.workbox ? (json.dependencies["workbox-routing"] = "^6.5.4") : null;
@@ -171,7 +223,7 @@ async function Setup(questions: any) {
     questions.workbox ? "workbox" : "worker"
   }.${lang} --outfile=./public/entry.${
     questions.workbox ? "workbox" : "worker"
-  }.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'`;
+  }.js --minify --bundle --platform=node --format=esm --define:process.env.NODE_ENV='\"production\"'`;
 
   json.scripts["dev"] = "run-p dev:*";
   json.scripts["dev:remix"] = "cross-env NODE_ENV=development remix dev";
@@ -180,7 +232,7 @@ async function Setup(questions: any) {
     questions.workbox ? "workbox" : "worker"
   }.${lang} --outfile=./public/entry.${
     questions.workbox ? "workbox" : "worker"
-  }.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
+  }.js --bundle --platform=node --format=esm --define:process.env.NODE_ENV='\"development\"' --watch`;
 
   saveFile(pkgJsonPath, JSON.stringify(json, null, 2));
   console.log(colorette.green("Successfully ran postinstall scripts!"));
@@ -205,7 +257,15 @@ async function Setup(questions: any) {
 }
 
 const helpText = `
-${colorette.bold(colorette.magenta("REMIX-PWA"))}
+${colorette.bold(
+  colorette.magenta(`______               _       ______ _    _  ___  
+| ___ \\             (_)      | ___ \\ |  | |/ _ \\ 
+| |_/ /___ _ __ ___  ___  __ | |_/ / |  | / /_\\ \\
+|    // _ \\ '_ \` _ \\| \\ \\/ / |  __/| |/\\| |  _  |
+| |\\ \\  __/ | | | | | |>  <  | |   \\  /\\  / | | |
+\\_| \\_\\___|_| |_| |_|_/_/\\_\\ \\_|    \\/  \\/\\_| |_/
+`),
+)}
 
 Usage:  npx remix-pwa@latest [OPTIONS]
 
@@ -360,6 +420,7 @@ async function cli() {
           {
             name: "feat",
             type: "multiselect",
+            // @ts-ignore
             hint: "(Use <space> to select, <return> to submit)",
             message: "What features of remix-pwa do you need? Don't be afraid to pick all!",
             //@ts-ignore
@@ -393,6 +454,7 @@ async function cli() {
       : []),
     {
       name: "cache",
+      // @ts-ignore
       type: "select",
       message: "What caching strategy do you want to use? Check out the docs for more info.",
       choices: [
@@ -405,29 +467,36 @@ async function cli() {
           value: "jit",
         },
       ],
+      // @ts-ignore
       skip: cache !== null || (feat && !feat.includes("Service Workers")),
     },
     {
       name: "workbox",
+      // @ts-ignore
       type: "confirm",
       message: "Do you want to use Workbox?",
       initial: false,
+      // @ts-ignore
       skip: workbox !== null || (feat && !feat.includes("Service Workers")),
     },
     {
       name: "dir",
+      // @ts-ignore
       type: "input",
       message: "What is the location of your Remix app?",
       initial: "app",
+      // @ts-ignore
       skip: dir !== null,
     },
     {
+      // @ts-ignore
       type: "confirm",
       name: "question",
       message: `Do you want to immediately ${
         packageManager ? `run "${packageManager} install"?` : "install dependencies?"
       }`,
       initial: true,
+      // @ts-ignore
       skip: question !== null,
     },
   ]);
@@ -459,6 +528,7 @@ async function cli() {
       type: "input",
       name: "packageManager",
       message: "Which package manager you want to use?",
+      // @ts-ignore
       skip: () => {
         if (packageManager) return true;
 
@@ -476,6 +546,7 @@ async function cli() {
   ]);
 
   // Our final packageManager. Note: it still can be null.
+  // @ts-ignore
   packageManager = packageManager || pm || forPackageManager?.packageManager || null;
 
   await Setup(questions).catch((err) => console.error(err));
