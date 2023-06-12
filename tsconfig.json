@@ -2,8 +2,8 @@
   "exclude": ["templates"],
   "include": ["cli.ts"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ES2022",
+    "module": "CommonJS",
     "declaration": true,
     "moduleResolution": "Node",
     "strict": true,
