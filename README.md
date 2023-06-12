@@ -59,11 +59,6 @@ npx remix-pwa@latest
 
 Refer to [the docs](https://remix-pwa-docs.vercel.app/pwa/installation#cli-usage) for a detailed explanation of the CLI installation process.
 
-> If you want to install the stable version of `remix-pwa` (v1.1.10) without any of v2 features attached to it, run the following command:
-> ```sh
-> npx remix-pwa@1.1.10
-> ```
-
 ### Upgrade Guide
 
 To upgrade to the latest v2 pre-release version of `remix-pwa`, check out the [upgrade guide](https://remix-pwa-docs.vercel.app/sw/upgrade-guide) in the docs.
