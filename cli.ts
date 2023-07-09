@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const fs = require("fs");
-const fse = require("fs-extra")
+const fse = require("fs-extra");
 const path = require("path");
 const { execSync } = require("child_process");
 const colorette = require("colorette");
@@ -15,12 +15,6 @@ let publicDir: string; // location of the `public` folder in the Remix app
 let appDir: string; // location of the `app` folder in the Remix app
 let packageManager: PackageManager = null; // package manager user is utilising ('npm', 'yarn', 'pnpm')
 let v2_routeConvention: boolean = false; // if the user is using the v2 route convention
-
-const remixConfig = require(path.join(process.cwd(), "remix.config.js")); // remix.config.js file
-
-if (remixConfig?.future.v2_routeConvention == true) {
-  v2_routeConvention = true;
-}
 
 function integrateIcons(projectDir: string) {
   if (!fs.existsSync(projectDir + "/public/icons")) {
@@ -345,6 +339,13 @@ async function cli() {
   if (args["--docs"]) {
     console.log("https://remix-pwa-docs.vercel.app");
     return;
+  }
+
+  const remixConfig = async () => import(path.join(process.cwd(), "remix.config.js")); // remix.config.js file
+  const { default: config } = await remixConfig();
+
+  if (config.future && config.future.v2_routeConvention == true) {
+    v2_routeConvention = true;
   }
 
   console.log(colorette.bold(colorette.magenta("Welcome to Remix PWA!")));
