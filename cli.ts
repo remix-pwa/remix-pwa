@@ -341,10 +341,9 @@ async function cli() {
     return;
   }
 
-  const remixConfig = async () => import(path.join(process.cwd(), "remix.config.js")); // remix.config.js file
-  const { default: config } = await remixConfig();
+  const remixConfig = require(path.join(process.cwd(), "remix.config.js")); // remix.config.js file
 
-  if (config.future && config.future.v2_routeConvention == true) {
+  if (remixConfig.future && remixConfig.future.v2_routeConvention == true) {
     v2_routeConvention = true;
   }
 
