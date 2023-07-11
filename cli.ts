@@ -341,11 +341,26 @@ async function cli() {
     return;
   }
 
-  const remixConfig = require(path.join(process.cwd(), "remix.config.js")); // remix.config.js file
+  let remixConfigPath = path.join(process.cwd(), "remix.config.js");
+  fs.readFileSync(remixConfigPath, "utf-8", (err: any, data: any) => {
+    if (err) {
+      console.log(
+        colorette.red(
+          "No `remix.config.js` file found in your project. Please make sure to run in a remix project or create one and try again or alternatively, run `remix-pwa --help` for more info.",
+        ),
+      );
+      return;
+    }
 
-  if (remixConfig.future && remixConfig.future.v2_routeConvention == true) {
-    v2_routeConvention = true;
-  }
+    const remixConfig = eval(data);
+    if (!remixConfig.future) {
+      remixConfig.future = {};
+    }
+
+    if (remixConfig.future && remixConfig.future.v2_routeConvention == true) {
+      v2_routeConvention = true;
+    }
+  });
 
   console.log(colorette.bold(colorette.magenta("Welcome to Remix PWA!")));
   console.log();
