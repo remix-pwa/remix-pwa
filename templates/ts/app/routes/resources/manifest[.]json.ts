@@ -1,8 +1,8 @@
 import { json } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
 
-export let loader: LoaderFunction = async () => {
-  return json(
+export let loader: LoaderFunction = async () => (
+  json(
     {
       short_name: "PWA",
       name: "Remix PWA",
@@ -69,5 +69,5 @@ export let loader: LoaderFunction = async () => {
         "Content-Type": "application/manifest+json",
       },
     },
-  );
-};
+  )
+);
