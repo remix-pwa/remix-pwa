@@ -235,7 +235,7 @@ async function Setup(questions: any) {
 
   if (questions.question) {
     console.log(colorette.blueBright(`Running ${packageManager} install....`));
-    execSync(`${packageManager} install --loglevel silent`, {
+    execSync(`${packageManager} install ${packageManager == 'yarn' ? null : '--loglevel silent'}`, {
       cwd: process.cwd(),
       stdio: "inherit",
     });
