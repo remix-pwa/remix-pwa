@@ -61,9 +61,7 @@ Refer to [the docs](https://remix-pwa-docs.vercel.app/pwa/installation#cli-usage
 
 ### Upgrade Guide
 
-To upgrade to the latest v2 pre-release version of `remix-pwa`, check out the [upgrade guide](https://remix-pwa-docs.vercel.app/sw/upgrade-guide) in the docs.
-
-> Still a Work-In-Progress but stable enough.
+To upgrade to the latest v2 version of `remix-pwa`, check out the [upgrade guide](https://remix-pwa-docs.vercel.app/sw/upgrade-guide) in the docs.
 
 ## Setting up Remix for PWA
 
