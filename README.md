@@ -26,8 +26,6 @@ Remix PWA is a lightweight, standalone npm package that adds full Progressive We
 
 Check out the new [documentation](https://remix-pwa-docs.vercel.app) for the full list of features and more!
 
-**`remix-pwa` pre-release is here! Hold tight for a full list of feature overhaul 🚀!** 
-
 ## Table Of Content
 
 - [Getting Started](#getting-started)
@@ -67,8 +65,7 @@ To upgrade to the latest v2 version of `remix-pwa`, check out the [upgrade guide
 
 Check out the [quickstart guide](https://remix-pwa-docs.vercel.app/pwa/quickstart) in the docs for a detailed walkthrough on how to set up your Remix app for PWA.
 
-If you want to lay your hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico`
-in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/links/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
+If you want to lay your hands on demo icons and favicons for your PWA, `remix-pwa` got you covered with sample icons. Simply delete the `favicon.ico` in your `public` folder and add the [following links](https://github.com/ShafSpecs/remix-pwa/blob/main/links/pwa-links.ts#L9) to your `root` file, above the `<Links />` tag.
 
 ## API Documentation
 
