@@ -37,7 +37,7 @@ Check out the new [documentation](https://remix-pwa-docs.vercel.app) for the ful
 - [Support](#support)
 - [FAQ](#faq)
 - [Authors](#authors)
-- [License](#license)  
+- [License](#license)
 
 ## Getting Started
 
@@ -53,7 +53,7 @@ npx remix-pwa@latest
 > ```sh
 > npx remix-pwa@latest -h
 > ```
-> *to view the commands* 
+> *to view the commands*
 
 Refer to [the docs](https://remix-pwa-docs.vercel.app/pwa/installation#cli-usage) for a detailed explanation of the CLI installation process.
 
@@ -71,7 +71,7 @@ If you want to lay your hands on demo icons and favicons for your PWA, `remix-pw
 
 The API documentation for `remix-pwa` is now available [here](https://remix-pwa-docs.vercel.app)
 
-*To view the old docs for `remix-pwa` v1.1.10 and below, check [here]("./archive/README.md")*
+*To view the old docs for `remix-pwa` v1.1.10 and below, check [here](./archive/README.md)*
 
 ## Roadmap
 
@@ -83,7 +83,7 @@ Thank you for your interest in contributing 🙂. Check out the [contributing gu
 
 > You can also help out with the docs too which is definitely a great way to contribute to the project and also help with it's completion
 
-## Support 
+## Support
 
 If you want to get help on an issue or have a question, you could either [open an issue](https://github.com/ShafSpecs/remix-pwa/issues/new/choose) or you could ask your questions in the [Official Remix's Discord Server](https://discord.gg/TTVwU2wZca) where there are a lot of helpful people to help you out.
 
