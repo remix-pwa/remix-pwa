@@ -4,6 +4,8 @@
 // The required icons are already added and stored in the `public/icons` folder, you can change the icons
 // by replacing the icons with your own. Remove the default Remix's `favicon.ico` and use these instead.
 
+// Todo: Throw this into a component.
+
 function LinkExample () {
     return (
         <link
