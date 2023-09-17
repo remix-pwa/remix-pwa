@@ -61,7 +61,7 @@ Refer to [the docs](https://remix-pwa.run/docs/installation) for a detailed expl
 
 ### Upgrade Guide
 
-To upgrade to the latest v2 version of `remix-pwa`, check out the [upgrade guide](https://remix-pwa.run/docs/upgrade-guide) in the docs.
+To upgrade to the latest v3.0 version of `remix-pwa`, check out the [upgrade guide](https://remix-pwa.run/docs/upgrade-guide) in the docs.
 
 ## Setting up Remix for PWA
 
