@@ -6,17 +6,15 @@
 
 # Remix PWA
 
-**PWA integration & support for Remix**
-
 [![stars](https://img.shields.io/github/stars/ShafSpecs/remix-pwa)](https://github.com/ShafSpecs/remix-pwa/stargazers)
 [![issues](https://img.shields.io/github/issues/ShafSpecs/remix-pwa)](https://github.com/ShafSpecs/remix-pwa/issues)
 [![License](https://img.shields.io/github/license/ShafSpecs/remix-pwa)](https://github.com/ShafSpecs/remix-pwa/blob/main/LICENSE.md)
 
 </div>
 
-Remix PWA is a lightweight, standalone npm package that adds full Progressive Web App support to Remix 💿.
+Remix PWA is a PWA framework that seamlessly integrates Progressive Web App (PWA) features into Remix including offline support, caching, installability on Native devices and more.
 
-**`remix-pwa` v2 is finally out! Check out the full release notes [here](https://github.com/remix-pwa/remix-pwa/releases/tag/v2.0)**
+**Remix PWA v3.0 is finally out! Check out the full release notes [here](https://github.com/remix-pwa/remix-pwa/releases/tag/v3.0)**
 
 ## Features
 
@@ -28,16 +26,20 @@ Check out the new [documentation](https://remix-pwa-docs.vercel.app) for the ful
 
 ## Table Of Content
 
-- [Getting Started](#getting-started)
-  - [Installation](#installation)
-  - [Upgrade Guide](#upgrade-guide)
-- [API Documentation](#api-documentation)
-- [Remix PWA Roadmap](#roadmap)
-- [Contributing Doc](#contributing)
-- [Support](#support)
-- [FAQ](#faq)
-- [Authors](#authors)
-- [License](#license)  
+- [Remix PWA](#remix-pwa)
+  - [Features](#features)
+  - [Table Of Content](#table-of-content)
+  - [Getting Started](#getting-started)
+    - [Installation](#installation)
+    - [Upgrade Guide](#upgrade-guide)
+  - [Setting up Remix for PWA](#setting-up-remix-for-pwa)
+  - [API Documentation](#api-documentation)
+  - [Contributing](#contributing)
+  - [Support](#support)
+  - [FAQ](#faq)
+  - [Ecosystem](#ecosystem)
+  - [Authors](#authors)
+  - [License](#license)
 
 ## Getting Started
 
@@ -46,20 +48,20 @@ Check out the new [documentation](https://remix-pwa-docs.vercel.app) for the ful
 To integrate PWA features into your Remix App with `remix-pwa`, run the following command to get started with PWA goodness:
 
 ```sh
-npx remix-pwa@latest
+npx remix-pwa@latest init
 ```
 
 > **To check out `remix-pwa` flags, run:**
 > ```sh
 > npx remix-pwa@latest -h
 > ```
-> *to view the commands* 
+> *to view the commands*
 
-Refer to [the docs](https://remix-pwa-docs.vercel.app/pwa/installation#cli-usage) for a detailed explanation of the CLI installation process.
+Refer to [the docs](https://remix-pwa.run/docs/installation) for a detailed explanation of the CLI installation process.
 
 ### Upgrade Guide
 
-To upgrade to the latest v2 version of `remix-pwa`, check out the [upgrade guide](https://remix-pwa-docs.vercel.app/sw/upgrade-guide) in the docs.
+To upgrade to the latest v2 version of `remix-pwa`, check out the [upgrade guide](https://remix-pwa.run/docs/upgrade-guide) in the docs.
 
 ## Setting up Remix for PWA
 
@@ -69,33 +71,39 @@ If you want to lay your hands on demo icons and favicons for your PWA, `remix-pw
 
 ## API Documentation
 
-The API documentation for `remix-pwa` is now available [here](https://remix-pwa-docs.vercel.app)
+The API documentation for Remix PWA v3.0 is now available [here](https://remix-pwa.run)
+
+*To view old docs for `remix-pwa` v2.x.x, check [here](https://remix-pwa-docs.vercel.app)*
 
 *To view the old docs for `remix-pwa` v1.1.10 and below, check [here]("./archive/README.md")*
 
-## Roadmap
-
-Want to see proposed features and bug fixes? Or do you want to propose an idea/bug fix for `remix-pwa` and want to view the current roadmap? Check out `remix-pwa` [roadmap](https://remix-pwa-docs.vercel.app/pwa/roadmap) and see what lies in wait for us!
-
 ## Contributing
 
-Thank you for your interest in contributing 🙂. Check out the [contributing guide](https://remix-pwa-docs.vercel.app/pwa/contribute) to ensure you follow the right steps in contributing to `remix-pwa`.
+Thank you for your interest in contributing 🙂. Check out the [contributing guide](https://remix-pwa.run/docs/contribute) to ensure you follow the right steps in contributing to `remix-pwa`.
 
 > You can also help out with the docs too which is definitely a great way to contribute to the project and also help with it's completion
 
-## Support 
+## Support
 
 If you want to get help on an issue or have a question, you could either [open an issue](https://github.com/ShafSpecs/remix-pwa/issues/new/choose) or you could ask your questions in the [Official Remix's Discord Server](https://discord.gg/TTVwU2wZca) where there are a lot of helpful people to help you out.
 
-Check out the [docs](https://remix-pwa-docs.vercel.app/pwa/community) for a more detailed walkthrough.
+Check out the [docs](https://remix-pwa.run/docs/community) for more info on community support.
 
 ## FAQ
 
-Check out the [FAQ](https://remix-pwa-docs.vercel.app/pwa/faq) section of the docs for answers to frequently asked questions.
+Check out the [FAQ](https://remix-pwa.run/docs/faq) section of the docs for answers to frequently asked questions.
+
+## Ecosystem
+
+Check out https://github.com/remix-pwa/monorepo for the full Remix PWA v3.0 source code.
 
 ## Authors
 
 - Abdur-Rahman (aka [@ShafSpecs](https://github.com/ShafSpecs))
+
+- Juan Pablo Garcia Ripa ([Sarabadu](https://github.com/Sarabadu))
+
+- Luciano Fantone ([lfantone](https://github.com/lfantone))
 
 - Afzal Ansari ([dev-afzalansari](https://github.com/dev-afzalansari))
 
