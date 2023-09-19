@@ -14,7 +14,7 @@
 
 Remix PWA is a PWA framework that seamlessly integrates Progressive Web App (PWA) features into Remix including offline support, caching, installability on Native devices and more.
 
-**Remix PWA v3.0 is finally out! Check out the full release notes [here](https://github.com/remix-pwa/remix-pwa/releases/tag/v3.0)**
+**Remix PWA v3.0 is finally out! Check out the full release notes [here](https://github.com/remix-pwa/remix-pwa/releases/tag/v3.0.0)**
 
 ## Features
 
