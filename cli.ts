@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-
-import * as a from "@remix-pwa/dev"
+import * as compiler from "@remix-pwa/dev"
 
 async function cli() {
-  await a.run();
+  await compiler.run();
 }
 
 cli();
