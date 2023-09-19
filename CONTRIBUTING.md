@@ -8,31 +8,41 @@ We love your input! We want to make contributing to this project as easy and tra
 - Discussing the current state of the code and proposing changes
 - Submitting a fix
 - Proposing new features
+- More test cases (we love tests 😍)
 
 ## 💻 Setup
 
-Before you can contribute to `remix-pwa` codebase, you will need to fork the repo. 
+Before you can contribute to `remix-pwa` codebase, you will need to fork the repo.
 
-1. **Fork the repo**: To fork the repo, simply click the <kbd>Fork</kbd> button on the top right of `remix-pwa` page. 
+1. **Fork the repo**: To fork the repo, simply click the <kbd>Fork</kbd> button on the top right of [`monorepo`](https://github.com/remix-pwa/monorepo) page. If you want to edit the docs, you can fork the [docs repo](https:/github.com/ShafSpecs/remix-pwa-docs) instead.
 
 2. **Clone your fork locally**: After that, clone your forked repo using the command:
+
 ```sh
 # in a terminal, cd to parent directory where you want your clone to be, then
-git clone https://github.com/<your_github_username>/remix-pwa.git
+git clone https://github.com/<your_github_username>/monorepo.git
 
 cd remix-pwa
 ```
 
-3. **Install dependencies**: `remix-pwa` uses npm. To download the dependencies, simply run:
+1. **Install dependencies**: `remix-pwa` uses npm. To download the dependencies, build packages and run tests, run the following command:
+
 ```sh
-npm install
+npm run postclone
 ```
 
-Pull Requests should be made to different branches based on their context.
+We have everything wrapped up in a single command for you.
 
-## 🐛 Found a Bug? 
+Pull Requests should be made to different branches based on their context. When making a PR, make sure to create it to the latest working branch that isn't `main`
+or `dev`.
 
-If you think you found a bug that you can fix, clone the repo, make your changes and then submit a PR to the latest version branch (*Not every version of `remix-pwa` has a branch, this is done on purpose. Instead, submit your PR to the latest release. Every release has it's own branch*)
+We also use [commitlint](https://commitlint.js.org/), so ensure that your commit messages are compliant.
+
+> *"We request to avoid pushing to those two as we follow a semantic release process, changes merged to `main` are published immediately and `dev` are bumped automatically."*
+
+## 🐛 Found a Bug?
+
+If you think you found a bug that you can fix, clone the repo, make your changes and then submit a PR to the latest working branch. If you can't fix it, then create an issue and we'll look into it.
 
 ## 🛠 Suggesting a New Feature or Improving one?
 
@@ -40,11 +50,11 @@ If you feel you have a great idea for `remix-pwa` or you can improve an existing
 
 ## 📬 Neglected Issue?
 
-If you happen to come across an issue that you think is important but neglected, you can fork the repo and after you're done, if it involves changes to `remix-pwa` itself including template workers and the CLI, create a PR to the `dev` branch. If it involves tests, then create a PR to the `test` branch.
+If you happen to come across an issue that you think is important but neglected, you can fork the repo and after you're done, if it involves changes to `remix-pwa` itself including the CLI and compiler, create a PR to the `dev` branch.
 
 ## 😄 First PR?
 
-Looking to make your first PR to Open Source? Then you can do so by simply correcting stuffs like typo in the README or even here in the contribution guide, it could also be explaining a particular topic or section more (in the README or here). Any PR of this type should be submitted to the `main` branch directly.
+Looking to make your first PR to Open Source? Then you can do so by simply correcting stuffs like typo in the README or even here in the contribution guide, it could also be explaining a particular topic or section more (in the README or here). Any PR of this type should be submitted to the a non-`main` or `dev` branch.
 
 ## 📃 License
 

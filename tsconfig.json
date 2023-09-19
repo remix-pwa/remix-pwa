@@ -3,9 +3,9 @@
   "include": ["cli.ts"],
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",
+    "module": "NodeNext",
     "declaration": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "strict": true,
     "outDir": "dist/"
   },
