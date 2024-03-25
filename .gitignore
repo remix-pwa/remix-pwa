@@ -4,3 +4,5 @@ index.js
 dist/**/*
 coverage
 .DS_Store
+cli.js
+cli.d.ts
