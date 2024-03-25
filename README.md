@@ -1,7 +1,7 @@
 <div align="center">
 
 &NewLine;
-<img src="./links/remix-pwa-logo.png" alt="logo" width="300" />
+<!-- <img src="./links/remix-pwa-logo.png" alt="logo" width="300" /> -->
 &NewLine;
 
 # Remix PWA

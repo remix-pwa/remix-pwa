@@ -7,10 +7,6 @@
     "declaration": true,
     "moduleResolution": "NodeNext",
     "strict": true,
-    "outDir": "dist/"
-  },
-  "ts-node": {
-    "transpileOnly": false,
-    "files": false
+    "outDir": "."
   }
 }

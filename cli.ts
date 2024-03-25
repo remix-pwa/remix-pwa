@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-import * as compiler from "@remix-pwa/dev"
+import _process from "@remix-pwa/cli"
 
-async function cli() {
-  await compiler.run();
-}
-
-cli();
+_process.parse(process.argv)
