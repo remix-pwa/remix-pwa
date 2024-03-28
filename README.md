@@ -1,7 +1,7 @@
 <div align="center">
 
 &NewLine;
-<img src="https://ucarecdn.com/e5ab139d-5fa2-477b-b3da-2b801252d2d9/-/preview/1200x630/-/quality/smart_retina/-/format/auto" alt="logo" width="300" />
+<img src="./assets/RemixPWA.png" alt="logo" width="100" />
 &NewLine;
 
 # Remix PWA
