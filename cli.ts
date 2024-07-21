@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-import _process from "@remix-pwa/cli"
+import _ from "@remix-pwa/cli"
 
-_process.parse(process.argv)
+_.parse(process.argv)
